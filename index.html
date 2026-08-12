@@ -57,7 +57,8 @@
     </div>
     <div class="hero__art">
       <span class="sticker sticker--tl">New<br>Drop</span>
-      <img src="assets/cosmic-checker--pink.svg" alt="Cosmic Checker tee in hot pink" width="600" height="600">
+      <img src="assets/cosmic-checker--pink.svg" alt="Cosmic Checker tee in hot pink"
+           width="600" height="600" data-parallax="0.16">
       <span class="sticker sticker--br">240<br>GSM</span>
     </div>
   </div>
@@ -75,7 +76,7 @@
 <!-- ── editorial statement ───────────────────────────────────────────────── -->
 <section class="band band--yellow">
   <div class="shell">
-    <p class="editorial" data-reveal>
+    <p class="editorial" data-words>
       From the <span class="hl">first thread</span> to the last stitch, we make clothes for people
       who would rather be <em>looked at</em> than looked past. Because
       <span class="hl">beige</span> already has enough shops.
@@ -90,7 +91,7 @@
       <span class="kicker">Why we're different</span>
       <h2 class="display">Built To Be<br>Noticed</h2>
     </div>
-    <div class="pillars" data-reveal>
+    <div class="pillars" data-stagger>
       <div class="pillar">
         <div class="pillar__icon">🧵</div>
         <h3>240gsm, not 140</h3>
@@ -118,12 +119,12 @@
 <!-- ── best sellers ──────────────────────────────────────────────────────── -->
 <section class="band band--cream" id="bestsellers">
   <div class="shell">
-    <div class="band-head band-head--center" data-reveal>
+    <div class="band-head band-head--center" data-reveal data-zoom>
       <span class="kicker">Everybody's buying these</span>
       <h2 class="display">Best Sellers</h2>
       <p>The six that keep selling out. Pick a colourway on the card — the swatch changes the shot.</p>
     </div>
-    <div class="grid-products" id="bestGrid" data-reveal></div>
+    <div class="grid-products" id="bestGrid" data-stagger></div>
     <div style="text-align:center;margin-top:2.6rem">
       <a href="shop.html" class="btn">See all 20 designs <span class="arrow">→</span></a>
     </div>
@@ -168,21 +169,21 @@
       <h2 class="display">Four People,<br>One Press</h2>
       <p class="lead">Every order goes through the same four hands in the same Manchester railway arch. Here's what actually happens between you clicking buy and a parcel landing on your mat.</p>
     </div>
-    <div class="collage" data-reveal>
+    <div class="collage" data-stagger>
       <figure class="snap">
-        <img src="assets/story-1.svg" alt="Blanks being cut and sewn" width="800" height="600">
+        <img src="assets/story-1.svg" alt="Blanks being cut and sewn" width="800" height="600" data-parallax="0.09">
         <figcaption>Blanks arrive undyed — we pick the cotton first</figcaption>
       </figure>
       <figure class="snap">
-        <img src="assets/story-2.svg" alt="Screen printing by hand" width="800" height="600">
+        <img src="assets/story-2.svg" alt="Screen printing by hand" width="800" height="600" data-parallax="-0.07">
         <figcaption>Every colour is a separate pass on the press</figcaption>
       </figure>
       <figure class="snap">
-        <img src="assets/story-3.svg" alt="Small batch runs" width="800" height="600">
+        <img src="assets/story-3.svg" alt="Small batch runs" width="800" height="600" data-parallax="0.11">
         <figcaption>200 per colourway, then the screen gets washed</figcaption>
       </figure>
       <figure class="snap">
-        <img src="assets/story-4.svg" alt="Packing orders" width="800" height="600">
+        <img src="assets/story-4.svg" alt="Packing orders" width="800" height="600" data-parallax="-0.05">
         <figcaption>Packed by hand, sticker sheet included</figcaption>
       </figure>
     </div>
@@ -218,7 +219,7 @@
 
 <!-- ── featured drop ─────────────────────────────────────────────────────── -->
 <section class="band band--yellow">
-  <div class="shell feature">
+  <div class="shell feature feature--pin">
     <div data-reveal>
       <span class="kicker">Drop 007 · limited to 200</span>
       <h2 class="display" style="margin:.6rem 0 1rem">The<br>Supernova</h2>
@@ -231,28 +232,56 @@
       </ul>
       <a href="shop.html" class="btn">Get the Supernova <span class="arrow">→</span></a>
     </div>
-    <img src="assets/supernova--purple.svg" alt="Supernova tee in purple" width="600" height="600" data-reveal>
+    <div class="feature__art" data-reveal>
+      <img src="assets/supernova--purple.svg" alt="Supernova tee in purple" width="600" height="600">
+    </div>
+  </div>
+</section>
+
+<!-- ── stacking statement panels ─────────────────────────────────────────── -->
+<section class="stack" aria-label="What people do with them">
+  <div class="stack__panel band--red">
+    <div class="shell">
+      <span class="stack__n">01 / 03</span>
+      <h2 class="display" data-words>They Wear Them.</h2>
+      <p class="lead">Out the door in the same shirt three days running. We've seen the photos.</p>
+    </div>
+  </div>
+  <div class="stack__panel band--yellow">
+    <div class="shell">
+      <span class="stack__n">02 / 03</span>
+      <h2 class="display" data-words>They Flex Them.</h2>
+      <p class="lead">Tagged, posted, and argued about in the replies. Loud clothes start conversations.</p>
+    </div>
+  </div>
+  <div class="stack__panel band--ink">
+    <div class="shell">
+      <span class="stack__n">03 / 03</span>
+      <h2 class="display" data-words>They Come Back.</h2>
+      <p class="lead">Just over half of every drop goes to someone who has bought from us before.</p>
+      <a href="shop.html" class="btn btn--yellow" style="margin-top:2rem">Join them <span class="arrow">→</span></a>
+    </div>
   </div>
 </section>
 
 <!-- ── reviews ───────────────────────────────────────────────────────────── -->
 <section class="band band--red" id="reviews">
   <div class="shell">
-    <div class="band-head band-head--center" data-reveal>
+    <div class="band-head band-head--center" data-reveal data-zoom>
       <span class="kicker">2,140 reviews · 4.8 average</span>
-      <h2 class="display">They Wear Them.<br>They Flex Them.<br>They Keep Buying.</h2>
+      <h2 class="display">In Their<br>Own Words</h2>
     </div>
-    <div class="reviews" id="reviewGrid" data-reveal></div>
+    <div class="reviews" id="reviewGrid" data-stagger></div>
   </div>
 </section>
 
 <!-- ── stats ─────────────────────────────────────────────────────────────── -->
 <section class="band band--ink" style="padding-block:clamp(2.5rem,5vw,4rem)">
-  <div class="shell stats" data-reveal>
-    <div class="stat"><div class="stat__n">20</div><div class="stat__l">Designs in stock</div></div>
-    <div class="stat"><div class="stat__n">2,140</div><div class="stat__l">Verified reviews</div></div>
-    <div class="stat"><div class="stat__n">48h</div><div class="stat__l">Average dispatch</div></div>
-    <div class="stat"><div class="stat__n">31</div><div class="stat__l">Countries shipped</div></div>
+  <div class="shell stats" data-stagger>
+    <div class="stat"><div class="stat__n" data-count="20">0</div><div class="stat__l">Designs in stock</div></div>
+    <div class="stat"><div class="stat__n" data-count="2140">0</div><div class="stat__l">Verified reviews</div></div>
+    <div class="stat"><div class="stat__n" data-count="48" data-count-suffix="h">0</div><div class="stat__l">Average dispatch</div></div>
+    <div class="stat"><div class="stat__n" data-count="31">0</div><div class="stat__l">Countries shipped</div></div>
   </div>
 </section>
 
@@ -264,7 +293,7 @@
       <h2 class="display">Out In The Wild</h2>
       <p>Tag us and you'll end up here. We send a free sticker pack to anyone who does.</p>
     </div>
-    <div class="lookbook" data-reveal>
+    <div class="lookbook" data-stagger>
       <a href="shop.html"><img src="assets/look-1.svg" alt="Customer photo" width="800" height="600"></a>
       <a href="shop.html"><img src="assets/look-2.svg" alt="Customer photo" width="800" height="600"></a>
       <a href="shop.html"><img src="assets/look-3.svg" alt="Customer photo" width="800" height="600"></a>
@@ -385,5 +414,6 @@
 <script src="js/shopify.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
+<script src="js/scroll.js"></script>
 </body>
 </html>

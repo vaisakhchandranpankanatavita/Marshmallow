@@ -46,7 +46,7 @@
 
 <section class="band band--yellow">
   <div class="shell">
-    <p class="editorial" data-reveal>
+    <p class="editorial" data-words>
       We started because every shop we walked into sold the <span class="hl">same grey tee</span>
       at four different prices. <em>So we bought a press.</em>
     </p>
@@ -54,7 +54,7 @@
 </section>
 
 <section class="band band--cream">
-  <div class="shell feature">
+  <div class="shell feature feature--pin">
     <div data-reveal>
       <span class="kicker">The short version</span>
       <h2 class="display" style="margin:.6rem 0 1.2rem">A Railway Arch<br>And A Bad Idea</h2>
@@ -62,16 +62,18 @@
       <p style="margin-bottom:1rem;opacity:.85">The first drop was forty shirts. We sold eleven, gave nine to friends, and wore the rest ourselves. The second drop sold out in a weekend, which we assumed was a fluke. It was not, and we have been printing ever since.</p>
       <p style="opacity:.85">Everything still comes off that same carousel. When you order, someone here pulls a blank off the rack, lines up the screen, and pulls the squeegee — once for every colour in the design.</p>
     </div>
-    <img src="assets/story-2.svg" alt="The press" width="800" height="600" data-reveal>
+    <div class="feature__art" data-reveal>
+      <img data-parallax="-0.07" src="assets/story-2.svg" alt="The press" width="800" height="600">
+    </div>
   </div>
 </section>
 
 <section class="band band--ink" style="padding-block:clamp(2.5rem,5vw,4rem)">
-  <div class="shell stats" data-reveal>
-    <div class="stat"><div class="stat__n">2019</div><div class="stat__l">Year we started</div></div>
-    <div class="stat"><div class="stat__n">4</div><div class="stat__l">People on the team</div></div>
-    <div class="stat"><div class="stat__n">61</div><div class="stat__l">Designs printed so far</div></div>
-    <div class="stat"><div class="stat__n">31</div><div class="stat__l">Countries shipped</div></div>
+  <div class="shell stats" data-stagger>
+    <div class="stat"><div class="stat__n" data-count="2019">0</div><div class="stat__l">Year we started</div></div>
+    <div class="stat"><div class="stat__n" data-count="4">0</div><div class="stat__l">People on the team</div></div>
+    <div class="stat"><div class="stat__n" data-count="61">0</div><div class="stat__l">Designs printed so far</div></div>
+    <div class="stat"><div class="stat__n" data-count="31">0</div><div class="stat__l">Countries shipped</div></div>
   </div>
 </section>
 
@@ -81,9 +83,9 @@
       <span class="kicker">Start to finish</span>
       <h2 class="display">How An Order<br>Gets Made</h2>
     </div>
-    <div class="collage" data-reveal>
+    <div class="collage" data-stagger>
       <figure class="snap">
-        <img src="assets/story-1.svg" alt="Choosing blanks" width="800" height="600">
+        <img data-parallax="0.09" src="assets/story-1.svg" alt="Choosing blanks" width="800" height="600">
         <figcaption>We pick the cotton before we pick the colour</figcaption>
       </figure>
       <figure class="snap">
@@ -91,11 +93,11 @@
         <figcaption>One pass on the press per ink</figcaption>
       </figure>
       <figure class="snap">
-        <img src="assets/story-3.svg" alt="Curing" width="800" height="600">
+        <img data-parallax="0.11" src="assets/story-3.svg" alt="Curing" width="800" height="600">
         <figcaption>Cured at 160°C so it never cracks</figcaption>
       </figure>
       <figure class="snap">
-        <img src="assets/story-4.svg" alt="Packing" width="800" height="600">
+        <img data-parallax="-0.05" src="assets/story-4.svg" alt="Packing" width="800" height="600">
         <figcaption>Folded, bagged and stickered by hand</figcaption>
       </figure>
     </div>
@@ -109,7 +111,7 @@
       <h2 class="display">What We Do<br>And Don't Do</h2>
       <p>We would rather tell you exactly where we are than call ourselves sustainable and hope nobody checks.</p>
     </div>
-    <div class="pillars" data-reveal>
+    <div class="pillars" data-stagger>
       <div class="pillar">
         <div class="pillar__icon">✅</div>
         <h3>What we do</h3>
@@ -219,5 +221,6 @@
 <script src="js/shopify.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
+<script src="js/scroll.js"></script>
 </body>
 </html>

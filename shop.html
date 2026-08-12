@@ -72,13 +72,13 @@
         </select>
       </div>
     </div>
-    <div class="grid-products" id="mainGrid"></div>
+    <div class="grid-products" id="mainGrid" data-stagger></div>
   </div>
 </section>
 
 <!-- ── size guide ────────────────────────────────────────────────────────── -->
 <section class="band band--yellow" id="sizing">
-  <div class="shell feature">
+  <div class="shell feature feature--pin">
     <div data-reveal>
       <span class="kicker">Measured flat, in centimetres</span>
       <h2 class="display" style="margin:.6rem 0 1rem">Will It<br>Fit?</h2>
@@ -93,13 +93,15 @@
       </ul>
       <p style="font-size:.88rem;opacity:.75">Still unsure? Email your usual size in a brand you own and we'll tell you what to order.</p>
     </div>
-    <img src="assets/drop.svg" alt="Drop 007" width="800" height="600" data-reveal>
+    <div class="feature__art" data-reveal>
+      <img src="assets/drop.svg" alt="Drop 007" width="800" height="600">
+    </div>
   </div>
 </section>
 
 <section class="band band--paper" id="faq">
   <div class="shell">
-    <div class="band-head band-head--center" data-reveal>
+    <div class="band-head band-head--center" data-reveal data-zoom>
       <span class="kicker">Before you ask</span>
       <h2 class="display">The Answers</h2>
     </div>
@@ -189,5 +191,6 @@
 <script src="js/shopify.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
+<script src="js/scroll.js"></script>
 </body>
 </html>

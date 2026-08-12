@@ -186,3 +186,40 @@ netlify deploy --prod --dir .
 # or: vercel --prod
 # or: push to GitHub and enable Pages
 ```
+
+---
+
+## Scroll behaviour
+
+All of it lives in `js/scroll.js` — one passive scroll listener feeding a single
+`requestAnimationFrame` loop, writing only transforms and opacity so it stays at
+frame rate down a long page. Opt in from markup:
+
+| Attribute | Effect |
+|---|---|
+| `data-reveal` | Fade + rise on entry |
+| `data-stagger` | Children arrive one after another (`--i` sets the order) |
+| `data-words` | Splits text into words that rise individually |
+| `data-zoom` | Scales up slightly on entry |
+| `data-parallax="0.12"` | Drifts against the scroll; negative values invert |
+| `data-count="2140"` | Counts up on entry (`data-count-suffix` for units) |
+
+Plus, without markup: a scroll progress rail, marquees whose speed and direction
+respond to scroll velocity, sticky-stacking `.stack__panel` sections, and
+`.feature--pin` which pins artwork while its copy column scrolls past.
+
+Everything collapses to plain static content under `prefers-reduced-motion:
+reduce` — panels un-stick, words appear, counters jump to their final value.
+
+### Two traps worth knowing about
+
+**`overflow` on `<body>` breaks `position: sticky`.** Body's overflow propagates
+to the viewport, and `hidden` makes that element a scroll container, which
+disables sticky inside it. Horizontal overflow is contained on `<html>` with
+`clip` instead — same containment, no scroll container.
+
+**Parallax must not read back its own transform.** `getBoundingClientRect()`
+includes the transform being written, so feeding it back settles at a fixed
+point and the element stops moving. `scroll.js` caches `offsetTop`/`offsetHeight`
+(layout values, unaffected by transforms) and recomputes from `scrollY`,
+re-measuring when lazy images land and change the layout.

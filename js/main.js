@@ -26,11 +26,11 @@
 
   const stars = r => '★'.repeat(Math.round(r)) + '☆'.repeat(5 - Math.round(r));
 
-  function cardHTML(p) {
+  function cardHTML(p, index) {
     const first = p.colorways[0];
     const sizes = window.SIZES_FOR(p);
     return `
-      <article class="card" data-slug="${p.slug}" data-colorway="${first}">
+      <article class="card" style="--i:${index % 8}" data-slug="${p.slug}" data-colorway="${first}">
         <div class="card__media">
           <img src="${window.PRODUCT_IMAGE(p, first)}" alt="${p.name} in ${first}"
                data-role="img" width="600" height="600" loading="lazy">
@@ -63,7 +63,7 @@
   function renderGrid(el, products) {
     if (!el) return;
     el.innerHTML = products.length
-      ? products.map(cardHTML).join('')
+      ? products.map((p, i) => cardHTML(p, i)).join('')
       : `<p style="grid-column:1/-1;text-align:center;padding:3rem 0;opacity:.7">
            Nothing matches that filter yet.</p>`;
   }
@@ -235,23 +235,6 @@
     });
   }
 
-  function initReveal() {
-    const items = document.querySelectorAll('[data-reveal]');
-    if (!('IntersectionObserver' in window)) {
-      items.forEach(el => el.classList.add('is-in'));
-      return;
-    }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-in');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
-    items.forEach(el => io.observe(el));
-  }
-
   /* ---------------------------------------------------------------- boot */
 
   async function boot() {
@@ -264,8 +247,11 @@
     initFaq();
     initNav();
     initSignup();
-    initReveal();
     window.Cart.init();
+
+    // Grids are populated above, so scroll.js has to (re)bind after this.
+    // It listens for this rather than racing DOMContentLoaded.
+    document.dispatchEvent(new CustomEvent('ft:content-ready'));
   }
 
   document.addEventListener('DOMContentLoaded', boot);

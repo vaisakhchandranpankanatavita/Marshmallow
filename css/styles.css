@@ -38,14 +38,22 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+/* Horizontal overflow is contained on <html>, and with `clip` rather than
+   `hidden`. On <body> an overflow value propagates up to the viewport, and
+   `hidden` anywhere in the ancestor chain makes that element a scroll
+   container, which silently disables position:sticky inside it — that would
+   take out the stacking panels and the pinned feature art. `clip` contains
+   the overflow without creating a scroll container.
+   It is only a backstop: everything that can bleed sideways (rotated hero
+   art, stickers, max-content marquee tracks) already sits inside its own
+   overflow:hidden section. */
+html { scroll-behavior: smooth; overflow-x: clip; }
 
 body {
   font-family: var(--body);
   background: var(--cream);
   color: var(--ink);
   line-height: 1.55;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -161,9 +169,15 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   width: max-content;
   gap: 2.5rem;
   animation: marquee 34s linear infinite;
+  will-change: transform;
 }
 .marquee--fast .marquee__track { animation-duration: 20s; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
+
+/* When JS drives the track, the CSS animation has to get out of the way —
+   scroll velocity feeds the offset instead. */
+.marquee.is-driven .marquee__track { animation: none; }
+.marquee.is-driven { transition: rotate .4s ease; }
 .marquee__track span {
   font-family: var(--display);
   text-transform: uppercase;
@@ -594,10 +608,85 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 .toast--err { border-color: var(--red); }
 @keyframes toast-in { from { opacity: 0; translate: -24px 0; } }
 
-/* ------------------------------------------------------------ scroll reveal */
+/* ============================================================ SCROLL SYSTEM */
 
+/* Progress rail — pinned above everything, tracks document scroll. */
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 4px;
+  z-index: 1000; background: transparent; pointer-events: none;
+}
+.progress__fill {
+  height: 100%; width: 0%;
+  background: var(--yellow);
+  border-right: 2px solid var(--ink);
+}
+
+/* Base reveal. Grid children stagger via --i set in JS. */
 [data-reveal] { opacity: 0; translate: 0 22px; transition: opacity .6s ease, translate .6s cubic-bezier(.2,.7,.3,1); }
 [data-reveal].is-in { opacity: 1; translate: 0 0; }
+
+[data-stagger] > * {
+  opacity: 0; translate: 0 30px;
+  transition: opacity .55s ease, translate .55s cubic-bezier(.2,.7,.3,1);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+[data-stagger].is-in > * { opacity: 1; translate: 0 0; }
+
+/* Word-by-word reveal for the big editorial statements. */
+.word { display: inline-block; }
+[data-words] .word {
+  opacity: 0; translate: 0 .45em; rotate: -4deg;
+  transition: opacity .5s ease, translate .5s cubic-bezier(.2,.8,.3,1), rotate .5s cubic-bezier(.2,.8,.3,1);
+  transition-delay: calc(var(--i, 0) * 34ms);
+}
+[data-words].is-in .word { opacity: 1; translate: 0 0; rotate: 0deg; }
+
+/* Parallax composes through a custom property so it never clobbers a
+   transform already set in CSS (the hero art is rotated, for one). */
+[data-parallax] { will-change: transform; }
+.hero__art img { transform: rotate(-3deg) translate3d(0, var(--py, 0px), 0); }
+.feature img { transform: translate3d(0, var(--py, 0px), 0); }
+.snap img { transition: none; }
+.snap:nth-child(odd) img { transform: rotate(-2.5deg) translate3d(0, var(--py, 0px), 0); }
+.snap:nth-child(even) img { transform: rotate(2deg) translate3d(0, var(--py, 0px), 0); }
+
+/* Sticky-stacking panels: each sticks at the top and the next slides over it. */
+.stack { position: relative; }
+.stack__panel {
+  position: sticky; top: 0;
+  min-height: 100svh;
+  display: grid; place-items: center;
+  text-align: center;
+  padding: clamp(2rem, 6vw, 5rem) 0;
+  border-bottom: 3px solid var(--ink);
+  overflow: hidden;
+}
+.stack__panel .display { font-size: clamp(2.6rem, 11vw, 7.5rem); }
+.stack__panel .kicker { display: block; margin-bottom: 1rem; opacity: .8; }
+.stack__panel p { max-width: 40ch; margin: 1.4rem auto 0; }
+.stack__n {
+  font-family: var(--display); font-size: .9rem; letter-spacing: .2em;
+  opacity: .55; margin-bottom: 1.5rem; display: block;
+}
+
+/* Sticky feature: art pins while the copy column scrolls past it. */
+.feature--pin { align-items: start; }
+.feature--pin .feature__art { position: sticky; top: calc(var(--nav-h) + 2rem); }
+
+/* Section headings that scale up slightly as they enter. */
+[data-zoom] { transition: scale .8s cubic-bezier(.2,.7,.3,1); scale: .94; }
+[data-zoom].is-in { scale: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stack__panel { position: static; min-height: 0; }
+  .feature--pin .feature__art { position: static; }
+  [data-words] .word, [data-stagger] > * { opacity: 1; translate: none; rotate: none; }
+  [data-zoom] { scale: 1; }
+  .hero__art img { transform: rotate(-3deg); }
+  .feature img { transform: none; }
+  .snap:nth-child(odd) img { transform: rotate(-2.5deg); }
+  .snap:nth-child(even) img { transform: rotate(2deg); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
