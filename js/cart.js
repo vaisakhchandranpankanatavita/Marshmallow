@@ -1,191 +1,200 @@
-// Shopping Cart Management
-class ShoppingCart {
-    constructor() {
-        this.items = this.loadCart();
-        this.init();
+/* Cart state + drawer.
+ *
+ * A line is identified by slug + colourway + size, so the same tee in two
+ * colours is two lines. Persisted to localStorage under FT_CART_V1.
+ */
+
+window.Cart = (function () {
+  const KEY = 'FT_CART_V1';
+  const money = n => window.Shop.money(n);
+  const keyOf = l => `${l.slug}::${l.colorway}::${l.size}`;
+
+  let lines = load();
+
+  function load() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(KEY));
+      // Drop anything whose product no longer exists — the catalog can change
+      // under a saved cart, and a stale line would render as a blank card.
+      return Array.isArray(raw)
+        ? raw.filter(l => l && l.slug && window.PRODUCT_BY_SLUG(l.slug))
+        : [];
+    } catch { return []; }
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(lines)); }
+    catch (err) { console.warn('[cart] could not persist:', err.message); }
+  }
+
+  /* ---------------------------------------------------------------- state */
+
+  function add(slug, colorway, size, qty = 1) {
+    const product = window.PRODUCT_BY_SLUG(slug);
+    if (!product) return { ok: false, reason: 'No such product' };
+    if (!size) return { ok: false, reason: 'Pick a size first' };
+
+    const line = { slug, colorway, size, qty };
+    const existing = lines.find(l => keyOf(l) === keyOf(line));
+    if (existing) existing.qty += qty;
+    else lines.push(line);
+
+    save(); render();
+    return { ok: true, product };
+  }
+
+  function setQty(key, qty) {
+    const line = lines.find(l => keyOf(l) === key);
+    if (!line) return;
+    if (qty <= 0) lines = lines.filter(l => keyOf(l) !== key);
+    else line.qty = Math.min(qty, 99);
+    save(); render();
+  }
+
+  function remove(key) {
+    lines = lines.filter(l => keyOf(l) !== key);
+    save(); render();
+  }
+
+  function clear() { lines = []; save(); render(); }
+
+  const count = () => lines.reduce((n, l) => n + l.qty, 0);
+  const subtotal = () => lines.reduce((n, l) => {
+    const p = window.PRODUCT_BY_SLUG(l.slug);
+    return n + (p ? p.price * l.qty : 0);
+  }, 0);
+
+  /* ----------------------------------------------------------------- ui */
+
+  const $ = id => document.getElementById(id);
+
+  function open() {
+    $('drawer').classList.add('is-open');
+    $('drawer').setAttribute('aria-hidden', 'false');
+    $('overlay').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    $('cartClose').focus();
+  }
+
+  function close() {
+    $('drawer').classList.remove('is-open');
+    $('drawer').setAttribute('aria-hidden', 'true');
+    $('overlay').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  function render() {
+    const n = count();
+    const badge = $('cartCount');
+    if (badge) {
+      badge.textContent = n;
+      badge.dataset.empty = n === 0;
+    }
+    const dc = $('drawerCount');
+    if (dc) dc.textContent = n ? `(${n})` : '';
+
+    const wrap = $('drawerItems');
+    if (!wrap) return;
+
+    if (!lines.length) {
+      wrap.innerHTML = `
+        <div class="drawer__empty">
+          <h3>Nothing in here yet</h3>
+          <p>Your bag is suspiciously beige.</p>
+          <a href="shop.html" class="btn btn--sm">Start shopping</a>
+        </div>`;
+      $('drawerFoot').hidden = true;
+      updateShipMeter(0);
+      return;
     }
 
-    init() {
-        this.setupEventListeners();
-        this.updateCartUI();
-    }
-
-    setupEventListeners() {
-        const cartToggle = document.getElementById('cartToggle');
-        const closeCart = document.getElementById('closeCart');
-        const cartOverlay = document.getElementById('cartOverlay');
-
-        cartToggle.addEventListener('click', () => this.toggleCart());
-        closeCart.addEventListener('click', () => this.closeCartSidebar());
-        cartOverlay.addEventListener('click', () => this.closeCartSidebar());
-
-        // Close cart on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeCartSidebar();
-            }
-        });
-    }
-
-    toggleCart() {
-        const sidebar = document.getElementById('cartSidebar');
-        const overlay = document.getElementById('cartOverlay');
-
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-    }
-
-    closeCartSidebar() {
-        const sidebar = document.getElementById('cartSidebar');
-        const overlay = document.getElementById('cartOverlay');
-
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-    }
-
-    addItem(product) {
-        const existingItem = this.items.find(item => item.id === product.id);
-
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            this.items.push({
-                ...product,
-                quantity: 1
-            });
-        }
-
-        this.saveCart();
-        this.updateCartUI();
-        this.showAddedNotification(product.name);
-    }
-
-    removeItem(productId) {
-        this.items = this.items.filter(item => item.id !== productId);
-        this.saveCart();
-        this.updateCartUI();
-    }
-
-    updateQuantity(productId, quantity) {
-        const item = this.items.find(item => item.id === productId);
-        if (item) {
-            if (quantity <= 0) {
-                this.removeItem(productId);
-            } else {
-                item.quantity = quantity;
-                this.saveCart();
-                this.updateCartUI();
-            }
-        }
-    }
-
-    getTotal() {
-        return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-    }
-
-    getItemCount() {
-        return this.items.reduce((count, item) => count + item.quantity, 0);
-    }
-
-    updateCartUI() {
-        this.updateCartCount();
-        this.updateCartItems();
-        this.updateCartTotal();
-    }
-
-    updateCartCount() {
-        const cartCount = document.getElementById('cartCount');
-        const count = this.getItemCount();
-        cartCount.textContent = count;
-        cartCount.style.display = count > 0 ? 'flex' : 'none';
-    }
-
-    updateCartItems() {
-        const cartItemsContainer = document.getElementById('cartItems');
-
-        if (this.items.length === 0) {
-            cartItemsContainer.innerHTML = `
-                <div class="empty-cart">
-                    <p>Your cart is empty</p>
-                    <p class="empty-text">Add some colorful items!</p>
-                </div>
-            `;
-            return;
-        }
-
-        cartItemsContainer.innerHTML = this.items.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-image" style="background: linear-gradient(135deg, #f0f0f0, #e0e0e0); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
-                    ${item.image}
-                </div>
-                <div class="cart-item-content">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                    <div class="quantity-control">
-                        <button class="qty-btn" onclick="cart.updateQuantity(${item.id}, ${item.quantity - 1})">−</button>
-                        <span class="qty-display">${item.quantity}</span>
-                        <button class="qty-btn" onclick="cart.updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
-                    </div>
-                </div>
-                <button class="remove-item" onclick="cart.removeItem(${item.id})">×</button>
+    wrap.innerHTML = lines.map(l => {
+      const p = window.PRODUCT_BY_SLUG(l.slug);
+      const k = keyOf(l);
+      return `
+        <div class="line">
+          <img src="${window.PRODUCT_IMAGE(p, l.colorway)}" alt="${p.name}">
+          <div>
+            <div class="line__name">${p.name}</div>
+            <div class="line__variant">${cap(l.colorway)} · ${l.size}</div>
+            <div class="line__price">${money(p.price * l.qty)}</div>
+            <div class="stepper">
+              <button data-qty="${k}" data-delta="-1" aria-label="Decrease quantity">−</button>
+              <span>${l.qty}</span>
+              <button data-qty="${k}" data-delta="1" aria-label="Increase quantity">+</button>
             </div>
-        `).join('');
-    }
+          </div>
+          <button class="line__remove" data-remove="${k}">Remove</button>
+        </div>`;
+    }).join('');
 
-    updateCartTotal() {
-        const cartTotal = document.getElementById('cartTotal');
-        const total = this.getTotal();
-        cartTotal.textContent = '$' + total.toFixed(2);
-    }
+    const sub = subtotal();
+    $('subtotal').textContent = money(sub);
+    $('total').textContent = money(sub);
+    $('shipping').textContent =
+      sub >= window.Shop.CONFIG.freeShippingThreshold ? 'Free' : 'Calculated at checkout';
+    $('drawerFoot').hidden = false;
+    updateShipMeter(sub);
+  }
 
-    saveCart() {
-        localStorage.setItem('cart', JSON.stringify(this.items));
-    }
+  function updateShipMeter(sub) {
+    const threshold = window.Shop.CONFIG.freeShippingThreshold;
+    const fill = $('shipFill');
+    const text = $('shipText');
+    if (!fill || !text) return;
+    const pct = Math.min(100, (sub / threshold) * 100);
+    fill.style.width = pct + '%';
+    text.textContent = sub >= threshold
+      ? "Nice — UK shipping is on us 🎉"
+      : `${money(threshold - sub)} away from free UK shipping`;
+  }
 
-    loadCart() {
-        const saved = localStorage.getItem('cart');
-        return saved ? JSON.parse(saved) : [];
-    }
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
-    clearCart() {
-        this.items = [];
-        this.saveCart();
-        this.updateCartUI();
-    }
+  /* ------------------------------------------------------------- wiring */
 
-    showAddedNotification(productName) {
-        // Create a temporary notification
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 500;
-            z-index: 10000;
-            animation: slideInLeft 0.3s ease-out;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        `;
-        notification.textContent = `✓ Added "${productName}" to cart`;
-        document.body.appendChild(notification);
+  function init() {
+    $('cartOpen')?.addEventListener('click', open);
+    $('cartClose')?.addEventListener('click', close);
+    $('overlay')?.addEventListener('click', close);
 
-        setTimeout(() => {
-            notification.style.animation = 'slideInLeft 0.3s ease-out reverse';
-            setTimeout(() => notification.remove(), 300);
-        }, 2000);
-    }
-}
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') close();
+    });
 
-// Export for external use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ShoppingCart;
-}
+    $('drawerItems')?.addEventListener('click', e => {
+      const q = e.target.closest('[data-qty]');
+      if (q) {
+        const line = lines.find(l => keyOf(l) === q.dataset.qty);
+        if (line) setQty(q.dataset.qty, line.qty + Number(q.dataset.delta));
+        return;
+      }
+      const r = e.target.closest('[data-remove]');
+      if (r) remove(r.dataset.remove);
+    });
 
-// Initialize cart
-let cart;
-document.addEventListener('DOMContentLoaded', () => {
-    cart = new ShoppingCart();
-});
+    $('checkout')?.addEventListener('click', async () => {
+      if (!lines.length) return window.toast('Your bag is empty', true);
+      const btn = $('checkout');
+      btn.disabled = true;
+      btn.textContent = 'Taking you to checkout…';
+      try {
+        const res = await window.Shop.checkout(lines);
+        if (!res.ok && res.reason === 'disabled') {
+          window.toast('Shopify not connected yet — payload logged to console');
+        } else if (!res.ok) {
+          window.toast(`Checkout failed: ${res.reason}`, true);
+        }
+      } catch (err) {
+        window.toast(`Checkout failed: ${err.message}`, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Checkout';
+      }
+    });
+
+    render();
+  }
+
+  return { init, add, remove, setQty, clear, open, close, render, count, subtotal, get lines() { return lines; } };
+})();

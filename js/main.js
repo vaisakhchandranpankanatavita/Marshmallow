@@ -1,237 +1,272 @@
-// Main JavaScript for Product Management and Interactions
+/* Rendering + interactions shared by every page. */
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeProducts();
-    setupFilterButtons();
-    setupScrollAnimations();
-    setupContactForm();
-});
+(function () {
+  const $ = id => document.getElementById(id);
+  const money = n => window.Shop.money(n);
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
-// Initialize and render products
-function initializeProducts() {
-    const productsGrid = document.getElementById('productsGrid');
-    renderProducts(products, productsGrid);
-}
+  /* ---------------------------------------------------------------- toast */
 
-// Render products to the grid
-function renderProducts(productsToRender, container) {
-    container.innerHTML = productsToRender.map((product, index) => `
-        <div class="product-card" style="animation-delay: ${index * 0.05}s">
-            <div class="product-image ${product.category}">
-                ${product.image}
-            </div>
-            <div class="product-info">
-                <div class="product-category">${product.category === 'tshirts' ? 'T-Shirt' : 'Phone Case'}</div>
-                <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <button class="add-to-cart-btn" onclick="handleAddToCart(${product.id})">
-                    Add to Cart
-                </button>
-            </div>
+  window.toast = function (message, isError) {
+    const stack = $('toasts');
+    if (!stack) return;
+    const el = document.createElement('div');
+    el.className = 'toast' + (isError ? ' toast--err' : '');
+    el.textContent = message;
+    stack.appendChild(el);
+    setTimeout(() => {
+      el.style.transition = 'opacity .25s, translate .25s';
+      el.style.opacity = '0';
+      el.style.translate = '-24px 0';
+      setTimeout(() => el.remove(), 250);
+    }, 2600);
+  };
+
+  /* ---------------------------------------------------------- product card */
+
+  const stars = r => '★'.repeat(Math.round(r)) + '☆'.repeat(5 - Math.round(r));
+
+  function cardHTML(p) {
+    const first = p.colorways[0];
+    const sizes = window.SIZES_FOR(p);
+    return `
+      <article class="card" data-slug="${p.slug}" data-colorway="${first}">
+        <div class="card__media">
+          <img src="${window.PRODUCT_IMAGE(p, first)}" alt="${p.name} in ${first}"
+               data-role="img" width="600" height="600" loading="lazy">
+          ${p.badge ? `<span class="card__badge" data-badge="${p.badge}">${p.badge}</span>` : ''}
+          <div class="card__quick">
+            <button class="btn btn--sm btn--block" data-role="quick">Quick add</button>
+          </div>
         </div>
-    `).join('');
-}
+        <div class="card__body">
+          <div class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} (${p.reviews})</div>
+          <h3 class="card__name">${p.name}</h3>
+          <p class="card__tagline">${p.tagline}</p>
+          <div class="swatches" role="group" aria-label="Choose a colourway">
+            ${p.colorways.map((c, i) => `
+              <button class="swatch" data-role="swatch" data-colorway="${c}"
+                      style="background:${window.SWATCHES[c]}"
+                      aria-label="${cap(c)}" aria-pressed="${i === 0}"></button>`).join('')}
+          </div>
+          <div class="card__price">${money(p.price)}${p.compareAt ? `<s>${money(p.compareAt)}</s>` : ''}</div>
+          <div class="card__sizes" data-role="sizes" hidden>
+            <p class="kicker" style="margin-bottom:.5rem;opacity:.6">Pick a size</p>
+            <div class="chips">
+              ${sizes.map(s => `<button class="chip btn--sm" data-role="size" data-size="${s}">${s}</button>`).join('')}
+            </div>
+          </div>
+        </div>
+      </article>`;
+  }
 
-// Handle add to cart
-function handleAddToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    if (product && cart) {
-        cart.addItem(product);
+  function renderGrid(el, products) {
+    if (!el) return;
+    el.innerHTML = products.length
+      ? products.map(cardHTML).join('')
+      : `<p style="grid-column:1/-1;text-align:center;padding:3rem 0;opacity:.7">
+           Nothing matches that filter yet.</p>`;
+  }
+
+  /* Card interactions are delegated from the document, so grids can re-render
+     freely without rebinding anything. */
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+    const p = window.PRODUCT_BY_SLUG(card.dataset.slug);
+    if (!p) return;
+
+    const swatch = e.target.closest('[data-role="swatch"]');
+    if (swatch) {
+      const c = swatch.dataset.colorway;
+      card.dataset.colorway = c;
+      const img = card.querySelector('[data-role="img"]');
+      img.src = window.PRODUCT_IMAGE(p, c);
+      img.alt = `${p.name} in ${c}`;
+      card.querySelectorAll('[data-role="swatch"]')
+        .forEach(s => s.setAttribute('aria-pressed', s === swatch));
+      return;
     }
-}
 
-// Setup filter buttons
-function setupFilterButtons() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    if (e.target.closest('[data-role="quick"]')) {
+      const box = card.querySelector('[data-role="sizes"]');
+      box.hidden = !box.hidden;
+      return;
+    }
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Update active state
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    const size = e.target.closest('[data-role="size"]');
+    if (size) {
+      const res = window.Cart.add(p.slug, card.dataset.colorway, size.dataset.size);
+      if (res.ok) {
+        window.toast(`Added ${p.name} · ${size.dataset.size}`);
+        card.querySelector('[data-role="sizes"]').hidden = true;
+        const btn = $('cartOpen');
+        btn.classList.add('is-bumped');
+        setTimeout(() => btn.classList.remove('is-bumped'), 400);
+      } else {
+        window.toast(res.reason, true);
+      }
+    }
+  });
 
-            // Filter products
-            const filter = btn.dataset.filter;
-            const filtered = filter === 'all'
-                ? products
-                : products.filter(p => p.category === filter);
+  /* --------------------------------------------------------- filter + sort */
 
-            renderProducts(filtered, document.getElementById('productsGrid'));
-        });
+  const FILTER_KEY = 'FT_FILTER';
+  let filter = 'all';
+  let sort = 'featured';
+
+  function visible() {
+    let out = filter === 'all'
+      ? window.PRODUCTS.slice()
+      : window.PRODUCTS.filter(p => p.category === filter);
+
+    if (sort === 'price-asc') out.sort((a, b) => a.price - b.price);
+    else if (sort === 'price-desc') out.sort((a, b) => b.price - a.price);
+    else if (sort === 'rating') out.sort((a, b) => b.rating - a.rating || b.reviews - a.reviews);
+    return out;
+  }
+
+  function applyFilters() {
+    const list = visible();
+    renderGrid($('mainGrid'), list);
+    const count = $('resultCount');
+    if (count) count.textContent = `${list.length} product${list.length === 1 ? '' : 's'}`;
+    $('filters')?.querySelectorAll('[data-filter]').forEach(b =>
+      b.setAttribute('aria-pressed', b.dataset.filter === filter));
+  }
+
+  function initFilters() {
+    if (!$('mainGrid')) return;
+
+    // A "Tees" link on another page hands its choice over through sessionStorage.
+    const handoff = sessionStorage.getItem(FILTER_KEY);
+    if (handoff) {
+      filter = handoff;
+      sessionStorage.removeItem(FILTER_KEY);
+    }
+
+    $('filters')?.addEventListener('click', e => {
+      const b = e.target.closest('[data-filter]');
+      if (!b) return;
+      filter = b.dataset.filter;
+      applyFilters();
     });
-}
 
-// Setup scroll animations
-function setupScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe all sections
-    document.querySelectorAll('.products, .about, .contact').forEach(el => {
-        observer.observe(el);
+    $('sort')?.addEventListener('change', e => {
+      sort = e.target.value;
+      applyFilters();
     });
-}
 
-// Setup contact form
-function setupContactForm() {
-    const contactForm = document.querySelector('.contact-form');
-    if (!contactForm) return;
+    applyFilters();
+  }
 
-    const inputs = contactForm.querySelectorAll('.form-input, .form-textarea');
-    const submitBtn = contactForm.querySelector('.cta-button');
+  document.querySelectorAll('[data-filter-link]').forEach(link => {
+    link.addEventListener('click', () => {
+      sessionStorage.setItem(FILTER_KEY, link.dataset.filterLink);
+    });
+  });
 
-    if (submitBtn) {
-        submitBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+  /* ------------------------------------------------------ static sections */
 
-            const name = inputs[0].value;
-            const email = inputs[1].value;
-            const message = inputs[2].value;
+  function initBestSellers() {
+    const el = $('bestGrid');
+    if (!el) return;
+    const best = window.PRODUCTS
+      .slice()
+      .sort((a, b) => b.reviews - a.reviews)
+      .slice(0, 6);
+    renderGrid(el, best);
+  }
 
-            if (name && email && message) {
-                // Show success message
-                showContactNotification('Message sent! We\'ll get back to you soon.');
+  function initReviews() {
+    const el = $('reviewGrid');
+    if (!el) return;
+    el.innerHTML = window.REVIEWS.map(r => `
+      <article class="review">
+        <div class="review__stars">${stars(r.rating)}</div>
+        <h3 class="review__title">${r.title}</h3>
+        <p class="review__body">${r.body}</p>
+        <div class="review__who">
+          <img src="assets/avatar-${r.initials}.svg" alt="" width="40" height="40">
+          <div>
+            <div class="review__name">${r.name}</div>
+            <div class="review__meta">Verified buyer · ${r.product}</div>
+          </div>
+        </div>
+      </article>`).join('');
+  }
 
-                // Clear form
-                inputs.forEach(input => input.value = '');
-            } else {
-                showContactNotification('Please fill in all fields.', true);
-            }
-        });
-    }
-}
+  function initFaq() {
+    const el = $('faqList');
+    if (!el) return;
+    el.innerHTML = window.FAQS.map((f, i) => `
+      <details class="acc"${i === 0 ? ' open' : ''}>
+        <summary class="acc__q">${f.q}<span class="acc__sign">+</span></summary>
+        <p class="acc__a">${f.a}</p>
+      </details>`).join('');
+  }
 
-// Show notification
-function showContactNotification(message, isError = false) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        background: ${isError ? 'linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%)' : 'linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%)'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 500;
-        z-index: 10000;
-        animation: slideInUp 0.3s ease-out;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        max-width: 400px;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
+  /* ------------------------------------------------------------- chrome */
 
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transition = 'opacity 0.3s ease-out';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
+  function initNav() {
+    const burger = $('burger');
+    burger?.addEventListener('click', () => {
+      const nav = $('nav');
+      const open = nav.classList.toggle('is-open');
+      burger.setAttribute('aria-expanded', open);
+    });
+  }
 
-// Handle checkout (placeholder for Shopify integration)
-function handleCheckout() {
-    if (!cart || cart.items.length === 0) {
-        showContactNotification('Your cart is empty!', true);
-        return;
-    }
-
-    // Prepare cart data for Shopify
-    const cartData = {
-        items: cart.items.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            category: item.category
-        })),
-        total: cart.getTotal(),
-        timestamp: new Date().toISOString()
-    };
-
-    console.log('Cart Data Ready for Shopify Integration:', cartData);
-
-    // Show message
-    showContactNotification('Redirecting to checkout... (Shopify integration ready)', false);
-
-    // Placeholder for Shopify redirect
-    setTimeout(() => {
-        // Replace this with actual Shopify integration
-        // window.location.href = `https://your-shopify-store.myshopify.com/cart/${cart.items.map(i => i.id).join(',')}`;
-        console.log('Ready to connect to Shopify Store');
-    }, 1000);
-}
-
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href !== '#' && document.querySelector(href)) {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+  function initSignup() {
+    document.querySelectorAll('.signup').forEach(form => {
+      const submit = form.querySelector('button');
+      const input = form.querySelector('input');
+      const go = e => {
+        e.preventDefault();
+        const v = input.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+          return window.toast('That email looks off', true);
         }
+        input.value = '';
+        window.toast("You're on the list — check your inbox");
+      };
+      form.addEventListener('submit', go);
+      if (submit && form.tagName !== 'FORM') submit.addEventListener('click', go);
     });
-});
+  }
 
-// Add hover effect to product cards
-document.addEventListener('mouseover', (e) => {
-    const productCard = e.target.closest('.product-card');
-    if (productCard) {
-        productCard.style.transform = 'translateY(-8px)';
+  function initReveal() {
+    const items = document.querySelectorAll('[data-reveal]');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(el => el.classList.add('is-in'));
+      return;
     }
-});
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
+    items.forEach(el => io.observe(el));
+  }
 
-document.addEventListener('mouseout', (e) => {
-    const productCard = e.target.closest('.product-card');
-    if (productCard) {
-        productCard.style.transform = '';
-    }
-});
+  /* ---------------------------------------------------------------- boot */
 
-// Parallax effect on scroll (optional enhancement)
-window.addEventListener('scroll', () => {
-    const blobs = document.querySelectorAll('.blob');
-    blobs.forEach((blob, index) => {
-        const speed = (index + 1) * 0.5;
-        blob.style.transform = `translateY(${window.scrollY * speed}px)`;
-    });
-});
+  async function boot() {
+    const status = await window.Shop.init();
+    console.info(`[shop] catalog source: ${status.source} (${status.count} products)`);
 
-// Performance optimization - lazy load images if needed
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                // Placeholder for lazy loading actual images
-                observer.unobserve(img);
-            }
-        });
-    });
+    initBestSellers();
+    initFilters();
+    initReviews();
+    initFaq();
+    initNav();
+    initSignup();
+    initReveal();
+    window.Cart.init();
+  }
 
-    document.querySelectorAll('.product-image').forEach(img => imageObserver.observe(img));
-}
-
-// Export for external use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        renderProducts,
-        handleAddToCart,
-        handleCheckout
-    };
-}
+  document.addEventListener('DOMContentLoaded', boot);
+})();

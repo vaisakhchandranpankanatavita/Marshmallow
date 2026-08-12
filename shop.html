@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop all — Funky Threads</title>
+<meta name="description" content="All 20 designs: heavyweight screen-printed tees and drop-proof phone cases. Filter by category, sort by price or rating.">
+<link rel="icon" href="assets/acid-smiley--lime.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="topbar">Free UK shipping over £50 · 30-day no-questions returns · Drop 007 is live</div>
+
+<header class="nav" id="nav">
+  <div class="shell nav__inner">
+    <a href="index.html" class="nav__logo">Funky<b>Threads</b></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="shop.html" aria-current="page">Shop all</a>
+      <a href="#grid" data-filter-link="tees">Tees</a>
+      <a href="#grid" data-filter-link="cases">Cases</a>
+      <a href="about.html">Our story</a>
+      <a href="#faq">Help</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <button class="cart-btn" id="cartOpen" aria-label="Open cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
+  <div class="shell">
+    <span class="kicker" style="opacity:.8">20 designs · restocked never</span>
+    <h1 class="display" style="margin-top:.7rem">Shop<br>Everything</h1>
+    <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">
+      Twelve tees, eight cases, three colourways each. Tap a swatch to see the colour, then quick-add without leaving the grid.
+    </p>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ Free returns</span>
+    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ Free returns</span>
+  </div>
+</div>
+
+<section class="band band--cream" id="grid">
+  <div class="shell">
+    <div class="toolbar">
+      <div class="chips" id="filters" role="group" aria-label="Filter by category">
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="tees" aria-pressed="false">Tees</button>
+        <button class="chip" data-filter="cases" aria-pressed="false">Cases</button>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:center">
+        <span class="result-count" id="resultCount"></span>
+        <select class="select" id="sort" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+          <option value="rating">Top rated</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-products" id="mainGrid"></div>
+  </div>
+</section>
+
+<!-- ── size guide ────────────────────────────────────────────────────────── -->
+<section class="band band--yellow" id="sizing">
+  <div class="shell feature">
+    <div data-reveal>
+      <span class="kicker">Measured flat, in centimetres</span>
+      <h2 class="display" style="margin:.6rem 0 1rem">Will It<br>Fit?</h2>
+      <p class="lead">Our tees are cut boxy — a shorter body and a wider chest than a standard fit. If you like things closer to the body, take one size down.</p>
+      <ul class="feature__list">
+        <li><strong>XS</strong> · chest 50cm · length 66cm</li>
+        <li><strong>S</strong> · chest 53cm · length 69cm</li>
+        <li><strong>M</strong> · chest 56cm · length 71cm</li>
+        <li><strong>L</strong> · chest 59cm · length 74cm</li>
+        <li><strong>XL</strong> · chest 62cm · length 76cm</li>
+        <li><strong>2XL</strong> · chest 65cm · length 79cm</li>
+      </ul>
+      <p style="font-size:.88rem;opacity:.75">Still unsure? Email your usual size in a brand you own and we'll tell you what to order.</p>
+    </div>
+    <img src="assets/drop.svg" alt="Drop 007" width="800" height="600" data-reveal>
+  </div>
+</section>
+
+<section class="band band--paper" id="faq">
+  <div class="shell">
+    <div class="band-head band-head--center" data-reveal>
+      <span class="kicker">Before you ask</span>
+      <h2 class="display">The Answers</h2>
+    </div>
+    <div class="accordion" id="faqList" data-reveal></div>
+  </div>
+</section>
+
+<section class="band band--yellow">
+  <div class="shell" style="display:grid;gap:2rem;justify-items:center;text-align:center">
+    <div class="band-head band-head--center" style="margin-bottom:0" data-reveal>
+      <span class="kicker">First dibs</span>
+      <h2 class="display">Get The Drop<br>Before It Drops</h2>
+      <p>One email per drop. Early access, restock alerts, and 10% off your first order.</p>
+    </div>
+    <form class="signup" data-reveal novalidate>
+      <input type="email" placeholder="you@email.com" aria-label="Email address" required>
+      <button type="submit" class="btn">Sign me up</button>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="nav__logo">Funky<b>Threads</b></span>
+        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Manchester railway arch since 2019.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All products</a></li>
+          <li><a href="#grid" data-filter-link="tees">Tees</a></li>
+          <li><a href="#grid" data-filter-link="cases">Phone cases</a></li>
+          <li><a href="index.html#bestsellers">Best sellers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#sizing">Sizing guide</a></li>
+          <li><a href="#faq">Shipping</a></li>
+          <li><a href="#faq">Returns</a></li>
+          <li><a href="#faq">Print care</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">Our story</a></li>
+          <li><a href="about.html#sustainability">Sustainability</a></li>
+          <li><a href="index.html#reviews">Reviews</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Funky Threads Ltd. Made in Manchester.</span>
+      <div class="pay"><span>VISA</span><span>MC</span><span>AMEX</span><span>PAYPAL</span><span>APPLE PAY</span></div>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="drawer__head">
+    <h2>Your bag <span id="drawerCount"></span></h2>
+    <button class="drawer__close" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+  <div class="ship-meter" id="shipMeter">
+    <p id="shipText">Spend £50 for free UK shipping</p>
+    <div class="ship-meter__bar"><div class="ship-meter__fill" id="shipFill"></div></div>
+  </div>
+  <div class="drawer__items" id="drawerItems"></div>
+  <div class="drawer__foot" id="drawerFoot" hidden>
+    <div class="drawer__row"><span>Subtotal</span><span id="subtotal">£0.00</span></div>
+    <div class="drawer__row"><span>Shipping</span><span id="shipping">Calculated at checkout</span></div>
+    <div class="drawer__row drawer__row--total"><span>Total</span><span id="total">£0.00</span></div>
+    <button class="btn btn--block" id="checkout">Checkout</button>
+    <p class="drawer__note">Taxes calculated at checkout · Shopify-ready</p>
+  </div>
+</aside>
+
+<div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+<script src="js/products.js"></script>
+<script src="js/shopify.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

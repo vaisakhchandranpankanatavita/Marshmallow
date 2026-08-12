@@ -1,242 +1,188 @@
-# FUNKY THREADS - E-Commerce Website
+# Funky Threads
 
-A modern, vibrant e-commerce website for selling funky and colorful t-shirts and phone cases. Built with clean HTML, CSS, and JavaScript with a fully functional shopping cart system ready to integrate with Shopify.
+A content-rich storefront for loud t-shirts and phone cases, with a working
+cart that's built to hand over to Shopify.
 
-## 🎨 Features
+Design language follows [terryhoproducts.com](https://terryhoproducts.com):
+full-bleed colour bands stacked alternately (red / yellow / cream / black),
+oversized display type with script accents mixed in, pill buttons, heavy black
+outlines on rounded cards, tilted photo collages with handwritten captions, and
+a review wall.
 
-### Design & UX
-- **Vibrant Color Scheme**: Eye-catching gradients and color combinations
-- **Smooth Animations**: Fade-ins, slide-ups, bounces, and parallax effects inspired by terryhoproducts.com
-- **Modern Typography**: Space Grotesk and Inter fonts for contemporary feel
-- **Responsive Design**: Perfectly optimized for mobile, tablet, and desktop
-- **Interactive Elements**: Hover effects, smooth transitions, and engaging interactions
-
-### Shopping Cart
-- ✅ Add/remove products
-- ✅ Quantity management
-- ✅ Real-time total calculation
-- ✅ Cart persistence with localStorage
-- ✅ Mobile-friendly sidebar cart
-- ✅ Ready for Shopify integration
-
-### Product Management
-- 12 sample products (6 t-shirts, 6 phone cases)
-- Product filtering by category
-- Easy-to-extend product structure
-- Rich product information display
-
-## 🚀 Quick Start
-
-### Prerequisites
-- No build tools needed!
-- Works in any modern browser
-- Just open `index.html` in your browser
-
-### Installation
-1. Clone the repository
-2. Open `index.html` in your browser
-3. Start shopping!
-
-## 📁 File Structure
-
-```
-/
-├── index.html                      # Main HTML file
-├── css/
-│   └── styles.css                 # All styling (2000+ lines)
-├── js/
-│   ├── products.js                # Product data
-│   ├── cart.js                    # Cart functionality
-│   └── main.js                    # Main interactions
-├── README.md                       # This file
-└── SHOPIFY_INTEGRATION.md         # Shopify setup guide
-```
-
-## 🛒 Shopping Cart Usage
-
-### For Users
-1. Browse products
-2. Click "Add to Cart" on any product
-3. Use the cart button (top right) to view your cart
-4. Adjust quantities or remove items
-5. Proceed to checkout
-
-### For Developers
-```javascript
-// Access cart programmatically
-cart.addItem(product);
-cart.removeItem(productId);
-cart.updateQuantity(productId, newQuantity);
-cart.getTotal();
-cart.clearCart();
-```
-
-## 🎯 Shopify Integration
-
-Complete integration guide available in `SHOPIFY_INTEGRATION.md`
-
-### Quick Integration Steps:
-1. Update product data with Shopify IDs
-2. Add Shopify Buy SDK to HTML
-3. Configure checkout flow
-4. Deploy to your domain
-
-See `SHOPIFY_INTEGRATION.md` for detailed instructions.
-
-## 🎨 Customization
-
-### Change Colors
-Edit CSS variables in `css/styles.css` (lines 1-15):
-```css
---primary-1: #FF6B6B;     /* Main pink/red */
---primary-2: #4ECDC4;     /* Teal */
---primary-3: #FFD93D;     /* Yellow */
-/* ... more colors ... */
-```
-
-### Add Products
-Edit `js/products.js`:
-```javascript
-{
-    id: 13,
-    name: 'Your Product',
-    category: 'tshirts',
-    price: 29.99,
-    description: 'Your description',
-    image: '👕'
-}
-```
-
-### Modify Animations
-Edit animation timings in `css/styles.css`:
-```css
---transition: 0.3s cubic-bezier(...);
---smooth: 0.5s cubic-bezier(...);
-```
-
-## 📱 Responsive Breakpoints
-
-- **Mobile**: 480px and below
-- **Tablet**: 481px to 768px
-- **Desktop**: 769px and above
-
-## ⚡ Performance
-
-- Lightweight: No external dependencies
-- Fast: Optimized CSS and JavaScript
-- Smooth: 60fps animations
-- Accessible: WCAG compliant design
-
-## 🔍 Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## 📊 Sample Products
-
-### T-Shirts (6 items)
-- Cosmic Rainbow Tee - $34.99
-- Electric Dream Shirt - $36.99
-- Neon Wave Tee - $32.99
-- Sunset Vibes Shirt - $34.99
-- Psychedelic Pop Tee - $37.99
-- Blob Dream Shirt - $35.99
-
-### Phone Cases (6 items)
-- Gradient Glow Case - $24.99
-- Rainbow Splash Case - $26.99
-- Neon Light Case - $23.99
-- Cosmic Phone Shield - $27.99
-- Pastel Dream Case - $22.99
-- Wave Rider Case - $25.99
-
-## 🛠️ Development
-
-### No Build Step Required
-Just edit the files and refresh your browser!
-
-### Key Technologies
-- **HTML5**: Semantic markup
-- **CSS3**: Modern styling with gradients and animations
-- **JavaScript ES6+**: Modern JavaScript features
-
-## 💾 Local Storage
-
-Cart data is automatically saved to browser's localStorage:
-- Key: `cart`
-- Persists across browser sessions
-- Cleared on manual cart clear
-
-## 🚀 Deployment
-
-### Simple Deployment
-1. Upload files to any web hosting
-2. No backend required
-3. Add Shopify integration
-4. Go live!
-
-### Recommended Hosting
-- Netlify (free tier available)
-- Vercel
-- GitHub Pages
-- Your own server
-
-## 📝 License
-
-This project is ready for commercial use. Customize and deploy freely.
-
-## ✨ Features Highlight
-
-- 🎨 **Trending Design**: Modern gradient colors and smooth animations
-- 🛍️ **Easy Shopping**: Intuitive cart and checkout
-- 📱 **Mobile Ready**: Responsive design on all devices
-- ⚡ **Fast**: No dependencies, instant load time
-- 🔗 **Shopify Ready**: Built for Shopify integration
-- 🎯 **Expandable**: Easy to add products and customize
-
-## 🎬 Demo Sections
-
-### Hero Section
-- Large eye-catching headline
-- Call-to-action button
-- Animated blob background
-
-### Featured Products
-- Carousel-style display
-- Hot/New/Sale badges
-- Smooth hover effects
-
-### All Products Grid
-- Filterable by category
-- 12 sample products
-- Product details and pricing
-
-### Shopping Cart
-- Slide-out sidebar
-- Item management
-- Real-time total calculation
-
-### About Section
-- Brand story
-- Statistics showcase
-- Community feel
-
-### Contact Section
-- Newsletter signup
-- Contact form
-- Customer support
-
-### Footer
-- Navigation links
-- Social media links
-- Copyright info
+No build step, no dependencies. Open `index.html` and it runs.
 
 ---
 
-**Status**: Production Ready  
-**Version**: 1.0  
-**Last Updated**: 2024  
+## Running it
 
-Made with 🎨 for creative brands
+```bash
+python3 -m http.server 8000     # or: npx http-server -p 8000
+```
+
+Then open <http://localhost:8000>.
+
+Opening `index.html` as a `file://` URL mostly works, but `localStorage` and
+relative asset paths behave better over HTTP — use the server.
+
+---
+
+## What's here
+
+| Path | What it is |
+|---|---|
+| `index.html` | Home — 15 sections, hero through footer |
+| `shop.html` | Full catalog, filters, sort, size guide, FAQ |
+| `about.html` | Brand story, process, sustainability |
+| `css/styles.css` | The whole design system |
+| `js/products.js` | Catalog data, reviews, FAQ copy |
+| `js/cart.js` | Cart state + drawer |
+| `js/main.js` | Rendering, filters, reveal animations |
+| `js/shopify.js` | **The only file that talks to Shopify** |
+| `assets/*.svg` | 84 generated artwork files |
+| `tools/gen_assets.py` | Regenerates `assets/` |
+
+### Home page sections
+
+Announcement bar → nav → split-colour hero → marquee → editorial statement →
+four value pillars → best sellers → stockist logos → category tiles → process
+collage → full filterable grid → featured drop → review wall → stats →
+lookbook → FAQ accordion → newsletter → marquee → footer.
+
+---
+
+## The artwork
+
+Every image is a flat SVG generated by `tools/gen_assets.py` — 20 products ×
+3 colourways, plus posters, retailer badges and reviewer avatars. The whole set
+is 340KB and loads with zero external requests.
+
+```bash
+python3 tools/gen_assets.py
+```
+
+**These are placeholders for real photography.** They're deliberately graphic
+rather than fake photos, so the site looks intentional until you shoot product.
+To swap one in, drop a real image at the same path — `assets/<slug>--<colour>.svg`
+— or change the extension in `window.PRODUCT_IMAGE` in `js/products.js`.
+
+To add a new print pattern, write a function in `gen_assets.py` that draws into
+a given box, register it in the `ARTS` dict, and reference it from `CATALOG`.
+
+---
+
+## The cart
+
+Lives in `js/cart.js`. A line is keyed on **slug + colourway + size**, so the
+same tee in two colours is two lines.
+
+- Persists to `localStorage` under `FT_CART_V1`
+- Drops saved lines whose product no longer exists, so editing the catalog
+  can't leave a stale cart rendering blank cards
+- Free-shipping progress meter driven by `Shop.CONFIG.freeShippingThreshold`
+- Quantity stepper, remove, live subtotal
+
+From the console:
+
+```js
+Cart.lines            // current contents
+Cart.add('cosmic-checker', 'pink', 'M')
+Cart.subtotal()
+Cart.clear()
+```
+
+---
+
+## Connecting Shopify
+
+Everything Shopify-related is in `js/shopify.js`. Nothing else in the codebase
+knows Shopify exists — the rest of the site reads `window.PRODUCTS` and calls
+`Shop.checkout(lines)`.
+
+**1. Get a Storefront API token.** Shopify admin → Settings → Apps and sales
+channels → Develop apps → create an app → enable the Storefront API → copy the
+public access token.
+
+> Use a **Storefront** token, not an Admin API token. Storefront tokens are
+> designed to be public and scoped to read-only catalog plus cart operations.
+> An Admin token in client-side JavaScript would expose your whole store.
+
+**2. Fill in `CONFIG` at the top of `js/shopify.js`:**
+
+```js
+const CONFIG = {
+  enabled: true,                        // ← flip this
+  domain: 'your-store.myshopify.com',
+  token: 'your-storefront-token',
+  apiVersion: '2025-01',
+  currency: 'GBP',
+  currencySymbol: '£',
+  freeShippingThreshold: 50
+};
+```
+
+**3. Match your Shopify product options.** The variant mapper expects two
+options named **Colour** (or Color) and **Size**. Colour values should match the
+colourway names used for the artwork filenames — `pink`, `blue`, `lime`,
+`orange`, `purple`, `cyan`, `yellow`, `red`, `black`, `cream` — or upload real
+photos and let the `image` field from Shopify take over.
+
+That's it. On load, `Shop.init()` replaces `window.PRODUCTS` with live data;
+`Shop.checkout()` creates a Shopify cart and redirects to hosted checkout.
+
+**Failure behaviour is deliberate:** if the Shopify fetch fails, the site logs a
+warning and keeps rendering the local catalog rather than showing a blank page.
+Watch the console for `[shop] catalog source:` to see which one is live.
+
+While `enabled` is `false`, clicking Checkout logs the payload it *would* have
+sent and shows a toast. Useful for verifying line data before you wire the token.
+
+---
+
+## Customising
+
+**Colours** — the palette is CSS custom properties at the top of `styles.css`:
+
+```css
+--red: #E03127;  --yellow: #FFC72C;  --ink: #141414;  --cream: #FBF3E4;
+```
+
+Structural colour (bands, buttons, borders) is red/yellow/black/cream. The loud
+product colours are a separate set used only for swatches and artwork — keeping
+them apart is what stops the page turning into noise.
+
+**Section backgrounds** — put `band--red`, `band--yellow`, `band--cream`,
+`band--paper` or `band--ink` on any `<section class="band">`. Alternating them
+is the main rhythm of the design.
+
+**Copy** — product names, taglines, reviews and FAQ answers all live in
+`js/products.js`.
+
+---
+
+## Known limitations
+
+- **Fonts load from Google Fonts.** If that request fails the page falls back to
+  Impact / Helvetica and still reads fine, but for production you should
+  self-host the three families (Archivo Black, DM Sans, Caveat) to drop the
+  external dependency and the render delay.
+- **No product detail pages yet.** Everything adds to cart from the grid via
+  quick-add. A `product.html` template reading `?slug=` would be the natural
+  next step.
+- **The contact and newsletter forms are front-end only.** They validate and
+  show a toast; nothing is sent anywhere. Wire them to your ESP or a form
+  service before launch.
+- **Review counts, ratings and stockist logos are placeholder content.** Replace
+  them with real data before going live — fabricated social proof on a real
+  store is a legal problem, not just a taste one.
+
+---
+
+## Deploying
+
+Static hosting, nothing to build:
+
+```bash
+netlify deploy --prod --dir .
+# or: vercel --prod
+# or: push to GitHub and enable Pages
+```
