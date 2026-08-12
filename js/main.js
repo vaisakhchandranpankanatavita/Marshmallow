@@ -147,10 +147,15 @@
       return;
     }
 
+
+    // Count against every active filter except this row's own, so a chip never
+    // advertises a number that yields an empty grid when clicked.
     const subs = window.SUBCATEGORIES[filter] || [];
     const counts = {};
     window.PRODUCTS.forEach(p => {
-      if (p.category === filter) counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
+      if (p.category !== filter) return;
+      if (theme && p.theme !== theme) return;
+      counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
     });
 
     row.hidden = false;
@@ -158,7 +163,7 @@
       `<button class="chip chip--sub" data-sub="" aria-pressed="${sub === null}">
          All ${window.CATEGORY_LABEL[filter]}
        </button>` +
-      subs.map(sc => `
+      subs.filter(sc => counts[sc.id] || sc.id === sub).map(sc => `
         <button class="chip chip--sub" data-sub="${sc.id}" aria-pressed="${sub === sc.id}"
                 title="${sc.blurb}">
           ${sc.label} <span class="chip__n">${counts[sc.id] || 0}</span>
@@ -171,15 +176,16 @@
   function renderThemes() {
     const row = $('themefilters');
     if (!row) return;
-    const pool = filter === 'all'
-      ? window.PRODUCTS
-      : window.PRODUCTS.filter(p => p.category === filter);
     const counts = {};
-    pool.forEach(p => { counts[p.theme] = (counts[p.theme] || 0) + 1; });
+    window.PRODUCTS.forEach(p => {
+      if (filter !== 'all' && p.category !== filter) return;
+      if (sub && p.subcategory !== sub) return;
+      counts[p.theme] = (counts[p.theme] || 0) + 1;
+    });
 
     row.innerHTML =
       `<button class="chip chip--theme" data-theme="" aria-pressed="${theme === null}">All themes</button>` +
-      window.THEMES.filter(t => counts[t.id]).map(t => `
+      window.THEMES.filter(t => counts[t.id] || t.id === theme).map(t => `
         <button class="chip chip--theme" data-theme="${t.id}" aria-pressed="${theme === t.id}"
                 title="${t.blurb}">
           <span aria-hidden="true">${t.emoji}</span> ${t.label}
@@ -208,7 +214,14 @@
   }
 
   function initFilters() {
-    if (!$('mainGrid')) return;
+    const grid = $('mainGrid');
+    if (!grid) return;
+
+    /* Dedicated category pages pin the grid to one category. The category chip
+       row is absent there, so `filter` must not be reachable from the UI —
+       otherwise a stray deep-link could drop phone cases onto the tee page. */
+    const locked = grid.dataset.lockedCategory || null;
+    if (locked) filter = locked;
 
     // A "Tees" link on another page hands its choice over through sessionStorage.
     // Value is "category" or "category:subcategory".
@@ -217,6 +230,11 @@
       const [cat, subId, themeId] = handoff.split(':');
       if (cat === 'theme') {
         theme = subId || null;            // "theme:anime"
+      } else if (locked) {
+        // On a locked page the category is fixed; only carry the finer filters,
+        // and only when the incoming category matches this page.
+        if (cat === locked) { sub = subId || null; theme = themeId || null; }
+        else if (themeId) { theme = themeId; }
       } else {
         filter = cat || 'all';            // "cases", "cases:magsafe", "tees::anime"
         sub = subId || null;
@@ -227,7 +245,7 @@
 
     $('filters')?.addEventListener('click', e => {
       const b = e.target.closest('[data-filter]');
-      if (!b) return;
+      if (!b || locked) return;
       filter = b.dataset.filter;
       sub = null;                 // a new category invalidates the old subcategory
       applyFilters();
