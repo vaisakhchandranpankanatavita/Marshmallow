@@ -2,7 +2,7 @@
 
 (function () {
   const $ = id => document.getElementById(id);
-  const money = n => window.Shop.money(n);
+  const money = n => window.Store.money(n);
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
   /* ---------------------------------------------------------------- toast */
@@ -42,6 +42,7 @@
         <div class="card__body">
           <div class="card__meta">
             <span class="card__sub">${window.SUBCATEGORY_LABEL(p.category, p.subcategory)}</span>
+            <span class="card__theme">${window.THEME_LABEL(p.theme)}</span>
             <span class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} (${p.reviews})</span>
           </div>
           <h3 class="card__name">${p.name}</h3>
@@ -68,7 +69,7 @@
     el.innerHTML = products.length
       ? products.map((p, i) => cardHTML(p, i)).join('')
       : `<p style="grid-column:1/-1;text-align:center;padding:3rem 0;opacity:.7">
-           Nothing matches that filter yet.</p>`;
+           Nothing matches all of those filters. Try clearing the theme or the fit.</p>`;
   }
 
   /* Card interactions are delegated from the document, so grids can re-render
@@ -117,6 +118,7 @@
   const FILTER_KEY = 'FT_FILTER';
   let filter = 'all';
   let sub = null;          // subcategory id, only meaningful when filter !== 'all'
+  let theme = null;        // theme id — independent of category
   let sort = 'featured';
 
   function visible() {
@@ -125,6 +127,7 @@
       : window.PRODUCTS.filter(p => p.category === filter);
 
     if (sub) out = out.filter(p => p.subcategory === sub);
+    if (theme) out = out.filter(p => p.theme === theme);
 
     if (sort === 'price-asc') out.sort((a, b) => a.price - b.price);
     else if (sort === 'price-desc') out.sort((a, b) => b.price - a.price);
@@ -162,6 +165,28 @@
         </button>`).join('');
   }
 
+  /* Themes cross both categories, so this row is always available — unlike the
+     subcategory row, which only makes sense once a category is chosen. Counts
+     respect the current category so a theme showing "0" is never offered. */
+  function renderThemes() {
+    const row = $('themefilters');
+    if (!row) return;
+    const pool = filter === 'all'
+      ? window.PRODUCTS
+      : window.PRODUCTS.filter(p => p.category === filter);
+    const counts = {};
+    pool.forEach(p => { counts[p.theme] = (counts[p.theme] || 0) + 1; });
+
+    row.innerHTML =
+      `<button class="chip chip--theme" data-theme="" aria-pressed="${theme === null}">All themes</button>` +
+      window.THEMES.filter(t => counts[t.id]).map(t => `
+        <button class="chip chip--theme" data-theme="${t.id}" aria-pressed="${theme === t.id}"
+                title="${t.blurb}">
+          <span aria-hidden="true">${t.emoji}</span> ${t.label}
+          <span class="chip__n">${counts[t.id]}</span>
+        </button>`).join('');
+  }
+
   function applyFilters() {
     const list = visible();
     renderGrid($('mainGrid'), list);
@@ -172,6 +197,7 @@
     $('filters')?.querySelectorAll('[data-filter]').forEach(b =>
       b.setAttribute('aria-pressed', b.dataset.filter === filter));
     renderSubfilters();
+    renderThemes();
 
     const note = $('subNote');
     if (note) {
@@ -188,9 +214,14 @@
     // Value is "category" or "category:subcategory".
     const handoff = sessionStorage.getItem(FILTER_KEY);
     if (handoff) {
-      const [cat, subId] = handoff.split(':');
-      filter = cat;
-      sub = subId || null;
+      const [cat, subId, themeId] = handoff.split(':');
+      if (cat === 'theme') {
+        theme = subId || null;            // "theme:anime"
+      } else {
+        filter = cat || 'all';            // "cases", "cases:magsafe", "tees::anime"
+        sub = subId || null;
+        theme = themeId || null;
+      }
       sessionStorage.removeItem(FILTER_KEY);
     }
 
@@ -206,6 +237,13 @@
       const b = e.target.closest('[data-sub]');
       if (!b) return;
       sub = b.dataset.sub || null;
+      applyFilters();
+    });
+
+    $('themefilters')?.addEventListener('click', e => {
+      const b = e.target.closest('[data-theme]');
+      if (!b) return;
+      theme = b.dataset.theme || null;
       applyFilters();
     });
 
@@ -233,6 +271,26 @@
       .sort((a, b) => b.reviews - a.reviews)
       .slice(0, 6);
     renderGrid(el, best);
+  }
+
+  function initThemeTiles() {
+    const el = $('themeTiles');
+    if (!el) return;
+    const counts = {};
+    window.PRODUCTS.forEach(p => { counts[p.theme] = (counts[p.theme] || 0) + 1; });
+    el.innerHTML = window.THEMES.map(t => `
+      <a class="themetile" href="shop.html#grid" data-filter-link="theme:${t.id}">
+        <span class="themetile__emoji" aria-hidden="true">${t.emoji}</span>
+        <h3>${t.label}</h3>
+        <p>${t.blurb}</p>
+        <span class="themetile__n">${counts[t.id] || 0} designs</span>
+      </a>`).join('');
+    // These are injected, so they miss the document-load binding pass.
+    el.querySelectorAll('[data-filter-link]').forEach(link => {
+      link.addEventListener('click', () => {
+        sessionStorage.setItem('FT_FILTER', link.dataset.filterLink);
+      });
+    });
   }
 
   function initReviews() {
@@ -295,10 +353,11 @@
   /* ---------------------------------------------------------------- boot */
 
   async function boot() {
-    const status = await window.Shop.init();
-    console.info(`[shop] catalog source: ${status.source} (${status.count} products)`);
+    const status = await window.Store.init();
+    console.info(`[store] catalog source: ${status.source} (${status.count} products)`);
 
     initBestSellers();
+    initThemeTiles();
     initFilters();
     initReviews();
     initFaq();

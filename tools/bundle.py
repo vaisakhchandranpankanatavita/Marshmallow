@@ -63,7 +63,7 @@ def main():
     html = html.replace('href="index.html"', 'href="#top"')
 
     # --- inline the scripts ----------------------------------------------
-    for name in ("products.js", "shopify.js", "cart.js", "auth.js", "main.js", "scroll.js"):
+    for name in ("products.js", "store.js", "cart.js", "auth.js", "main.js", "scroll.js"):
         src = read("js", name)
         if name == "products.js":
             # PRODUCT_IMAGE builds "assets/<slug>--<colour>.svg" at runtime, so
@@ -94,17 +94,27 @@ def main():
         html = html.replace(f'"{path}"', f'"{uri}"')
 
     # --- expose the map to the runtime -----------------------------------
+    # It goes immediately before the first inlined script, NOT at the top of the
+    # document. The map is ~400KB; putting it first would push both the <title>
+    # past the host's 8KB scan and the charset declaration past the 1024 bytes a
+    # browser reads when sniffing the encoding — which decodes every ₹, ★ and →
+    # as mojibake.
     entries = ",\n".join(f'  {k!r}: {v!r}' for k, v in assets.items())
     asset_script = "<script>\nwindow.ASSET_MAP = {\n" + entries + "\n};\n</script>\n"
-    html = asset_script + html
+    first_script = html.find("<script>")
+    if first_script == -1:
+        raise SystemExit("bundle: no inlined <script> found to anchor the asset map")
+    html = html[:first_script] + asset_script + html[first_script:]
 
-    # Title has to sit in the first 8KB for the host to find it, and the asset
-    # map is large — so hoist it above everything.
+    # Hoist the title, then declare the charset ahead of everything. The host
+    # supplies its own <head>, so this <meta> lands in the body — but the
+    # encoding sniffer scans the first 1024 bytes of the document regardless of
+    # where the tag sits, so being first is what makes it work.
     m = re.search(r"(?is)<title>.*?</title>", html)
     if m:
         html = m.group(0) + "\n" + html.replace(m.group(0), "", 1)
 
-    html = "<a id=\"top\"></a>\n" + html if "id=\"top\"" not in html else html
+    html = '<meta charset="utf-8">\n<a id="top"></a>\n' + html
 
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(html)

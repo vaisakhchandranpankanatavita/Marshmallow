@@ -15,9 +15,15 @@
  *     form that looks real but accepts anything is how people end up typing a
  *     password they actually use.
  *
- * Before launch, delete the fake checks below and hand the whole flow to
- * Shopify's Customer Account API, which already does email/OTP login, password
- * reset and order history. Do not build your own credential store.
+ * Before launch, delete the fake checks below and put a real identity provider
+ * behind this. Do not hand-roll credential storage — password hashing, OTP rate
+ * limiting, session rotation and reset flows are all easy to get subtly wrong.
+ *
+ * For an Indian storefront the practical options are a managed auth service
+ * (Firebase Auth, Supabase Auth, Auth0, Clerk) or your own backend fronting an
+ * SMS provider (MSG91, Twilio) for the OTP path. Whichever you pick, the OTP
+ * must be generated and verified server-side — an OTP the client can see or
+ * compare against is not a second factor.
  */
 
 window.Auth = (function () {

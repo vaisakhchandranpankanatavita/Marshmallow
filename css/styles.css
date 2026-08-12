@@ -855,3 +855,106 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   .subfilters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .4rem; }
   .chip--sub { flex: none; }
 }
+
+/* ==================================================== PARALLEL SCROLL BANDS */
+/* Columns that travel in opposite directions as the section crosses the
+   viewport. Distinct from the drift on .hero__art — here the opposing motion
+   between neighbouring columns is the effect. */
+
+.parallel {
+  position: relative;
+  overflow: hidden;
+  height: clamp(520px, 84vh, 780px);
+  border-block: 3px solid var(--ink);
+  background: var(--ink);
+}
+
+.parallel__cols {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.parallel__col {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  will-change: transform;
+}
+
+.parallel__col img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 3px solid var(--ink);
+  border-radius: var(--r);
+  background: var(--paper);
+}
+
+/* Legibility plate — the columns behind it are busy by design. */
+.parallel__plate {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center,
+              rgba(20,20,20,.92) 0%, rgba(20,20,20,.78) 45%, rgba(20,20,20,.35) 100%);
+}
+.parallel__plate > div { pointer-events: auto; max-width: 46ch; }
+.parallel__plate .kicker { color: var(--yellow); display: block; margin-bottom: .8rem; }
+.parallel__plate h2 { color: var(--cream); }
+.parallel__plate p { color: var(--cream); opacity: .85; margin: 1rem auto 1.6rem; }
+
+@media (max-width: 900px) {
+  .parallel__cols { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 620px) {
+  .parallel__cols { grid-template-columns: repeat(2, 1fr); gap: .6rem; padding: .6rem; }
+  .parallel__col { gap: .6rem; }
+  .parallel { height: clamp(460px, 72vh, 620px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Without motion the columns are just decoration, so stop them mid-frame
+     rather than leaving a static wall of images pretending to be a feature. */
+  .parallel__col { transform: none !important; }
+}
+
+/* ========================================================= THEME FILTER ROW */
+
+.themefilters {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+.chip--theme { border-width: 2px; font-size: .78rem; padding: .45rem 1rem; display: inline-flex; align-items: center; gap: .35rem; }
+
+.card__theme {
+  font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  border: 2px solid currentColor; border-radius: 99px;
+  padding: .1rem .45rem; opacity: .6; white-space: nowrap;
+}
+.card__meta { flex-wrap: wrap; row-gap: .35rem; }
+
+/* Theme browse tiles */
+.themetiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+.themetile {
+  border: var(--edge); border-radius: var(--r);
+  background: var(--cream); color: var(--ink);
+  padding: 1.2rem 1rem; text-align: center;
+  transition: transform var(--base), box-shadow var(--base), background var(--fast);
+}
+.themetile:hover { transform: translateY(-5px); box-shadow: 6px 8px 0 var(--ink); background: var(--yellow); }
+.themetile__emoji { font-size: 2rem; display: block; margin-bottom: .5rem; }
+.themetile h3 { font-family: var(--display); text-transform: uppercase; font-size: .95rem; margin-bottom: .3rem; }
+.themetile p { font-size: .76rem; opacity: .7; }
+.themetile__n { display: block; margin-top: .5rem; font-size: .7rem; font-weight: 700; opacity: .5; }
+
+@media (max-width: 760px) {
+  .themefilters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .4rem; }
+  .chip--theme { flex: none; }
+}

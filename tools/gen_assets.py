@@ -230,12 +230,168 @@ def art_zigzag(x, y, w, h, c1, c2):
     return "".join(out)
 
 
+def art_anime_eye(x, y, w, h, c1, c2):
+    cx, cy = x + w / 2, y + h / 2
+    ew, eh = w * 0.38, h * 0.30
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<path d="M {cx-ew} {cy} Q {cx} {cy-eh*1.5} {cx+ew} {cy} Q {cx} {cy+eh*1.2} {cx-ew} {cy} Z" fill="{c2}"/>'
+        f'<ellipse cx="{cx}" cy="{cy-eh*.08}" rx="{ew*.5}" ry="{eh*.78}" fill="{c1}"/>'
+        f'<ellipse cx="{cx}" cy="{cy-eh*.08}" rx="{ew*.26}" ry="{eh*.44}" fill="{c2}"/>'
+        f'<circle cx="{cx-ew*.2}" cy="{cy-eh*.42}" r="{ew*.15}" fill="{c1}"/>'
+        f'<circle cx="{cx+ew*.18}" cy="{cy+eh*.24}" r="{ew*.08}" fill="{c1}"/>'
+        f'<path d="M {cx-ew*1.05} {cy-eh*.55} L {cx-ew*.55} {cy-eh*.85}" stroke="{c2}" stroke-width="{h*.045}" stroke-linecap="round"/>'
+        f'<path d="M {cx+ew*.55} {cy-eh*.85} L {cx+ew*1.05} {cy-eh*.55}" stroke="{c2}" stroke-width="{h*.045}" stroke-linecap="round"/>'
+    )
+
+
+def art_speed(x, y, w, h, c1, c2):
+    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}"/>']
+    for i in range(9):
+        yy = y + h * (i + .5) / 9
+        ln = w * (0.35 + 0.6 * abs(math.sin(i * 1.1)))
+        out.append(f'<rect x="{x}" y="{yy - h*.028:.1f}" width="{ln:.1f}" height="{h*.056:.1f}" rx="{h*.028:.1f}" fill="{c2}"/>')
+    return "".join(out)
+
+
+def art_cartoon_face(x, y, w, h, c1, c2):
+    cx, cy, R = x + w / 2, y + h / 2, min(w, h) * 0.42
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{c2}"/>'
+        f'<ellipse cx="{cx-R*.36}" cy="{cy-R*.22}" rx="{R*.19}" ry="{R*.25}" fill="{c1}"/>'
+        f'<ellipse cx="{cx+R*.36}" cy="{cy-R*.22}" rx="{R*.19}" ry="{R*.25}" fill="{c1}"/>'
+        f'<circle cx="{cx-R*.3}" cy="{cy-R*.18}" r="{R*.09}" fill="{c2}"/>'
+        f'<circle cx="{cx+R*.42}" cy="{cy-R*.18}" r="{R*.09}" fill="{c2}"/>'
+        f'<path d="M {cx-R*.48} {cy+R*.24} Q {cx} {cy+R*.86} {cx+R*.48} {cy+R*.24} Z" fill="{c1}"/>'
+        f'<path d="M {cx-R*.2} {cy+R*.55} Q {cx} {cy+R*.9} {cx+R*.2} {cy+R*.55} Z" fill="{c2}"/>'
+    )
+
+
+def art_bomb(x, y, w, h, c1, c2):
+    cx, cy, R = x + w / 2, y + h * 0.6, min(w, h) * 0.3
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{c2}"/>'
+        f'<rect x="{cx-R*.22}" y="{cy-R*1.32}" width="{R*.44}" height="{R*.36}" rx="{R*.08}" fill="{c2}"/>'
+        f'<path d="M {cx} {cy-R*1.32} Q {cx+R*.7} {cy-R*1.9} {cx+R*.35} {cy-R*2.3}" stroke="{c2}" stroke-width="{R*.16}" fill="none" stroke-linecap="round"/>'
+        f'<circle cx="{cx+R*.3}" cy="{cy-R*2.4}" r="{R*.2}" fill="{c2}"/>'
+        f'<circle cx="{cx-R*.34}" cy="{cy-R*.3}" r="{R*.16}" fill="{c1}"/>'
+    )
+
+
+def art_car(x, y, w, h, c1, c2):
+    bx, by, bw, bh = x + w * .1, y + h * .42, w * .8, h * .22
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<path d="M {bx} {by+bh} L {bx} {by+bh*.35} Q {bx+bw*.06} {by} {bx+bw*.3} {by-bh*.55} '
+        f'L {bx+bw*.62} {by-bh*.55} Q {bx+bw*.8} {by} {bx+bw*.94} {by+bh*.2} '
+        f'L {bx+bw} {by+bh} Z" fill="{c2}"/>'
+        f'<rect x="{bx+bw*.16}" y="{by-bh*.4}" width="{bw*.24}" height="{bh*.5}" rx="{bh*.1}" fill="{c1}"/>'
+        f'<rect x="{bx+bw*.46}" y="{by-bh*.4}" width="{bw*.22}" height="{bh*.5}" rx="{bh*.1}" fill="{c1}"/>'
+        f'<circle cx="{bx+bw*.26}" cy="{by+bh}" r="{bh*.52}" fill="{c2}"/>'
+        f'<circle cx="{bx+bw*.26}" cy="{by+bh}" r="{bh*.22}" fill="{c1}"/>'
+        f'<circle cx="{bx+bw*.76}" cy="{by+bh}" r="{bh*.52}" fill="{c2}"/>'
+        f'<circle cx="{bx+bw*.76}" cy="{by+bh}" r="{bh*.22}" fill="{c1}"/>'
+        f'<rect x="{x+w*.06}" y="{by+bh*1.9}" width="{w*.42}" height="{h*.035}" rx="{h*.02}" fill="{c2}"/>'
+        f'<rect x="{x+w*.06}" y="{by+bh*2.5}" width="{w*.28}" height="{h*.035}" rx="{h*.02}" fill="{c2}"/>'
+    )
+
+
+def art_controller(x, y, w, h, c1, c2):
+    gx, gy, gw, gh = x + w * .1, y + h * .34, w * .8, h * .34
+    cx, cy = gx + gw / 2, gy + gh / 2
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<rect x="{gx}" y="{gy}" width="{gw}" height="{gh}" rx="{gh*.46}" fill="{c2}"/>'
+        f'<rect x="{cx-gw*.34}" y="{cy-gh*.06}" width="{gw*.2}" height="{gh*.12}" rx="{gh*.05}" fill="{c1}"/>'
+        f'<rect x="{cx-gw*.29}" y="{cy-gh*.19}" width="{gw*.1}" height="{gh*.38}" rx="{gh*.05}" fill="{c1}"/>'
+        f'<circle cx="{cx+gw*.2}" cy="{cy-gh*.14}" r="{gh*.1}" fill="{c1}"/>'
+        f'<circle cx="{cx+gw*.32}" cy="{cy+gh*.02}" r="{gh*.1}" fill="{c1}"/>'
+        f'<circle cx="{cx+gw*.08}" cy="{cy+gh*.02}" r="{gh*.1}" fill="{c1}"/>'
+        f'<circle cx="{cx+gw*.2}" cy="{cy+gh*.18}" r="{gh*.1}" fill="{c1}"/>'
+    )
+
+
+def art_pixel_heart(x, y, w, h, c1, c2):
+    grid = [
+        "0110110",
+        "1111111",
+        "1111111",
+        "0111110",
+        "0011100",
+        "0001000",
+    ]
+    cw, ch = w / 7, h / 6
+    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}"/>']
+    for r, row in enumerate(grid):
+        for c, v in enumerate(row):
+            if v == "1":
+                out.append(f'<rect x="{x+c*cw:.1f}" y="{y+r*ch:.1f}" width="{cw+0.6:.1f}" height="{ch+0.6:.1f}" fill="{c2}"/>')
+    return "".join(out)
+
+
+def art_cassette(x, y, w, h, c1, c2):
+    bx, by, bw, bh = x + w * .1, y + h * .3, w * .8, h * .4
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<rect x="{bx}" y="{by}" width="{bw}" height="{bh}" rx="{bh*.12}" fill="{c2}"/>'
+        f'<rect x="{bx+bw*.12}" y="{by+bh*.16}" width="{bw*.76}" height="{bh*.4}" rx="{bh*.08}" fill="{c1}"/>'
+        f'<circle cx="{bx+bw*.3}" cy="{by+bh*.36}" r="{bh*.13}" fill="{c2}"/>'
+        f'<circle cx="{bx+bw*.7}" cy="{by+bh*.36}" r="{bh*.13}" fill="{c2}"/>'
+        f'<rect x="{bx+bw*.24}" y="{by+bh*.7}" width="{bw*.52}" height="{bh*.16}" rx="{bh*.06}" fill="{c1}"/>'
+    )
+
+
+def art_note(x, y, w, h, c1, c2):
+    cx = x + w / 2
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<rect x="{cx-w*.02}" y="{y+h*.2}" width="{w*.06}" height="{h*.46}" fill="{c2}"/>'
+        f'<rect x="{cx+w*.2}" y="{y+h*.14}" width="{w*.06}" height="{h*.46}" fill="{c2}"/>'
+        f'<path d="M {cx-w*.02} {y+h*.2} L {cx+w*.26} {y+h*.14} L {cx+w*.26} {y+h*.26} L {cx-w*.02} {y+h*.32} Z" fill="{c2}"/>'
+        f'<ellipse cx="{cx-w*.09}" cy="{y+h*.68}" rx="{w*.11}" ry="{h*.08}" fill="{c2}" transform="rotate(-18 {cx-w*.09} {y+h*.68})"/>'
+        f'<ellipse cx="{cx+w*.13}" cy="{y+h*.62}" rx="{w*.11}" ry="{h*.08}" fill="{c2}" transform="rotate(-18 {cx+w*.13} {y+h*.62})"/>'
+    )
+
+
+def art_planet(x, y, w, h, c1, c2):
+    cx, cy, R = x + w / 2, y + h * .52, min(w, h) * 0.26
+    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}"/>']
+    for sx, sy, sr in [(.16, .18, .035), (.82, .26, .028), (.74, .8, .032), (.2, .82, .026), (.5, .12, .022)]:
+        out.append(f'<circle cx="{x+w*sx:.1f}" cy="{y+h*sy:.1f}" r="{min(w,h)*sr:.1f}" fill="{c2}"/>')
+    out.append(f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{c2}"/>')
+    out.append(f'<circle cx="{cx-R*.3}" cy="{cy-R*.28}" r="{R*.2}" fill="{c1}" opacity=".5"/>')
+    out.append(f'<circle cx="{cx+R*.34}" cy="{cy+R*.22}" r="{R*.14}" fill="{c1}" opacity=".5"/>')
+    out.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{R*1.75}" ry="{R*.42}" fill="none" stroke="{c2}" stroke-width="{R*.16}" transform="rotate(-18 {cx} {cy})"/>')
+    return "".join(out)
+
+
+def art_rocket(x, y, w, h, c1, c2):
+    cx = x + w / 2
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c1}" rx="{w*.06}"/>'
+        f'<path d="M {cx} {y+h*.12} Q {cx+w*.16} {y+h*.4} {cx+w*.14} {y+h*.66} '
+        f'L {cx-w*.14} {y+h*.66} Q {cx-w*.16} {y+h*.4} {cx} {y+h*.12} Z" fill="{c2}"/>'
+        f'<circle cx="{cx}" cy="{y+h*.4}" r="{w*.07}" fill="{c1}"/>'
+        f'<path d="M {cx-w*.14} {y+h*.52} L {cx-w*.28} {y+h*.72} L {cx-w*.14} {y+h*.66} Z" fill="{c2}"/>'
+        f'<path d="M {cx+w*.14} {y+h*.52} L {cx+w*.28} {y+h*.72} L {cx+w*.14} {y+h*.66} Z" fill="{c2}"/>'
+        f'<path d="M {cx-w*.07} {y+h*.68} Q {cx} {y+h*.92} {cx+w*.07} {y+h*.68} Z" fill="{c2}"/>'
+    )
+
+
 ARTS = {
     "checker": art_checker, "smiley": art_smiley, "flames": art_flames,
     "stripes": art_stripes, "star": art_star, "waves": art_waves,
     "bolt": art_bolt, "eye": art_eye, "daisy": art_daisy,
     "spiral": art_spiral, "mushroom": art_mushroom, "rainbow": art_rainbow,
     "zigzag": art_zigzag,
+    # themed
+    "animeeye": art_anime_eye, "speed": art_speed,
+    "toonface": art_cartoon_face, "bomb": art_bomb,
+    "car": art_car, "controller": art_controller, "pixelheart": art_pixel_heart,
+    "cassette": art_cassette, "note": art_note,
+    "planet": art_planet, "rocket": art_rocket,
 }
 
 
@@ -429,51 +585,69 @@ def avatar(initials, bg, fg=CREAM, s=120):
 
 # --------------------------------------------------------------------------
 
-# (slug, kind, art, variant, colourways[(name, hex, ink)])
-# variant is a tee fit or a case kind — it drives the silhouette.
+# (slug, kind, art, variant, theme, colourways[(name, hex, ink)])
 P = PAL
 CATALOG = [
     # ---- oversized tees ----
-    ("cosmic-checker",  "tee", "checker",  "oversized", [("pink", P["pink"], INK), ("blue", P["blue"], P["lime"]), ("black", P["black"], P["cyan"])]),
-    ("acid-smiley",     "tee", "smiley",   "oversized", [("lime", P["lime"], INK), ("purple", P["purple"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
-    ("hot-flames",      "tee", "flames",   "oversized", [("orange", P["orange"], INK), ("black", P["black"], P["orange"]), ("red", P["red"], P["yellow"])]),
-    ("supernova",       "tee", "star",     "oversized", [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("blue", P["blue"], P["yellow"])]),
-    ("hypnotica",       "tee", "spiral",   "oversized", [("black", P["black"], P["cream"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
-    ("third-eye",       "tee", "eye",      "oversized", [("purple", P["purple"], P["cream"]), ("cream", P["cream"], P["purple"]), ("black", P["black"], P["lime"])]),
+    ("cosmic-checker",  "tee", "checker",  "oversized", "abstract", [("pink", P["pink"], INK), ("blue", P["blue"], P["lime"]), ("black", P["black"], P["cyan"])]),
+    ("acid-smiley",     "tee", "smiley",   "oversized", "cartoon",  [("lime", P["lime"], INK), ("purple", P["purple"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
+    ("hot-flames",      "tee", "flames",   "oversized", "cars",     [("orange", P["orange"], INK), ("black", P["black"], P["orange"]), ("red", P["red"], P["yellow"])]),
+    ("supernova",       "tee", "star",     "oversized", "space",    [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("blue", P["blue"], P["yellow"])]),
+    ("hypnotica",       "tee", "spiral",   "oversized", "abstract", [("black", P["black"], P["cream"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
+    ("third-eye",       "tee", "eye",      "oversized", "abstract", [("purple", P["purple"], P["cream"]), ("cream", P["cream"], P["purple"]), ("black", P["black"], P["lime"])]),
+    ("senpai-stare",    "tee", "animeeye", "oversized", "anime",    [("pink", P["pink"], INK), ("black", P["black"], P["pink"]), ("cream", P["cream"], P["purple"])]),
+    ("toon-town",       "tee", "toonface", "oversized", "cartoon",  [("yellow", P["yellow"], INK), ("cyan", P["cyan"], INK), ("orange", P["orange"], INK)]),
+    ("redline",         "tee", "car",      "oversized", "cars",     [("red", P["red"], P["cream"]), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
     # ---- classic fit tees ----
-    ("sunset-stripe",   "tee", "stripes",  "classic",   [("yellow", P["yellow"], P["red"]), ("cyan", P["cyan"], P["purple"]), ("cream", P["cream"], P["blue"])]),
-    ("tidal",           "tee", "waves",    "classic",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("lime", P["lime"], P["purple"])]),
-    ("high-voltage",    "tee", "bolt",     "classic",   [("black", P["black"], P["yellow"]), ("yellow", P["yellow"], INK), ("pink", P["pink"], P["cyan"])]),
-    ("shroom-boom",     "tee", "mushroom", "classic",   [("lime", P["lime"], P["red"]), ("cream", P["cream"], P["purple"]), ("blue", P["blue"], P["orange"])]),
-    ("double-rainbow",  "tee", "rainbow",  "classic",   [("blue", P["blue"], P["cream"]), ("cream", P["cream"], P["pink"]), ("black", P["black"], P["yellow"])]),
+    ("sunset-stripe",   "tee", "stripes",  "classic",   "abstract", [("yellow", P["yellow"], P["red"]), ("cyan", P["cyan"], P["purple"]), ("cream", P["cream"], P["blue"])]),
+    ("tidal",           "tee", "waves",    "classic",   "nature",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("lime", P["lime"], P["purple"])]),
+    ("high-voltage",    "tee", "bolt",     "classic",   "abstract", [("black", P["black"], P["yellow"]), ("yellow", P["yellow"], INK), ("pink", P["pink"], P["cyan"])]),
+    ("shroom-boom",     "tee", "mushroom", "classic",   "nature",   [("lime", P["lime"], P["red"]), ("cream", P["cream"], P["purple"]), ("blue", P["blue"], P["orange"])]),
+    ("double-rainbow",  "tee", "rainbow",  "classic",   "nature",   [("blue", P["blue"], P["cream"]), ("cream", P["cream"], P["pink"]), ("black", P["black"], P["yellow"])]),
+    ("continue-y-n",    "tee", "controller","classic",  "gaming",   [("black", P["black"], P["lime"]), ("purple", P["purple"], P["cyan"]), ("cream", P["cream"], P["red"])]),
+    ("tape-deck",       "tee", "cassette", "classic",   "music",    [("orange", P["orange"], INK), ("black", P["black"], P["cyan"]), ("yellow", P["yellow"], P["purple"])]),
+    ("orbit",           "tee", "planet",   "classic",   "space",    [("black", P["black"], P["cyan"]), ("blue", P["blue"], P["yellow"]), ("purple", P["purple"], P["lime"])]),
     # ---- crop tees ----
-    ("daisy-crop",      "tee", "daisy",    "crop",      [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["yellow"]), ("lime", P["lime"], P["red"])]),
-    ("checker-crop",    "tee", "checker",  "crop",      [("cyan", P["cyan"], INK), ("black", P["black"], P["pink"]), ("yellow", P["yellow"], P["purple"])]),
-    ("smiley-crop",     "tee", "smiley",   "crop",      [("purple", P["purple"], P["lime"]), ("orange", P["orange"], INK), ("cream", P["cream"], P["red"])]),
-    ("zigzag-crop",     "tee", "zigzag",   "crop",      [("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["blue"]), ("blue", P["blue"], P["yellow"])]),
+    ("daisy-crop",      "tee", "daisy",    "crop",      "nature",   [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["yellow"]), ("lime", P["lime"], P["red"])]),
+    ("checker-crop",    "tee", "checker",  "crop",      "abstract", [("cyan", P["cyan"], INK), ("black", P["black"], P["pink"]), ("yellow", P["yellow"], P["purple"])]),
+    ("smiley-crop",     "tee", "smiley",   "crop",      "cartoon",  [("purple", P["purple"], P["lime"]), ("orange", P["orange"], INK), ("cream", P["cream"], P["red"])]),
+    ("zigzag-crop",     "tee", "zigzag",   "crop",      "abstract", [("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["blue"]), ("blue", P["blue"], P["yellow"])]),
+    ("one-up-crop",     "tee", "pixelheart","crop",     "gaming",   [("lime", P["lime"], INK), ("pink", P["pink"], P["cream"]), ("black", P["black"], P["lime"])]),
+    ("speedlines-crop", "tee", "speed",    "crop",      "anime",    [("cream", P["cream"], P["red"]), ("cyan", P["cyan"], INK), ("yellow", P["yellow"], P["purple"])]),
     # ---- full sleeve tees ----
-    ("bolt-sleeve",     "tee", "bolt",     "longsleeve",[("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"]), ("red", P["red"], P["cream"])]),
-    ("spiral-sleeve",   "tee", "spiral",   "longsleeve",[("cream", P["cream"], P["purple"]), ("purple", P["purple"], P["cream"]), ("black", P["black"], P["cyan"])]),
-    ("wave-sleeve",     "tee", "waves",    "longsleeve",[("blue", P["blue"], P["cream"]), ("cyan", P["cyan"], INK), ("lime", P["lime"], P["purple"])]),
+    ("bolt-sleeve",     "tee", "bolt",     "longsleeve","abstract", [("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"]), ("red", P["red"], P["cream"])]),
+    ("spiral-sleeve",   "tee", "spiral",   "longsleeve","abstract", [("cream", P["cream"], P["purple"]), ("purple", P["purple"], P["cream"]), ("black", P["black"], P["cyan"])]),
+    ("wave-sleeve",     "tee", "waves",    "longsleeve","nature",   [("blue", P["blue"], P["cream"]), ("cyan", P["cyan"], INK), ("lime", P["lime"], P["purple"])]),
+    ("mecha-sleeve",    "tee", "animeeye", "longsleeve","anime",    [("black", P["black"], P["red"]), ("purple", P["purple"], P["cream"]), ("cream", P["cream"], P["blue"])]),
+    ("launch-sleeve",   "tee", "rocket",   "longsleeve","space",    [("blue", P["blue"], P["yellow"]), ("black", P["black"], P["orange"]), ("cream", P["cream"], P["red"])]),
 
     # ---- tough cases ----
-    ("checker-tough",   "case", "checker", "tough",     [("pink", P["pink"], INK), ("lime", P["lime"], INK), ("black", P["black"], P["cyan"])]),
-    ("flame-tough",     "case", "flames",  "tough",     [("black", P["black"], P["orange"]), ("orange", P["orange"], INK), ("red", P["red"], P["yellow"])]),
-    ("bolt-tough",      "case", "bolt",    "tough",     [("yellow", P["yellow"], INK), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
-    ("star-tough",      "case", "star",    "tough",     [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
+    ("checker-tough",   "case", "checker", "tough",     "abstract", [("pink", P["pink"], INK), ("lime", P["lime"], INK), ("black", P["black"], P["cyan"])]),
+    ("flame-tough",     "case", "flames",  "tough",     "cars",     [("black", P["black"], P["orange"]), ("orange", P["orange"], INK), ("red", P["red"], P["yellow"])]),
+    ("bolt-tough",      "case", "bolt",    "tough",     "abstract", [("yellow", P["yellow"], INK), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
+    ("star-tough",      "case", "star",    "tough",     "space",    [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
+    ("redline-tough",   "case", "car",     "tough",     "cars",     [("red", P["red"], P["cream"]), ("black", P["black"], P["yellow"]), ("cream", P["cream"], P["blue"])]),
+    ("respawn-tough",   "case", "controller","tough",   "gaming",   [("black", P["black"], P["lime"]), ("lime", P["lime"], INK), ("purple", P["purple"], P["cyan"])]),
     # ---- slim cases ----
-    ("smiley-slim",     "case", "smiley",  "slim",      [("yellow", P["yellow"], INK), ("purple", P["purple"], P["yellow"]), ("cyan", P["cyan"], INK)]),
-    ("zigzag-slim",     "case", "zigzag",  "slim",      [("cream", P["cream"], P["blue"]), ("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["purple"])]),
-    ("wave-slim",       "case", "waves",   "slim",      [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("purple", P["purple"], P["lime"])]),
-    ("daisy-slim",      "case", "daisy",   "slim",      [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["lime"]), ("lime", P["lime"], P["red"])]),
+    ("smiley-slim",     "case", "smiley",  "slim",      "cartoon",  [("yellow", P["yellow"], INK), ("purple", P["purple"], P["yellow"]), ("cyan", P["cyan"], INK)]),
+    ("zigzag-slim",     "case", "zigzag",  "slim",      "abstract", [("cream", P["cream"], P["blue"]), ("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["purple"])]),
+    ("wave-slim",       "case", "waves",   "slim",      "nature",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("purple", P["purple"], P["lime"])]),
+    ("daisy-slim",      "case", "daisy",   "slim",      "nature",   [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["lime"]), ("lime", P["lime"], P["red"])]),
+    ("toon-slim",       "case", "toonface","slim",      "cartoon",  [("cyan", P["cyan"], INK), ("yellow", P["yellow"], INK), ("pink", P["pink"], P["cream"])]),
+    ("mixtape-slim",    "case", "cassette","slim",      "music",    [("orange", P["orange"], INK), ("black", P["black"], P["cyan"]), ("cream", P["cream"], P["red"])]),
     # ---- clear cases ----
-    ("mushroom-clear",  "case", "mushroom","clear",     [("cream", P["cream"], P["lime"]), ("cyan", P["cyan"], P["purple"]), ("pink", P["pink"], P["red"])]),
-    ("daisy-clear",     "case", "daisy",   "clear",     [("cream", P["cream"], P["pink"]), ("lime", P["lime"], P["orange"]), ("blue", P["blue"], P["yellow"])]),
-    ("eye-clear",       "case", "eye",     "clear",     [("cream", P["cream"], P["purple"]), ("cyan", P["cyan"], INK), ("yellow", P["yellow"], P["red"])]),
+    ("mushroom-clear",  "case", "mushroom","clear",     "nature",   [("cream", P["cream"], P["lime"]), ("cyan", P["cyan"], P["purple"]), ("pink", P["pink"], P["red"])]),
+    ("daisy-clear",     "case", "daisy",   "clear",     "nature",   [("cream", P["cream"], P["pink"]), ("lime", P["lime"], P["orange"]), ("blue", P["blue"], P["yellow"])]),
+    ("eye-clear",       "case", "eye",     "clear",     "abstract", [("cream", P["cream"], P["purple"]), ("cyan", P["cyan"], INK), ("yellow", P["yellow"], P["red"])]),
+    ("senpai-clear",    "case", "animeeye","clear",     "anime",    [("cream", P["cream"], P["pink"]), ("pink", P["pink"], INK), ("cyan", P["cyan"], P["purple"])]),
+    ("heart-clear",     "case", "pixelheart","clear",   "gaming",   [("cream", P["cream"], P["red"]), ("lime", P["lime"], INK), ("cyan", P["cyan"], P["purple"])]),
     # ---- magsafe cases ----
-    ("spiral-mag",      "case", "spiral",  "magsafe",   [("purple", P["purple"], P["cream"]), ("red", P["red"], P["cream"]), ("black", P["black"], P["pink"])]),
-    ("rainbow-mag",     "case", "rainbow", "magsafe",   [("blue", P["blue"], P["cream"]), ("black", P["black"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
-    ("stripe-mag",      "case", "stripes", "magsafe",   [("yellow", P["yellow"], P["red"]), ("pink", P["pink"], P["cream"]), ("black", P["black"], P["lime"])]),
+    ("spiral-mag",      "case", "spiral",  "magsafe",   "abstract", [("purple", P["purple"], P["cream"]), ("red", P["red"], P["cream"]), ("black", P["black"], P["pink"])]),
+    ("rainbow-mag",     "case", "rainbow", "magsafe",   "nature",   [("blue", P["blue"], P["cream"]), ("black", P["black"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
+    ("stripe-mag",      "case", "stripes", "magsafe",   "abstract", [("yellow", P["yellow"], P["red"]), ("pink", P["pink"], P["cream"]), ("black", P["black"], P["lime"])]),
+    ("orbit-mag",       "case", "planet",  "magsafe",   "space",    [("black", P["black"], P["cyan"]), ("blue", P["blue"], P["yellow"]), ("purple", P["purple"], P["lime"])]),
+    ("bassline-mag",    "case", "note",    "magsafe",   "music",    [("purple", P["purple"], P["yellow"]), ("black", P["black"], P["pink"]), ("orange", P["orange"], INK)]),
+    ("boom-mag",        "case", "bomb",    "magsafe",   "cartoon",  [("red", P["red"], P["cream"]), ("yellow", P["yellow"], INK), ("cyan", P["cyan"], INK)]),
 ]
 
 POSTERS = [
@@ -481,8 +655,8 @@ POSTERS = [
     ("story-2.svg",  ["Screen", "Printed"],       P["yellow"], INK,        P["red"],    "by hand"),
     ("story-3.svg",  ["Small", "Batch"],          P["blue"],   CREAM,      P["lime"],   "no reprints"),
     ("story-4.svg",  ["Packed", "In Bengaluru"],  P["pink"],   CREAM,      P["yellow"], "shipped fast"),
-    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "18 designs"),
-    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "14 designs"),
+    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "28 designs"),
+    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "23 designs"),
     ("look-1.svg",   ["Loud"],                    P["purple"], P["lime"],  P["yellow"], None),
     ("look-2.svg",   ["Proud"],                   P["orange"], INK,        P["cream"],  None),
     ("look-3.svg",   ["Never", "Basic"],          P["cyan"],   INK,        P["red"],    None),
@@ -504,7 +678,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     n = 0
 
-    for slug, kind, art, variant, ways in CATALOG:
+    for slug, kind, art, variant, theme, ways in CATALOG:
         for cname, chex, cink in ways:
             uid = f"{slug}{cname}".replace("-", "")
             svg = (tee(chex, art, cink, CREAM, uid, variant) if kind == "tee"

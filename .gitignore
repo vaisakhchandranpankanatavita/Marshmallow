@@ -1,0 +1,12 @@
+# Secrets — never commit. Qikink credentials, gateway keys, SMS provider tokens.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+node_modules/
+dist/
+.DS_Store
+preview.html
+_bundle_test.html

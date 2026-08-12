@@ -11,6 +11,7 @@
  *   data-words               splits text into words that rise individually
  *   data-zoom                scales up slightly on entry
  *   data-parallax="0.12"     drifts against the scroll; sets --py on the node
+ *   data-track="0.5"         column in a .parallel section; negative reverses
  *   data-count="2140"        counts up to the number on entry
  *
  * All of it collapses to "just show the content" under prefers-reduced-motion.
@@ -144,6 +145,41 @@
     }
   }
 
+  /* --------------------------------------------- parallel scrolling columns */
+
+  let tracks = [];
+
+  /* Each column is taller than its frame; it starts centred on that overflow
+     and slides across it as the section crosses the viewport, so the column is
+     covered at both extremes and never reveals a gap. */
+  function collectTracks() {
+    tracks = [...document.querySelectorAll('[data-track]')].map(el => {
+      const frame = el.closest('.parallel');
+      const overflow = Math.max(0, el.scrollHeight - (frame ? frame.clientHeight : 0));
+      return {
+        el, frame,
+        speed: parseFloat(el.dataset.track) || 0.5,
+        amplitude: overflow / 2,
+        base: -overflow / 2
+      };
+    });
+    tracks.forEach(t => {
+      t.el.style.transform = `translate3d(0, ${t.base.toFixed(1)}px, 0)`;
+    });
+  }
+
+  function updateTracks(vh, y) {
+    for (const t of tracks) {
+      if (!t.frame || !t.amplitude) continue;
+      const rect = t.frame.getBoundingClientRect();
+      if (rect.bottom < -100 || rect.top > vh + 100) continue;
+      // -1 as the section enters from below, +1 as it leaves past the top.
+      const progress = (vh - rect.top) / (vh + rect.height) * 2 - 1;
+      const offset = t.base + progress * t.amplitude * t.speed;
+      t.el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+    }
+  }
+
   /* ------------------------------------------------- scroll-driven marquee */
 
   const marquees = [];
@@ -212,10 +248,11 @@
 
     updateProgress(y);
     updateParallax(vh, y);
+    updateTracks(vh, y);
     updateMarquees(velocity);
 
     // Marquees animate continuously, so keep ticking while they exist.
-    if (marquees.length || Math.abs(velocity) > 0.05) request();
+    if (marquees.length || tracks.length || Math.abs(velocity) > 0.05) request();
   }
 
   function request() {
@@ -241,6 +278,7 @@
       initReveals();
       if (reduced) return;
       collectParallax();
+      collectTracks();
       request();
     });
 
@@ -248,12 +286,14 @@
 
     initProgress();
     collectParallax();
+    collectTracks();
     initMarquees();
 
     window.addEventListener('scroll', request, { passive: true });
 
     const remeasure = debounce(() => {
       collectParallax();
+      collectTracks();
       marquees.forEach(m => { m.half = m.track.scrollWidth / 2; });
       request();
     }, 120);

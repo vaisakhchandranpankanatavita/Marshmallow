@@ -6,7 +6,7 @@
 
 window.Cart = (function () {
   const KEY = 'FT_CART_V1';
-  const money = n => window.Shop.money(n);
+  const money = n => window.Store.money(n);
   const keyOf = l => `${l.slug}::${l.colorway}::${l.size}`;
 
   let lines = load();
@@ -132,12 +132,12 @@ window.Cart = (function () {
     $('subtotal').textContent = money(sub);
     $('total').textContent = money(sub);
     $('shipping').textContent =
-      sub >= window.Shop.CONFIG.freeShippingThreshold ? 'Free' : 'Calculated at checkout';
+      sub >= window.Store.CONFIG.freeShippingThreshold ? 'Free' : 'Calculated at checkout';
     const cod = $('codNote');
     if (cod) {
-      const limit = window.Shop.CONFIG.codLimit;
+      const limit = window.Store.CONFIG.codLimit;
       cod.textContent = sub <= limit
-        ? `Cash on Delivery available · +${money(window.Shop.CONFIG.codFee)} handling`
+        ? `Cash on Delivery available · +${money(window.Store.CONFIG.codFee)} handling`
         : `Prepaid only above ${money(limit)}`;
     }
 
@@ -146,7 +146,7 @@ window.Cart = (function () {
   }
 
   function updateShipMeter(sub) {
-    const threshold = window.Shop.CONFIG.freeShippingThreshold;
+    const threshold = window.Store.CONFIG.freeShippingThreshold;
     const fill = $('shipFill');
     const text = $('shipText');
     if (!fill || !text) return;
@@ -187,9 +187,9 @@ window.Cart = (function () {
       btn.disabled = true;
       btn.textContent = 'Taking you to checkout…';
       try {
-        const res = await window.Shop.checkout(lines);
+        const res = await window.Store.checkout(lines);
         if (!res.ok && res.reason === 'disabled') {
-          window.toast('Shopify not connected yet — payload logged to console');
+          window.toast('Order backend not connected — payload logged to console');
         } else if (!res.ok) {
           window.toast(`Checkout failed: ${res.reason}`, true);
         }

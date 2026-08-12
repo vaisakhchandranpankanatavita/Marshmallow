@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shop all — Funky Threads</title>
-<meta name="description" content="All 32 designs: heavyweight screen-printed tees and drop-proof phone cases. Filter by fit and style, sort by price or rating.">
+<meta name="description" content="All 51 designs: heavyweight screen-printed tees and drop-proof phone cases. Filter by fit and style, sort by price or rating.">
 <link rel="icon" href="assets/acid-smiley--lime.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,10 +44,10 @@
 
 <section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
   <div class="shell">
-    <span class="kicker" style="opacity:.8">32 designs · restocked never</span>
+    <span class="kicker" style="opacity:.8">51 designs · restocked never</span>
     <h1 class="display" style="margin-top:.7rem">Shop<br>Everything</h1>
     <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">
-      Eighteen tees across four fits, fourteen cases across four styles, three colourways each. Tap a swatch to see the colour, then quick-add without leaving the grid.
+      Twenty-eight tees across four fits, twenty-three cases across four styles, eight themes, three colourways each. Tap a swatch to see the colour, then quick-add without leaving the grid.
     </p>
   </div>
 </section>
@@ -78,8 +78,64 @@
       </div>
     </div>
     <div class="subfilters" id="subfilters" role="group" aria-label="Filter by style" hidden></div>
+    <div class="themefilters" id="themefilters" role="group" aria-label="Filter by theme"></div>
     <p class="sub-note" id="subNote" hidden></p>
     <div class="grid-products" id="mainGrid" data-stagger></div>
+  </div>
+</section>
+
+<!-- ── parallel scrolling columns ────────────────────────────────────────── -->
+<section class="parallel" id="parallel" aria-label="The full range">
+  <div class="parallel__cols" aria-hidden="true">
+      <div class="parallel__col" data-track="0.9">
+        <img src="assets/cosmic-checker--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/acid-smiley--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/high-voltage--black.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/daisy-crop--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/flame-tough--orange.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/cosmic-checker--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/acid-smiley--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/high-voltage--black.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+      <div class="parallel__col" data-track="-0.75">
+        <img src="assets/smiley-slim--yellow.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/spiral-mag--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/tidal--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/supernova--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/double-rainbow--blue.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/smiley-slim--yellow.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/spiral-mag--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/tidal--cyan.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+      <div class="parallel__col" data-track="0.6">
+        <img src="assets/zigzag-slim--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/third-eye--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/bolt-sleeve--black.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/daisy-clear--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/shroom-boom--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/zigzag-slim--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/third-eye--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/bolt-sleeve--black.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+      <div class="parallel__col" data-track="-0.85">
+        <img src="assets/checker-crop--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/hot-flames--orange.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/wave-slim--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/star-tough--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/hypnotica--black.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/checker-crop--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/hot-flames--orange.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/wave-slim--cyan.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+  </div>
+  <div class="parallel__plate">
+    <div data-reveal>
+      <span class="kicker">51 designs · 8 themes</span>
+      <h2 class="display">Something<br>For Every Mood</h2>
+      <p>Four tee fits, four case styles, three colourways each. Nothing here is
+         a plain grey anything.</p>
+      <a href="#grid" class="btn btn--yellow">Browse the lot <span class="arrow">→</span></a>
+    </div>
   </div>
 </section>
 
@@ -216,7 +272,7 @@
 <div class="toast-stack" id="toasts" aria-live="polite"></div>
 
 <script src="js/products.js"></script>
-<script src="js/shopify.js"></script>
+<script src="js/store.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/main.js"></script>
