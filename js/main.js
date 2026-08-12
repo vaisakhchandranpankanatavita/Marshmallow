@@ -40,7 +40,10 @@
           </div>
         </div>
         <div class="card__body">
-          <div class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} (${p.reviews})</div>
+          <div class="card__meta">
+            <span class="card__sub">${window.SUBCATEGORY_LABEL(p.category, p.subcategory)}</span>
+            <span class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} (${p.reviews})</span>
+          </div>
           <h3 class="card__name">${p.name}</h3>
           <p class="card__tagline">${p.tagline}</p>
           <div class="swatches" role="group" aria-label="Choose a colourway">
@@ -113,6 +116,7 @@
 
   const FILTER_KEY = 'FT_FILTER';
   let filter = 'all';
+  let sub = null;          // subcategory id, only meaningful when filter !== 'all'
   let sort = 'featured';
 
   function visible() {
@@ -120,28 +124,73 @@
       ? window.PRODUCTS.slice()
       : window.PRODUCTS.filter(p => p.category === filter);
 
+    if (sub) out = out.filter(p => p.subcategory === sub);
+
     if (sort === 'price-asc') out.sort((a, b) => a.price - b.price);
     else if (sort === 'price-desc') out.sort((a, b) => b.price - a.price);
     else if (sort === 'rating') out.sort((a, b) => b.rating - a.rating || b.reviews - a.reviews);
     return out;
   }
 
+  /* The subcategory row only exists for a chosen category — "Oversized" is
+     meaningless while phone cases are also in the grid. */
+  function renderSubfilters() {
+    const row = $('subfilters');
+    if (!row) return;
+
+    if (filter === 'all') {
+      row.innerHTML = '';
+      row.hidden = true;
+      return;
+    }
+
+    const subs = window.SUBCATEGORIES[filter] || [];
+    const counts = {};
+    window.PRODUCTS.forEach(p => {
+      if (p.category === filter) counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
+    });
+
+    row.hidden = false;
+    row.innerHTML =
+      `<button class="chip chip--sub" data-sub="" aria-pressed="${sub === null}">
+         All ${window.CATEGORY_LABEL[filter]}
+       </button>` +
+      subs.map(sc => `
+        <button class="chip chip--sub" data-sub="${sc.id}" aria-pressed="${sub === sc.id}"
+                title="${sc.blurb}">
+          ${sc.label} <span class="chip__n">${counts[sc.id] || 0}</span>
+        </button>`).join('');
+  }
+
   function applyFilters() {
     const list = visible();
     renderGrid($('mainGrid'), list);
+
     const count = $('resultCount');
     if (count) count.textContent = `${list.length} product${list.length === 1 ? '' : 's'}`;
+
     $('filters')?.querySelectorAll('[data-filter]').forEach(b =>
       b.setAttribute('aria-pressed', b.dataset.filter === filter));
+    renderSubfilters();
+
+    const note = $('subNote');
+    if (note) {
+      const sc = (window.SUBCATEGORIES[filter] || []).find(x => x.id === sub);
+      note.textContent = sc ? sc.blurb : '';
+      note.hidden = !sc;
+    }
   }
 
   function initFilters() {
     if (!$('mainGrid')) return;
 
     // A "Tees" link on another page hands its choice over through sessionStorage.
+    // Value is "category" or "category:subcategory".
     const handoff = sessionStorage.getItem(FILTER_KEY);
     if (handoff) {
-      filter = handoff;
+      const [cat, subId] = handoff.split(':');
+      filter = cat;
+      sub = subId || null;
       sessionStorage.removeItem(FILTER_KEY);
     }
 
@@ -149,6 +198,14 @@
       const b = e.target.closest('[data-filter]');
       if (!b) return;
       filter = b.dataset.filter;
+      sub = null;                 // a new category invalidates the old subcategory
+      applyFilters();
+    });
+
+    $('subfilters')?.addEventListener('click', e => {
+      const b = e.target.closest('[data-sub]');
+      if (!b) return;
+      sub = b.dataset.sub || null;
       applyFilters();
     });
 
@@ -248,6 +305,7 @@
     initNav();
     initSignup();
     window.Cart.init();
+    window.Auth.init();
 
     // Grids are populated above, so scroll.js has to (re)bind after this.
     // It listens for this rather than racing DOMContentLoaded.

@@ -1,7 +1,8 @@
 # Funky Threads
 
-A content-rich storefront for loud t-shirts and phone cases, with a working
-cart that's built to hand over to Shopify.
+A content-rich storefront for loud t-shirts and phone cases, built for an
+Indian brand — INR pricing, COD, Indian phone models — with a working cart
+that's built to hand over to Shopify.
 
 Design language follows [terryhoproducts.com](https://terryhoproducts.com):
 full-bleed colour bands stacked alternately (red / yellow / cream / black),
@@ -36,9 +37,10 @@ relative asset paths behave better over HTTP — use the server.
 | `css/styles.css` | The whole design system |
 | `js/products.js` | Catalog data, reviews, FAQ copy |
 | `js/cart.js` | Cart state + drawer |
+| `js/auth.js` | Account UI shell — **not real authentication** |
 | `js/main.js` | Rendering, filters, reveal animations |
 | `js/shopify.js` | **The only file that talks to Shopify** |
-| `assets/*.svg` | 84 generated artwork files |
+| `assets/*.svg` | 120 generated artwork files |
 | `tools/gen_assets.py` | Regenerates `assets/` |
 
 ### Home page sections
@@ -67,6 +69,78 @@ To swap one in, drop a real image at the same path — `assets/<slug>--<colour>.
 
 To add a new print pattern, write a function in `gen_assets.py` that draws into
 a given box, register it in the `ARTS` dict, and reference it from `CATALOG`.
+To add a new fit, add an entry to `TEE_FITS` (torso path, sleeve paths, print
+box) — or `CASE_PRINT` plus a branch in `case()` for a new case style.
+
+---
+
+## Catalog structure
+
+Two levels. `category` is `tees` or `cases`; `subcategory` is the fit or style:
+
+| T-Shirts | Phone Cases |
+|---|---|
+| Oversized (6) | Tough (4) |
+| Classic Fit (5) | Slim (4) |
+| Crop (4) | Clear (3) |
+| Full Sleeve (3) | MagSafe (3) |
+
+The subcategory chip row only appears once a category is chosen — "Oversized"
+is meaningless while phone cases are still in the grid — and picking a new
+category clears the old subcategory rather than silently filtering to nothing.
+
+Links can deep-link into a filtered grid with `data-filter-link="cases:magsafe"`.
+The value is handed to the shop page through `sessionStorage`.
+
+Sizes are per category: XS–3XL for tees, and a phone model list weighted to
+what people actually carry in India (OnePlus, Nothing, Redmi, realme, iQOO,
+Samsung) rather than iPhones alone.
+
+---
+
+## Currency
+
+Everything runs through `Shop.money()`, which formats via `toLocaleString('en-IN')`.
+That matters: Indian digit grouping is 2,2,3 from the right, so ₹1,49,999 — not
+₹149,999. Never format prices by hand.
+
+Config lives in `js/shopify.js`:
+
+```js
+currency: 'INR', currencySymbol: '₹', locale: 'en-IN',
+freeShippingThreshold: 1499,   // free-shipping meter in the cart
+codLimit: 3000,                // COD offered below this
+codFee: 49                     // COD handling fee shown in the drawer
+```
+
+The cart's shipping meter and COD note both read these, so changing the
+threshold updates the copy everywhere it appears.
+
+---
+
+## Accounts
+
+`js/auth.js` gives you the whole signed-in/signed-out flow: mobile-OTP and
+email tabs, sign in vs create account, a nav avatar with a dropdown, and a
+session that survives reload.
+
+**It is not authentication.** There is no server. Any OTP is accepted, any
+password is accepted, and the "session" is a name and a contact string in
+`localStorage`. The modal says so, in the modal, every time it opens.
+
+Two deliberate choices:
+
+- **The password is never stored.** It is read for a length check and the field
+  is cleared immediately. It is not persisted, not logged, and does not appear
+  in the session object. There is a test asserting it never reaches
+  `localStorage`.
+- **The demo banner is not removable decoration.** A sign-in form that looks
+  real but accepts anything is how someone ends up typing a password they
+  actually use elsewhere.
+
+Before launch, delete the fake checks and hand the flow to **Shopify's Customer
+Account API**, which already does OTP login, password reset and order history.
+Do not build your own credential store.
 
 ---
 
@@ -154,8 +228,12 @@ them apart is what stops the page turning into noise.
 `band--paper` or `band--ink` on any `<section class="band">`. Alternating them
 is the main rhythm of the design.
 
-**Copy** — product names, taglines, reviews and FAQ answers all live in
-`js/products.js`.
+**Copy** — product names, taglines, subcategory blurbs, reviews and FAQ answers
+all live in `js/products.js`.
+
+**Subcategories** — edit `window.SUBCATEGORIES`. Each entry needs an `id`
+matching the products' `subcategory` field, a `label`, and a short `blurb`
+shown under the filter row.
 
 ---
 
@@ -171,9 +249,17 @@ is the main rhythm of the design.
 - **The contact and newsletter forms are front-end only.** They validate and
   show a toast; nothing is sent anywhere. Wire them to your ESP or a form
   service before launch.
-- **Review counts, ratings and stockist logos are placeholder content.** Replace
-  them with real data before going live — fabricated social proof on a real
-  store is a legal problem, not just a taste one.
+- **The account flow is a UI shell, not authentication.** See the Accounts
+  section above. It must be replaced with Shopify Customer Accounts before
+  anyone can actually sign in.
+- **Review counts, ratings and stockist logos are placeholder content.**
+  Replace them with real data before going live — fabricated social proof and
+  unearned "As stocked at Myntra" claims are a legal problem in India under the
+  Consumer Protection Act's rules on misleading advertisements, not just a
+  taste one. The GSTIN in the footer is fake and must be replaced.
+- **Shopify Payments does not operate in India.** Use Razorpay, PayU or
+  Cashfree as the gateway. The COD copy on the site is only true once you
+  actually configure a COD method at checkout.
 
 ---
 

@@ -241,49 +241,127 @@ ARTS = {
 
 # --------------------------------------------------------------------------
 # garment / case mockups
+#
+# Each fit and case kind gets a genuinely different silhouette — the
+# subcategory filters are only meaningful if the products look different.
 # --------------------------------------------------------------------------
 
-TEE_PATH = (
-    "M 195 130 L 250 108 C 262 142, 338 142, 350 108 L 405 130 L 470 168 "
-    "L 432 236 L 396 216 L 396 492 L 204 492 L 204 216 L 168 236 L 130 168 Z"
-)
+NECK = "M 250 108 C 262 142, 338 142, 350 108"
+
+# fit -> (torso path, [sleeve paths], print box)
+TEE_FITS = {
+    "classic": (
+        "M 195 130 L 250 108 C 262 142, 338 142, 350 108 L 405 130 "
+        "L 396 216 L 396 492 L 204 492 L 204 216 Z",
+        ["M 405 130 L 470 168 L 432 236 L 396 216 Z",
+         "M 195 130 L 130 168 L 168 236 L 204 216 Z"],
+        (232, 250, 136, 148),
+    ),
+    "oversized": (
+        "M 182 132 L 250 106 C 262 142, 338 142, 350 106 L 418 132 "
+        "L 410 234 L 410 504 L 190 504 L 190 234 Z",
+        ["M 418 132 L 494 180 L 452 260 L 410 234 Z",
+         "M 182 132 L 106 180 L 148 260 L 190 234 Z"],
+        (224, 262, 152, 160),
+    ),
+    "crop": (
+        "M 195 130 L 250 108 C 262 142, 338 142, 350 108 L 405 130 "
+        "L 396 216 L 396 396 L 204 396 L 204 216 Z",
+        ["M 405 130 L 470 168 L 432 236 L 396 216 Z",
+         "M 195 130 L 130 168 L 168 236 L 204 216 Z"],
+        (238, 244, 124, 112),
+    ),
+    "longsleeve": (
+        "M 195 130 L 250 108 C 262 142, 338 142, 350 108 L 405 130 "
+        "L 396 216 L 396 492 L 204 492 L 204 216 Z",
+        ["M 405 130 L 464 156 L 512 402 L 462 420 L 398 212 Z",
+         "M 195 130 L 136 156 L 88 402 L 138 420 L 202 212 Z"],
+        (232, 250, 136, 148),
+    ),
+}
 
 
-def tee(body, art_name, ink, bg=CREAM, uid="t"):
-    px, py, pw, ph = 232, 246, 136, 150
+def tee(body, art_name, ink, bg=CREAM, uid="t", fit="classic"):
+    torso, sleeves, (px, py, pw, ph) = TEE_FITS[fit]
     art = ARTS[art_name](px, py, pw, ph, ink, body if body != ink else CREAM)
-    return wrap(
-        f'<rect width="600" height="600" fill="{bg}"/>'
-        f'<defs><clipPath id="pr{uid}">'
-        f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="10"/></clipPath></defs>'
-        f'<path d="{TEE_PATH}" fill="{body}" stroke="{INK}" stroke-width="9" stroke-linejoin="round"/>'
-        f'<path d="M 250 108 C 262 142, 338 142, 350 108" fill="none" stroke="{INK}" stroke-width="9"/>'
-        f'<g clip-path="url(#pr{uid})">{art}</g>'
-        f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="10" fill="none" '
-        f'stroke="{INK}" stroke-width="6"/>'
-        f'<path d="M 204 470 L 396 470" stroke="{INK}" stroke-width="5" opacity=".45"/>'
-    )
+    parts = [f'<rect width="600" height="600" fill="{bg}"/>',
+             f'<defs><clipPath id="pr{uid}">'
+             f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="10"/></clipPath></defs>']
+    for sl in sleeves:
+        parts.append(f'<path d="{sl}" fill="{body}" stroke="{INK}" stroke-width="9" '
+                     f'stroke-linejoin="round"/>')
+    parts.append(f'<path d="{torso}" fill="{body}" stroke="{INK}" stroke-width="9" '
+                 f'stroke-linejoin="round"/>')
+    parts.append(f'<path d="{NECK}" fill="none" stroke="{INK}" stroke-width="9"/>')
+    parts.append(f'<g clip-path="url(#pr{uid})">{art}</g>')
+    parts.append(f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="10" fill="none" '
+                 f'stroke="{INK}" stroke-width="6"/>')
+    if fit == "crop":
+        parts.append('<path d="M 204 380 L 396 380" stroke="%s" stroke-width="5" opacity=".45"/>' % INK)
+    else:
+        hem = 504 if fit == "oversized" else 492
+        parts.append(f'<path d="M 204 {hem-22} L 396 {hem-22}" stroke="{INK}" '
+                     f'stroke-width="5" opacity=".45"/>')
+    if fit == "longsleeve":
+        parts.append(f'<path d="M 466 410 L 508 396" stroke="{INK}" stroke-width="7"/>')
+        parts.append(f'<path d="M 134 410 L 92 396" stroke="{INK}" stroke-width="7"/>')
+    return wrap("".join(parts))
 
 
-def case(body, art_name, ink, bg=CREAM, uid="c"):
-    px, py, pw, ph = 206, 232, 188, 262
+# MagSafe needs headroom under the graphic for the ring, so its print box is
+# shorter than the others rather than having the ring sit on top of the art.
+CASE_PRINT = {
+    "slim":    (206, 236, 188, 254),
+    "tough":   (208, 240, 184, 246),
+    "clear":   (206, 236, 188, 254),
+    "magsafe": (206, 232, 188, 176),
+}
+
+
+def case(body, art_name, ink, bg=CREAM, uid="c", kind="slim"):
+    px, py, pw, ph = CASE_PRINT[kind]
     art = ARTS[art_name](px, py, pw, ph, ink, body if body != ink else CREAM)
-    return wrap(
-        f'<rect width="600" height="600" fill="{bg}"/>'
-        f'<defs><clipPath id="pc{uid}">'
-        f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="16"/></clipPath></defs>'
-        f'<rect x="190" y="86" width="220" height="428" rx="46" fill="{body}" '
-        f'stroke="{INK}" stroke-width="9"/>'
-        f'<g clip-path="url(#pc{uid})">{art}</g>'
-        f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="16" fill="none" '
-        f'stroke="{INK}" stroke-width="6"/>'
-        f'<rect x="212" y="110" width="104" height="104" rx="28" fill="{INK}" opacity=".92"/>'
-        f'<circle cx="243" cy="141" r="17" fill="{CREAM}"/><circle cx="243" cy="141" r="8" fill="{INK}"/>'
-        f'<circle cx="286" cy="141" r="17" fill="{CREAM}"/><circle cx="286" cy="141" r="8" fill="{INK}"/>'
-        f'<circle cx="243" cy="184" r="17" fill="{CREAM}"/><circle cx="243" cy="184" r="8" fill="{INK}"/>'
-        f'<rect x="418" y="180" width="10" height="46" rx="5" fill="{INK}"/>'
-        f'<rect x="418" y="240" width="10" height="72" rx="5" fill="{INK}"/>'
-    )
+    out = [f'<rect width="600" height="600" fill="{bg}"/>',
+           f'<defs><clipPath id="pc{uid}">'
+           f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="16"/></clipPath></defs>']
+
+    if kind == "tough":
+        # chunky outer shell with reinforced corners
+        out.append(f'<rect x="176" y="74" width="248" height="452" rx="54" fill="{INK}"/>')
+        out.append(f'<rect x="188" y="86" width="224" height="428" rx="46" fill="{body}" '
+                   f'stroke="{INK}" stroke-width="9"/>')
+        for cx, cy in [(206, 104), (394, 104), (206, 496), (394, 496)]:
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="15" fill="{INK}" opacity=".85"/>')
+    elif kind == "clear":
+        # translucent shell over a mid-grey handset — a dark phone underneath
+        # dragged every colourway towards mud.
+        out.append(f'<rect x="200" y="96" width="200" height="408" rx="38" fill="#8A8A8A"/>')
+        out.append(f'<rect x="200" y="96" width="200" height="408" rx="38" fill="{CREAM}" '
+                   f'fill-opacity=".35"/>')
+        out.append(f'<rect x="190" y="86" width="220" height="428" rx="46" fill="{body}" '
+                   f'fill-opacity=".5" stroke="{INK}" stroke-width="9"/>')
+    else:
+        out.append(f'<rect x="190" y="86" width="220" height="428" rx="46" fill="{body}" '
+                   f'stroke="{INK}" stroke-width="9"/>')
+
+    out.append(f'<g clip-path="url(#pc{uid})">{art}</g>')
+    out.append(f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="16" fill="none" '
+               f'stroke="{INK}" stroke-width="6"/>')
+
+    if kind == "magsafe":
+        out.append(f'<circle cx="300" cy="452" r="56" fill="none" stroke="{INK}" '
+                   f'stroke-width="8" opacity=".9"/>')
+        out.append(f'<circle cx="300" cy="452" r="38" fill="none" stroke="{INK}" '
+                   f'stroke-width="5" opacity=".5"/>')
+
+    # camera island + side buttons, shared by every kind
+    out.append(f'<rect x="212" y="110" width="104" height="104" rx="28" fill="{INK}" opacity=".92"/>')
+    for cx, cy in [(243, 141), (286, 141), (243, 184)]:
+        out.append(f'<circle cx="{cx}" cy="{cy}" r="17" fill="{CREAM}"/>'
+                   f'<circle cx="{cx}" cy="{cy}" r="8" fill="{INK}"/>')
+    out.append(f'<rect x="418" y="180" width="10" height="46" rx="5" fill="{INK}"/>')
+    out.append(f'<rect x="418" y="240" width="10" height="72" rx="5" fill="{INK}"/>')
+    return wrap("".join(out))
 
 
 # --------------------------------------------------------------------------
@@ -351,51 +429,74 @@ def avatar(initials, bg, fg=CREAM, s=120):
 
 # --------------------------------------------------------------------------
 
-# (slug, kind, art, colourways[(name, hex, ink)])
+# (slug, kind, art, variant, colourways[(name, hex, ink)])
+# variant is a tee fit or a case kind — it drives the silhouette.
+P = PAL
 CATALOG = [
-    ("cosmic-checker",  "tee",  "checker",  [("pink", PAL["pink"], INK), ("blue", PAL["blue"], PAL["lime"]), ("black", PAL["black"], PAL["cyan"])]),
-    ("acid-smiley",     "tee",  "smiley",   [("lime", PAL["lime"], INK), ("purple", PAL["purple"], PAL["yellow"]), ("cream", PAL["cream"], PAL["pink"])]),
-    ("hot-flames",      "tee",  "flames",   [("orange", PAL["orange"], INK), ("black", PAL["black"], PAL["orange"]), ("red", PAL["red"], PAL["yellow"])]),
-    ("sunset-stripe",   "tee",  "stripes",  [("yellow", PAL["yellow"], PAL["red"]), ("cyan", PAL["cyan"], PAL["purple"]), ("cream", PAL["cream"], PAL["blue"])]),
-    ("supernova",       "tee",  "star",     [("purple", PAL["purple"], PAL["lime"]), ("red", PAL["red"], PAL["cream"]), ("blue", PAL["blue"], PAL["yellow"])]),
-    ("tidal",           "tee",  "waves",    [("cyan", PAL["cyan"], INK), ("blue", PAL["blue"], PAL["cream"]), ("lime", PAL["lime"], PAL["purple"])]),
-    ("high-voltage",    "tee",  "bolt",     [("black", PAL["black"], PAL["yellow"]), ("yellow", PAL["yellow"], INK), ("pink", PAL["pink"], PAL["cyan"])]),
-    ("third-eye",       "tee",  "eye",      [("purple", PAL["purple"], PAL["cream"]), ("cream", PAL["cream"], PAL["purple"]), ("black", PAL["black"], PAL["lime"])]),
-    ("daisy-daze",      "tee",  "daisy",    [("cream", PAL["cream"], PAL["orange"]), ("pink", PAL["pink"], PAL["yellow"]), ("lime", PAL["lime"], PAL["red"])]),
-    ("hypnotica",       "tee",  "spiral",   [("black", PAL["black"], PAL["cream"]), ("red", PAL["red"], PAL["cream"]), ("cyan", PAL["cyan"], INK)]),
-    ("shroom-boom",     "tee",  "mushroom", [("lime", PAL["lime"], PAL["red"]), ("cream", PAL["cream"], PAL["purple"]), ("blue", PAL["blue"], PAL["orange"])]),
-    ("double-rainbow",  "tee",  "rainbow",  [("blue", PAL["blue"], PAL["cream"]), ("cream", PAL["cream"], PAL["pink"]), ("black", PAL["black"], PAL["yellow"])]),
-    ("checker-case",    "case", "checker",  [("pink", PAL["pink"], INK), ("lime", PAL["lime"], INK), ("black", PAL["black"], PAL["cyan"])]),
-    ("smiley-case",     "case", "smiley",   [("yellow", PAL["yellow"], INK), ("purple", PAL["purple"], PAL["yellow"]), ("cyan", PAL["cyan"], INK)]),
-    ("flame-case",      "case", "flames",   [("black", PAL["black"], PAL["orange"]), ("orange", PAL["orange"], INK), ("red", PAL["red"], PAL["yellow"])]),
-    ("zigzag-case",     "case", "zigzag",   [("cream", PAL["cream"], PAL["blue"]), ("pink", PAL["pink"], PAL["cream"]), ("lime", PAL["lime"], PAL["purple"])]),
-    ("bolt-case",       "case", "bolt",     [("yellow", PAL["yellow"], INK), ("black", PAL["black"], PAL["yellow"]), ("blue", PAL["blue"], PAL["cream"])]),
-    ("wave-case",       "case", "waves",    [("cyan", PAL["cyan"], INK), ("blue", PAL["blue"], PAL["cream"]), ("purple", PAL["purple"], PAL["lime"])]),
-    ("daisy-case",      "case", "daisy",    [("cream", PAL["cream"], PAL["orange"]), ("pink", PAL["pink"], PAL["lime"]), ("lime", PAL["lime"], PAL["red"])]),
-    ("spiral-case",     "case", "spiral",   [("purple", PAL["purple"], PAL["cream"]), ("red", PAL["red"], PAL["cream"]), ("black", PAL["black"], PAL["pink"])]),
+    # ---- oversized tees ----
+    ("cosmic-checker",  "tee", "checker",  "oversized", [("pink", P["pink"], INK), ("blue", P["blue"], P["lime"]), ("black", P["black"], P["cyan"])]),
+    ("acid-smiley",     "tee", "smiley",   "oversized", [("lime", P["lime"], INK), ("purple", P["purple"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
+    ("hot-flames",      "tee", "flames",   "oversized", [("orange", P["orange"], INK), ("black", P["black"], P["orange"]), ("red", P["red"], P["yellow"])]),
+    ("supernova",       "tee", "star",     "oversized", [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("blue", P["blue"], P["yellow"])]),
+    ("hypnotica",       "tee", "spiral",   "oversized", [("black", P["black"], P["cream"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
+    ("third-eye",       "tee", "eye",      "oversized", [("purple", P["purple"], P["cream"]), ("cream", P["cream"], P["purple"]), ("black", P["black"], P["lime"])]),
+    # ---- classic fit tees ----
+    ("sunset-stripe",   "tee", "stripes",  "classic",   [("yellow", P["yellow"], P["red"]), ("cyan", P["cyan"], P["purple"]), ("cream", P["cream"], P["blue"])]),
+    ("tidal",           "tee", "waves",    "classic",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("lime", P["lime"], P["purple"])]),
+    ("high-voltage",    "tee", "bolt",     "classic",   [("black", P["black"], P["yellow"]), ("yellow", P["yellow"], INK), ("pink", P["pink"], P["cyan"])]),
+    ("shroom-boom",     "tee", "mushroom", "classic",   [("lime", P["lime"], P["red"]), ("cream", P["cream"], P["purple"]), ("blue", P["blue"], P["orange"])]),
+    ("double-rainbow",  "tee", "rainbow",  "classic",   [("blue", P["blue"], P["cream"]), ("cream", P["cream"], P["pink"]), ("black", P["black"], P["yellow"])]),
+    # ---- crop tees ----
+    ("daisy-crop",      "tee", "daisy",    "crop",      [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["yellow"]), ("lime", P["lime"], P["red"])]),
+    ("checker-crop",    "tee", "checker",  "crop",      [("cyan", P["cyan"], INK), ("black", P["black"], P["pink"]), ("yellow", P["yellow"], P["purple"])]),
+    ("smiley-crop",     "tee", "smiley",   "crop",      [("purple", P["purple"], P["lime"]), ("orange", P["orange"], INK), ("cream", P["cream"], P["red"])]),
+    ("zigzag-crop",     "tee", "zigzag",   "crop",      [("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["blue"]), ("blue", P["blue"], P["yellow"])]),
+    # ---- full sleeve tees ----
+    ("bolt-sleeve",     "tee", "bolt",     "longsleeve",[("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"]), ("red", P["red"], P["cream"])]),
+    ("spiral-sleeve",   "tee", "spiral",   "longsleeve",[("cream", P["cream"], P["purple"]), ("purple", P["purple"], P["cream"]), ("black", P["black"], P["cyan"])]),
+    ("wave-sleeve",     "tee", "waves",    "longsleeve",[("blue", P["blue"], P["cream"]), ("cyan", P["cyan"], INK), ("lime", P["lime"], P["purple"])]),
+
+    # ---- tough cases ----
+    ("checker-tough",   "case", "checker", "tough",     [("pink", P["pink"], INK), ("lime", P["lime"], INK), ("black", P["black"], P["cyan"])]),
+    ("flame-tough",     "case", "flames",  "tough",     [("black", P["black"], P["orange"]), ("orange", P["orange"], INK), ("red", P["red"], P["yellow"])]),
+    ("bolt-tough",      "case", "bolt",    "tough",     [("yellow", P["yellow"], INK), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
+    ("star-tough",      "case", "star",    "tough",     [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
+    # ---- slim cases ----
+    ("smiley-slim",     "case", "smiley",  "slim",      [("yellow", P["yellow"], INK), ("purple", P["purple"], P["yellow"]), ("cyan", P["cyan"], INK)]),
+    ("zigzag-slim",     "case", "zigzag",  "slim",      [("cream", P["cream"], P["blue"]), ("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["purple"])]),
+    ("wave-slim",       "case", "waves",   "slim",      [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("purple", P["purple"], P["lime"])]),
+    ("daisy-slim",      "case", "daisy",   "slim",      [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["lime"]), ("lime", P["lime"], P["red"])]),
+    # ---- clear cases ----
+    ("mushroom-clear",  "case", "mushroom","clear",     [("cream", P["cream"], P["lime"]), ("cyan", P["cyan"], P["purple"]), ("pink", P["pink"], P["red"])]),
+    ("daisy-clear",     "case", "daisy",   "clear",     [("cream", P["cream"], P["pink"]), ("lime", P["lime"], P["orange"]), ("blue", P["blue"], P["yellow"])]),
+    ("eye-clear",       "case", "eye",     "clear",     [("cream", P["cream"], P["purple"]), ("cyan", P["cyan"], INK), ("yellow", P["yellow"], P["red"])]),
+    # ---- magsafe cases ----
+    ("spiral-mag",      "case", "spiral",  "magsafe",   [("purple", P["purple"], P["cream"]), ("red", P["red"], P["cream"]), ("black", P["black"], P["pink"])]),
+    ("rainbow-mag",     "case", "rainbow", "magsafe",   [("blue", P["blue"], P["cream"]), ("black", P["black"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
+    ("stripe-mag",      "case", "stripes", "magsafe",   [("yellow", P["yellow"], P["red"]), ("pink", P["pink"], P["cream"]), ("black", P["black"], P["lime"])]),
 ]
 
 POSTERS = [
-    ("story-1.svg",  ["Cut &", "Sewn"],        PAL["red"],    CREAM,         PAL["yellow"], "the studio"),
-    ("story-2.svg",  ["Screen", "Printed"],    PAL["yellow"], INK,           PAL["red"],    "by hand"),
-    ("story-3.svg",  ["Small", "Batch"],       PAL["blue"],   CREAM,         PAL["lime"],   "no reprints"),
-    ("story-4.svg",  ["Packed", "With Love"],  PAL["pink"],   CREAM,         PAL["yellow"], "shipped fast"),
-    ("cat-tees.svg", ["Tees"],                 PAL["red"],    CREAM,         PAL["yellow"], "12 designs"),
-    ("cat-cases.svg",["Cases"],                PAL["blue"],   CREAM,         PAL["lime"],   "8 designs"),
-    ("look-1.svg",   ["Loud"],                 PAL["purple"], PAL["lime"],   PAL["yellow"], None),
-    ("look-2.svg",   ["Proud"],                PAL["orange"], INK,           PAL["cream"],  None),
-    ("look-3.svg",   ["Never", "Basic"],       PAL["cyan"],   INK,           PAL["red"],    None),
-    ("look-4.svg",   ["Wear", "It Loud"],      INK,           PAL["yellow"], PAL["pink"],   None),
-    ("look-5.svg",   ["Colour", "Riot"],       PAL["lime"],   INK,           PAL["purple"], None),
-    ("look-6.svg",   ["Own It"],               PAL["pink"],   CREAM,         PAL["cyan"],   None),
-    ("drop.svg",     ["Drop", "007"],          PAL["yellow"], INK,           PAL["red"],    "out now"),
+    ("story-1.svg",  ["Cotton", "From Tiruppur"], P["red"],    CREAM,      P["yellow"], "the blanks"),
+    ("story-2.svg",  ["Screen", "Printed"],       P["yellow"], INK,        P["red"],    "by hand"),
+    ("story-3.svg",  ["Small", "Batch"],          P["blue"],   CREAM,      P["lime"],   "no reprints"),
+    ("story-4.svg",  ["Packed", "In Bengaluru"],  P["pink"],   CREAM,      P["yellow"], "shipped fast"),
+    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "18 designs"),
+    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "14 designs"),
+    ("look-1.svg",   ["Loud"],                    P["purple"], P["lime"],  P["yellow"], None),
+    ("look-2.svg",   ["Proud"],                   P["orange"], INK,        P["cream"],  None),
+    ("look-3.svg",   ["Never", "Basic"],          P["cyan"],   INK,        P["red"],    None),
+    ("look-4.svg",   ["Wear", "It Loud"],         INK,         P["yellow"],P["pink"],   None),
+    ("look-5.svg",   ["Colour", "Riot"],          P["lime"],   INK,        P["purple"], None),
+    ("look-6.svg",   ["Own It"],                  P["pink"],   CREAM,      P["cyan"],   None),
+    ("drop.svg",     ["Drop", "007"],             P["yellow"], INK,        P["red"],    "out now"),
 ]
 
-RETAILERS = ["Urban Outfitters", "ASOS", "Dolls Kill", "Zumiez", "Hot Topic"]
+RETAILERS = ["Myntra", "Ajio", "Nykaa Fashion", "Tata CLiQ", "Amazon.in"]
 
 REVIEWERS = [
-    ("MJ", PAL["pink"]), ("TK", PAL["blue"]), ("AR", PAL["lime"]),
-    ("SD", PAL["purple"]), ("LO", PAL["orange"]), ("BW", PAL["cyan"]),
+    ("AS", P["pink"]), ("RK", P["blue"]), ("PN", P["lime"]),
+    ("MD", P["purple"]), ("SI", P["orange"]), ("KV", P["cyan"]),
 ]
 
 
@@ -403,11 +504,12 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     n = 0
 
-    for slug, kind, art, ways in CATALOG:
-        maker = tee if kind == "tee" else case
+    for slug, kind, art, variant, ways in CATALOG:
         for cname, chex, cink in ways:
-            uid = f"{slug}-{cname}".replace("-", "")
-            write(f"{slug}--{cname}.svg", maker(chex, art, cink, CREAM, uid))
+            uid = f"{slug}{cname}".replace("-", "")
+            svg = (tee(chex, art, cink, CREAM, uid, variant) if kind == "tee"
+                   else case(chex, art, cink, CREAM, uid, variant))
+            write(f"{slug}--{cname}.svg", svg)
             n += 1
 
     for name, lines, bg, fg, accent, kicker in POSTERS:
@@ -415,7 +517,7 @@ def main():
         n += 1
 
     for r in RETAILERS:
-        write("retailer-" + r.lower().replace(" ", "-") + ".svg", badge(r))
+        write("retailer-" + r.lower().replace(" ", "-").replace(".", "-") + ".svg", badge(r))
         n += 1
 
     for ini, col in REVIEWERS:

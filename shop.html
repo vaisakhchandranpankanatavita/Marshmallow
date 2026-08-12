@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shop all — Funky Threads</title>
-<meta name="description" content="All 20 designs: heavyweight screen-printed tees and drop-proof phone cases. Filter by category, sort by price or rating.">
+<meta name="description" content="All 32 designs: heavyweight screen-printed tees and drop-proof phone cases. Filter by fit and style, sort by price or rating.">
 <link rel="icon" href="assets/acid-smiley--lime.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="topbar">Free UK shipping over £50 · 30-day no-questions returns · Drop 007 is live</div>
+<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns · Drop 007 is live</div>
 
 <header class="nav" id="nav">
   <div class="shell nav__inner">
@@ -29,6 +29,11 @@
       <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
+      <div class="account">
+        <button class="account-btn" id="accountBtn" aria-label="Sign in"
+                aria-expanded="false" aria-haspopup="true"></button>
+        <div class="account__menu" id="accountMenu" hidden></div>
+      </div>
       <button class="cart-btn" id="cartOpen" aria-label="Open cart">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>
@@ -39,18 +44,18 @@
 
 <section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
   <div class="shell">
-    <span class="kicker" style="opacity:.8">20 designs · restocked never</span>
+    <span class="kicker" style="opacity:.8">32 designs · restocked never</span>
     <h1 class="display" style="margin-top:.7rem">Shop<br>Everything</h1>
     <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">
-      Twelve tees, eight cases, three colourways each. Tap a swatch to see the colour, then quick-add without leaving the grid.
+      Eighteen tees across four fits, fourteen cases across four styles, three colourways each. Tap a swatch to see the colour, then quick-add without leaving the grid.
     </p>
   </div>
 </section>
 
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track">
-    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ Free returns</span>
-    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ Free returns</span>
+    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ COD available</span>
+    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ COD available</span>
   </div>
 </div>
 
@@ -59,8 +64,8 @@
     <div class="toolbar">
       <div class="chips" id="filters" role="group" aria-label="Filter by category">
         <button class="chip" data-filter="all" aria-pressed="true">All</button>
-        <button class="chip" data-filter="tees" aria-pressed="false">Tees</button>
-        <button class="chip" data-filter="cases" aria-pressed="false">Cases</button>
+        <button class="chip" data-filter="tees" aria-pressed="false">T-Shirts</button>
+        <button class="chip" data-filter="cases" aria-pressed="false">Phone Cases</button>
       </div>
       <div style="display:flex;gap:1rem;align-items:center">
         <span class="result-count" id="resultCount"></span>
@@ -72,6 +77,8 @@
         </select>
       </div>
     </div>
+    <div class="subfilters" id="subfilters" role="group" aria-label="Filter by style" hidden></div>
+    <p class="sub-note" id="subNote" hidden></p>
     <div class="grid-products" id="mainGrid" data-stagger></div>
   </div>
 </section>
@@ -82,7 +89,7 @@
     <div data-reveal>
       <span class="kicker">Measured flat, in centimetres</span>
       <h2 class="display" style="margin:.6rem 0 1rem">Will It<br>Fit?</h2>
-      <p class="lead">Our tees are cut boxy — a shorter body and a wider chest than a standard fit. If you like things closer to the body, take one size down.</p>
+      <p class="lead">Our Oversized fit is boxy with a dropped shoulder — take one size down if you want it closer to the body. Classic Fit is true to size. Measurements below are for Classic Fit.</p>
       <ul class="feature__list">
         <li><strong>XS</strong> · chest 50cm · length 66cm</li>
         <li><strong>S</strong> · chest 53cm · length 69cm</li>
@@ -90,6 +97,7 @@
         <li><strong>L</strong> · chest 59cm · length 74cm</li>
         <li><strong>XL</strong> · chest 62cm · length 76cm</li>
         <li><strong>2XL</strong> · chest 65cm · length 79cm</li>
+        <li><strong>3XL</strong> · chest 68cm · length 81cm</li>
       </ul>
       <p style="font-size:.88rem;opacity:.75">Still unsure? Email your usual size in a brand you own and we'll tell you what to order.</p>
     </div>
@@ -128,7 +136,7 @@
     <div class="footer__top">
       <div class="footer__brand">
         <span class="nav__logo">Funky<b>Threads</b></span>
-        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Manchester railway arch since 2019.</p>
+        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
       </div>
       <div>
         <h4>Shop</h4>
@@ -159,8 +167,8 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© 2026 Funky Threads Ltd. Made in Manchester.</span>
-      <div class="pay"><span>VISA</span><span>MC</span><span>AMEX</span><span>PAYPAL</span><span>APPLE PAY</span></div>
+      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
+      <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
     </div>
   </div>
 </footer>
@@ -172,24 +180,45 @@
     <button class="drawer__close" id="cartClose" aria-label="Close cart">✕</button>
   </div>
   <div class="ship-meter" id="shipMeter">
-    <p id="shipText">Spend £50 for free UK shipping</p>
+    <p id="shipText">Spend ₹1,499 for free shipping</p>
     <div class="ship-meter__bar"><div class="ship-meter__fill" id="shipFill"></div></div>
   </div>
   <div class="drawer__items" id="drawerItems"></div>
   <div class="drawer__foot" id="drawerFoot" hidden>
-    <div class="drawer__row"><span>Subtotal</span><span id="subtotal">£0.00</span></div>
+    <div class="drawer__row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
     <div class="drawer__row"><span>Shipping</span><span id="shipping">Calculated at checkout</span></div>
-    <div class="drawer__row drawer__row--total"><span>Total</span><span id="total">£0.00</span></div>
+    <div class="drawer__row" style="font-size:.78rem;opacity:.7"><span id="codNote"></span></div>
+    <div class="drawer__row drawer__row--total"><span>Total</span><span id="total">₹0</span></div>
     <button class="btn btn--block" id="checkout">Checkout</button>
-    <p class="drawer__note">Taxes calculated at checkout · Shopify-ready</p>
+    <p class="drawer__note">GST included · COD available up to ₹3,000</p>
   </div>
 </aside>
+
+<div class="auth" id="authModal" role="dialog" aria-modal="true"
+     aria-labelledby="authTitle" aria-hidden="true">
+  <div class="auth__scrim" id="authScrim"></div>
+  <div class="auth__panel">
+    <div class="auth__head">
+      <div>
+        <h2 id="authTitle">Your account</h2>
+        <p>Track orders, save addresses, get drops early.</p>
+      </div>
+      <button class="drawer__close" id="authClose" aria-label="Close">&#10005;</button>
+    </div>
+    <p class="auth__demo">
+      <strong>Demo only.</strong> This form is not connected to anything — no account is
+      created and nothing is verified. Please don't enter a real password.
+    </p>
+    <div class="auth__body" id="authBody"></div>
+  </div>
+</div>
 
 <div class="toast-stack" id="toasts" aria-live="polite"></div>
 
 <script src="js/products.js"></script>
 <script src="js/shopify.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/main.js"></script>
 <script src="js/scroll.js"></script>
 </body>

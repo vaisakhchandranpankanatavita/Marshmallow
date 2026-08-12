@@ -63,7 +63,7 @@ def main():
     html = html.replace('href="index.html"', 'href="#top"')
 
     # --- inline the scripts ----------------------------------------------
-    for name in ("products.js", "shopify.js", "cart.js", "main.js", "scroll.js"):
+    for name in ("products.js", "shopify.js", "cart.js", "auth.js", "main.js", "scroll.js"):
         src = read("js", name)
         if name == "products.js":
             # PRODUCT_IMAGE builds "assets/<slug>--<colour>.svg" at runtime, so

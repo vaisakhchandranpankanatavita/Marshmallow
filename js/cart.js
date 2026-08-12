@@ -133,6 +133,14 @@ window.Cart = (function () {
     $('total').textContent = money(sub);
     $('shipping').textContent =
       sub >= window.Shop.CONFIG.freeShippingThreshold ? 'Free' : 'Calculated at checkout';
+    const cod = $('codNote');
+    if (cod) {
+      const limit = window.Shop.CONFIG.codLimit;
+      cod.textContent = sub <= limit
+        ? `Cash on Delivery available · +${money(window.Shop.CONFIG.codFee)} handling`
+        : `Prepaid only above ${money(limit)}`;
+    }
+
     $('drawerFoot').hidden = false;
     updateShipMeter(sub);
   }
@@ -145,8 +153,8 @@ window.Cart = (function () {
     const pct = Math.min(100, (sub / threshold) * 100);
     fill.style.width = pct + '%';
     text.textContent = sub >= threshold
-      ? "Nice — UK shipping is on us 🎉"
-      : `${money(threshold - sub)} away from free UK shipping`;
+      ? 'Nice — shipping is on us 🎉'
+      : `${money(threshold - sub)} away from free shipping`;
   }
 
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);

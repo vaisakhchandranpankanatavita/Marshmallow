@@ -19,6 +19,15 @@
  *
  * Until enabled is true, everything runs off the local catalog in products.js
  * and checkout just reports what it would have sent.
+ *
+ * ACCOUNTS: js/auth.js is a front-end shell only. Do not wire it to a database
+ * of your own — Shopify already issues customer accounts, and its Customer
+ * Account API should own login, password reset and order history. Point the
+ * sign-in button at that instead of storing credentials anywhere yourself.
+ *
+ * INDIA NOTES: Shopify Payments is not available in India. Use Razorpay, PayU
+ * or Cashfree as the gateway, and add a COD option at checkout if you want the
+ * COD copy on the site to be true.
  */
 
 window.Shop = (function () {
@@ -27,9 +36,12 @@ window.Shop = (function () {
     domain: 'your-store.myshopify.com',
     token: '',                       // Storefront API public access token
     apiVersion: '2025-01',
-    currency: 'GBP',
-    currencySymbol: '£',
-    freeShippingThreshold: 50
+    currency: 'INR',
+    currencySymbol: '\u20B9',
+    locale: 'en-IN',
+    freeShippingThreshold: 1499,
+    codLimit: 3000,
+    codFee: 49
   };
 
   const endpoint = () => `https://${CONFIG.domain}/api/${CONFIG.apiVersion}/graphql.json`;
@@ -139,7 +151,17 @@ window.Shop = (function () {
     return { ok: true };
   }
 
-  const money = n => CONFIG.currencySymbol + Number(n).toFixed(2);
+  /* Indian digit grouping is 2,2,3 from the right — 1,49,999 rather than
+     149,999 — so this has to go through en-IN, not a manual toFixed. Prices are
+     whole rupees, so no decimals unless a value actually has paise. */
+  function money(n) {
+    const v = Number(n) || 0;
+    const decimals = Number.isInteger(v) ? 0 : 2;
+    return CONFIG.currencySymbol + v.toLocaleString(CONFIG.locale, {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+  }
 
   return { CONFIG, init, checkout, money, gql };
 })();
