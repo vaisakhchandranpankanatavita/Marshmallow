@@ -189,47 +189,66 @@ Cart.clear()
 
 ---
 
-## Ordering — Qikink
+## Running the server
 
-Fulfilment is Qikink (print-on-demand, Bengaluru). Everything order-related is
-in `js/store.js`; nothing else in the codebase knows how orders are placed.
-
-### The architecture is not optional
-
-```
-React app  ──POST /api/orders──►  your backend  ──►  Qikink API
-                                       │
-                                       └──►  payment gateway verify
+```bash
+npm install    # zero dependencies, but installs Node runtime check
+npm start      # http://localhost:4000
+npm run dev    # with --watch auto-reload
 ```
 
-**Qikink credentials must never reach the browser.** This is the key difference
-from a Shopify Storefront token, which is designed to be public. Qikink's client
-id and secret are account credentials — whoever holds them can place real print
-orders you get billed for. Putting them in client-side JavaScript, a committed
-`.env`, or any `VITE_` / `REACT_APP_` / `NEXT_PUBLIC_` variable publishes them to
-every visitor, because those prefixes compile the value into the served bundle.
+Also try:
+```bash
+npm test                    # run server tests
+npm run verify:qikink       # check Qikink auth
+npm run verify:qikink -- --skus   # check SKU mappings against Qikink
+```
 
-Credentials go in `.env` (gitignored) and are read only by your server. See
-`.env.example` for the variable names.
+---
 
-**The server prices the order.** `Store.checkout()` deliberately sends no prices
-— only slug, colour, size and quantity. Re-price every line server-side from
-your own catalog. A price sent up from the browser is a price the customer can
-edit before submitting.
+## Ordering — Qikink backend
 
-**Payment is separate from fulfilment.** Qikink prints and ships; it does not
-collect money. Shopify Payments does not operate in India — use Razorpay, PayU
-or Cashfree. Take payment, verify the signature server-side, *then* create the
-Qikink order. Creating the print order first means paying for prints on
-abandoned payments.
+Everything order-related lives server-side. The storefront (`checkout.html`)
+sends customer address and bag contents to four endpoints:
 
-### Fields to verify
+| Endpoint | Method | What it does |
+|---|---|---|
+| `/api/quote` | POST | Price a bag (no side effects) |
+| `/api/payments/razorpay` | POST | Open a Razorpay order for prepaid checkout |
+| `/api/orders` | POST | Place order with customer address + payment proof |
+| `/api/orders/:number` | GET | Fetch order status from Qikink |
 
-The order payload in `store.js` is a structural sketch of what a print-on-demand
-order needs, not a transcription of Qikink's contract — it was written without
-access to their docs. Check every field name, the auth header names, the
-endpoint paths and the SKU format against their current API documentation before
-wiring it up.
+**The architecture is not optional.** Qikink credentials (`QIKINK_CLIENT_ID`,
+`QIKINK_CLIENT_SECRET`) are account credentials — whoever holds them can place
+real print orders you get billed for. They must never reach the browser.
+Credentials go in `.env` (gitignored, never committed) and are read only by the
+server. See `.env.example`.
+
+**The server prices every order.** The browser sends slug/colour/size/qty only,
+never prices. Prices are recomputed server-side from `js/products.js` so a
+customer cannot edit them before submitting.
+
+**Payment is separate from fulfilment.** Qikink prints and ships but does not
+collect money. Razorpay, PayU or Cashfree handles payment — take the payment,
+verify the signature server-side, *then* create the Qikink order. Creating the
+print order first means paying for prints on abandoned payments.
+
+### Mapping products to Qikink SKUs
+
+The join between your catalog and Qikink's product list is `server/qikink-skus.json`.
+Two approaches:
+
+1. **Derived codes** (for tees) — a blank code + colour code + size code, joined
+   with hyphens (e.g. `MRnHsOs-Wh-M`). The base codes live in `server/skus.js`,
+   tuned to Qikink's documented SKU format.
+
+2. **Explicit overrides** (for phone cases) — SKU per model, since a "MagSafe
+   iPhone 16" is a different blank than "Slim OnePlus 12". Fill in the model
+   mappings in `qikink-skus.json`.
+
+Before you can take orders, run `npm run verify:qikink -- --skus` to check every
+variant (product × colourway × size) against your Qikink account. The script
+reports which ones are unmapped or do not exist on Qikink's side.
 
 ## Customising
 
@@ -280,12 +299,10 @@ each product. To give a theme its own artwork, add an art function in
   unearned "As stocked at Myntra" claims are a legal problem in India under the
   Consumer Protection Act's rules on misleading advertisements, not just a
   taste one. The GSTIN in the footer is fake and must be replaced.
-- **Payments are not wired.** Qikink fulfils; it does not collect money. Add
-  Razorpay, PayU or Cashfree, verify the signature server-side, and only then
-  create the print order. The COD copy on the site is only true once COD is
-  actually configured.
-- **The Qikink payload is unverified.** It was written without access to their
-  API docs — check every field name before trusting it.
+- **The Razorpay and COD gateways are present but not wired to your actual
+  account.** Fill in `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `.env` to
+  enable prepaid checkout; leave them blank to offer COD only. The payment
+  verification is real (HMAC-SHA256 signature check); you just need the keys.
 
 ---
 

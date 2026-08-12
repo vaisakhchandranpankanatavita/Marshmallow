@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order Confirmed — Funky Threads</title>
+<link rel="icon" href="assets/acid-smiley--lime.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .success {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  .success__icon { font-size: 4rem; margin-bottom: 1.5rem; }
+  .success h1 { font-size: 2.5rem; margin: 1rem 0; }
+  .success__number { font-family: 'Courier New', monospace; background: var(--paper); padding: 1rem; border-radius: 4px; margin: 2rem 0; font-weight: 700; }
+  .success__copy { opacity: 0.8; margin: 2rem 0; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .success__actions { margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .success__actions a { display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns · Drop 007 is live</div>
+
+<header class="nav" id="nav">
+  <div class="shell nav__inner">
+    <a href="index.html" class="nav__logo">Funky<b>Threads</b></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="shop.html">Shop all</a>
+      <a href="tshirts.html">T-Shirts</a>
+      <a href="cases.html">Cases</a>
+      <a href="about.html">Our story</a>
+      <a href="index.html#faq">Help</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <button class="cart-btn" id="cartOpen" aria-label="Open cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="band band--yellow" style="padding-block:3rem">
+  <div class="shell success">
+    <div class="success__icon">🎉</div>
+    <h1>Order Confirmed!</h1>
+    <p class="success__copy">We've received your order and will print it in the next batch. You'll get a tracking link when it ships.</p>
+    <div class="success__number" id="orderNumber">Order #FT260812-ABC123</div>
+    <p class="success__copy" style="font-size:0.875rem;opacity:0.7">Check your email for an order confirmation and shipping updates.</p>
+    <div class="success__actions">
+      <a href="shop.html" class="btn">Continue shopping</a>
+      <a href="index.html#faq" class="btn btn--outline">Shipping info</a>
+    </div>
+  </div>
+</section>
+
+<section class="band band--cream" style="padding-block:3rem">
+  <div class="shell" style="text-align:center">
+    <h2 style="margin-bottom:2rem">What happens next?</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem">
+      <div>
+        <div style="font-size:2rem;margin-bottom:1rem">🖨️</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem">Printing</h3>
+        <p style="font-size:0.875rem;opacity:0.8">We print Monday–Saturday. Your order joins the next batch.</p>
+      </div>
+      <div>
+        <div style="font-size:2rem;margin-bottom:1rem">📦</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem">Packing</h3>
+        <p style="font-size:0.875rem;opacity:0.8">Folded, bagged and ready to ship the day after printing.</p>
+      </div>
+      <div>
+        <div style="font-size:2rem;margin-bottom:1rem">🚚</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem">Delivery</h3>
+        <p style="font-size:0.875rem;opacity:0.8">2–4 days in metros, 4–7 in the rest of India. You'll get a tracking link.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="nav__logo">Funky<b>Threads</b></span>
+        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All products</a></li>
+          <li><a href="tshirts.html">T-Shirts</a></li>
+          <li><a href="cases.html">Phone cases</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul>
+          <li><a href="index.html#faq">Shipping</a></li>
+          <li><a href="index.html#faq">Returns</a></li>
+          <li><a href="index.html#faq">Print care</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
+      <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+<script src="js/products.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const orderNum = params.get('order');
+  if (orderNum) {
+    document.getElementById('orderNumber').textContent = 'Order #' + orderNum;
+  }
+})();
+</script>
+</body>
+</html>

@@ -124,40 +124,74 @@ window.Store = (function () {
     };
   }
 
-  /* Hands the bag to your backend. The backend prices it, takes payment, and
-     creates the Qikink order. */
-  async function checkout(lines, customer) {
-    const mapped = lines.map(toOrderLine);
-    const bad = mapped.findIndex(l => l === null);
-    if (bad !== -1) return { ok: false, reason: `Unknown product in cart (line ${bad + 1})` };
-
-    const payload = {
-      lines: mapped,
-      customer: customer || null,     // name, phone, email, address, pincode
-      currency: CONFIG.currency
-    };
-
-    if (!CONFIG.enabled) {
-      console.info('[store] Order payload (backend not connected):', payload);
-      return { ok: false, reason: 'disabled', payload };
-    }
-
+  /* Get a price quote from the server for the current bag. Does not create an
+     order, just prices it so the checkout page can show totals. */
+  async function quote(lines, gateway = 'Prepaid') {
     try {
-      const res = await fetch(CONFIG.orderEndpoint, {
+      const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ lines, gateway })
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) return { ok: false, reason: data.message || `Server responded ${res.status}` };
-      if (data.paymentUrl) { window.location.href = data.paymentUrl; return { ok: true }; }
-      return { ok: true, order: data };
+      if (!res.ok) return { ok: false, reason: data.reason || `Server responded ${res.status}` };
+      return { ok: true, ...data };
     } catch (err) {
       return { ok: false, reason: err.message };
     }
   }
 
-  return { CONFIG, init, checkout, money, toOrderLine };
+  /* Create a Razorpay payment order for the current bag. Steps are:
+     1. quote() — price the bag
+     2. createPayment() — open a Razorpay order
+     3. show Razorpay checkout UI
+     4. verify the signature on the client
+     5. finalize() — send payment proof + customer address to backend
+  */
+  async function createPayment(lines) {
+    try {
+      const res = await fetch('/api/payments/razorpay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lines })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return { ok: false, reason: data.reason || `Server responded ${res.status}` };
+      return { ok: true, ...data };
+    } catch (err) {
+      return { ok: false, reason: err.message };
+    }
+  }
+
+  /* After payment is captured, send the customer address and payment proof to
+     the backend to complete the order. */
+  async function finalize(lines, customer, paymentProof) {
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lines,
+          customer,
+          gateway: paymentProof ? 'Prepaid' : 'COD',
+          payment: paymentProof,
+          orderNumber: paymentProof?.orderNumber
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return { ok: false, reason: data.reason || `Server responded ${res.status}`, code: data.code };
+      return { ok: true, ...data };
+    } catch (err) {
+      return { ok: false, reason: err.message };
+    }
+  }
+
+  /* Convenience: hand over the whole bag. Used by the checkout page. */
+  async function checkout(lines, customer, gateway = 'COD') {
+    return finalize(lines, customer, null);
+  }
+
+  return { CONFIG, init, checkout, createPayment, finalize, quote, money, toOrderLine };
 })();
 
 /* Back-compat: cart.js and main.js were written against window.Shop. Keeping

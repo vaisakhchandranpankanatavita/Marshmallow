@@ -181,24 +181,9 @@ window.Cart = (function () {
       if (r) remove(r.dataset.remove);
     });
 
-    $('checkout')?.addEventListener('click', async () => {
+    $('checkout')?.addEventListener('click', () => {
       if (!lines.length) return window.toast('Your bag is empty', true);
-      const btn = $('checkout');
-      btn.disabled = true;
-      btn.textContent = 'Taking you to checkout…';
-      try {
-        const res = await window.Store.checkout(lines);
-        if (!res.ok && res.reason === 'disabled') {
-          window.toast('Order backend not connected — payload logged to console');
-        } else if (!res.ok) {
-          window.toast(`Checkout failed: ${res.reason}`, true);
-        }
-      } catch (err) {
-        window.toast(`Checkout failed: ${err.message}`, true);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Checkout';
-      }
+      window.location.href = '/checkout.html';
     });
 
     render();

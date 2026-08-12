@@ -1,0 +1,17 @@
+{
+  "name": "funky-threads",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Storefront + Qikink print-on-demand fulfilment backend",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test server/",
+    "verify:qikink": "node server/verify-qikink.mjs",
+    "verify:skus": "node server/verify-qikink.mjs --skus"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

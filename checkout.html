@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — Funky Threads</title>
+<meta name="description" content="Complete your Funky Threads order.">
+<link rel="icon" href="assets/acid-smiley--lime.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .checkout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+  @media (min-width: 900px) {
+    .checkout { grid-template-columns: 1fr 380px; }
+  }
+
+  .checkout__form { display: contents; }
+  .form-section { grid-column: 1; padding: 2rem; background: var(--paper); }
+  .form-section h3 { margin: 0 0 1rem; font-size: 1.125rem; font-weight: 700; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; }
+  .form-group input, .form-group select { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(224, 49, 39, 0.1); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row .form-group { margin-bottom: 0; }
+
+  .gateway-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .gateway-choice input { display: none; }
+  .gateway-choice label { display: block; padding: 1rem; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; text-align: center; font-weight: 500; transition: all 0.2s; }
+  .gateway-choice input:checked + label { border-color: var(--red); background: rgba(224, 49, 39, 0.05); }
+
+  .checkout__order { grid-column: 1; padding: 2rem; background: #f9f7f4; border-top: 1px solid var(--border); }
+  @media (min-width: 900px) {
+    .checkout__order { grid-column: 2 / 3; grid-row: 1 / -1; position: sticky; top: 2rem; height: fit-content; }
+  }
+
+  .order-item { display: flex; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .order-item:last-child { border: none; }
+  .order-item img { width: 60px; height: 60px; object-fit: cover; }
+  .order-item__details { flex: 1; font-size: 0.875rem; }
+  .order-item__price { text-align: right; font-weight: 700; }
+
+  .order-total { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding-top: 1rem; font-weight: 700; border-top: 2px solid var(--border); margin-top: 1rem; }
+
+  .btn--submit { width: 100%; margin-top: 1.5rem; }
+  .error { color: var(--red); font-size: 0.875rem; margin-top: 0.25rem; }
+</style>
+</head>
+<body>
+
+<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns · Drop 007 is live</div>
+
+<header class="nav" id="nav">
+  <div class="shell nav__inner">
+    <a href="index.html" class="nav__logo">Funky<b>Threads</b></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="shop.html">Shop all</a>
+      <a href="tshirts.html">T-Shirts</a>
+      <a href="cases.html">Cases</a>
+      <a href="about.html">Our story</a>
+      <a href="index.html#faq">Help</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <button class="cart-btn" id="cartOpen" aria-label="Open cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="band band--cream" style="padding-block:2rem">
+  <div class="shell">
+    <h1 style="margin:0;font-size:2rem">Order Summary</h1>
+  </div>
+</section>
+
+<div class="shell" style="max-width:1200px">
+  <form class="checkout__form" id="checkoutForm">
+    <section class="form-section">
+      <h3>Delivery Address</h3>
+      <div class="form-group">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" placeholder="As it appears on your shipping label" required>
+        <div class="error" id="nameError"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Mobile number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+91 or 10 digits" required>
+          <div class="error" id="phoneError"></div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="For order updates" required>
+          <div class="error" id="emailError"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="address1">House/flat &amp; street</label>
+        <input type="text" id="address1" name="address1" required>
+        <div class="error" id="address1Error"></div>
+      </div>
+      <div class="form-group">
+        <label for="address2">Apartment/landmark (optional)</label>
+        <input type="text" id="address2" name="address2">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" required>
+          <div class="error" id="cityError"></div>
+        </div>
+        <div class="form-group">
+          <label for="state">State</label>
+          <select id="state" name="state" required>
+            <option value="">Choose a state</option>
+            <option value="Andaman and Nicobar">Andaman and Nicobar</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+            <option value="Assam">Assam</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Chandigarh">Chandigarh</option>
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+            <option value="Daman and Diu">Daman and Diu</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Goa">Goa</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+            <option value="Jharkhand">Jharkhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Ladakh">Ladakh</option>
+            <option value="Lakshadweep">Lakshadweep</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Manipur">Manipur</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Mizoram">Mizoram</option>
+            <option value="Nagaland">Nagaland</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Puducherry">Puducherry</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Tripura">Tripura</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="West Bengal">West Bengal</option>
+          </select>
+          <div class="error" id="stateError"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pincode">PIN code</label>
+        <input type="text" id="pincode" name="pincode" placeholder="6 digits" required>
+        <div class="error" id="pincodeError"></div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h3>Payment Method</h3>
+      <div class="gateway-choice">
+        <input type="radio" id="cod" name="gateway" value="COD" checked>
+        <label for="cod">
+          <div style="font-weight:700">Cash on Delivery</div>
+          <div style="font-size:0.75rem;opacity:.7">Up to ₹3,000 · +₹49 fee</div>
+        </label>
+        <input type="radio" id="prepaid" name="gateway" value="Prepaid">
+        <label for="prepaid">
+          <div style="font-weight:700">Pay Now</div>
+          <div style="font-size:0.75rem;opacity:.7">UPI, Card, Net Banking</div>
+        </label>
+      </div>
+      <div id="paymentWarning" style="display:none;padding:1rem;background:#fff3cd;border-radius:4px;font-size:0.875rem;margin-bottom:1rem">
+        Your order total is above the COD limit. Please pay online.
+      </div>
+      <button type="submit" class="btn btn--submit">Place Order</button>
+      <div id="checkoutError" class="error" style="text-align:center;margin-top:1rem"></div>
+    </section>
+
+    <section class="checkout__order">
+      <h3>Order Total</h3>
+      <div id="orderItems"></div>
+      <div class="order-total">
+        <span>Subtotal</span>
+        <span id="subtotalPrice">₹0</span>
+      </div>
+      <div class="order-total" id="shippingRow" style="border:none;margin:0;padding:0.5rem 0">
+        <span>Shipping</span>
+        <span id="shippingPrice">₹79</span>
+      </div>
+      <div class="order-total" id="codFeeRow" style="border:none;margin:0;padding:0.5rem 0;display:none">
+        <span>COD fee</span>
+        <span id="codFeePrice">₹49</span>
+      </div>
+      <div class="order-total" style="border:none;margin-top:1rem;padding:1rem 0;border-top:2px solid var(--border)">
+        <span style="font-size:1.125rem">Total</span>
+        <span id="totalPrice" style="font-size:1.125rem">₹0</span>
+      </div>
+    </section>
+  </form>
+</div>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="nav__logo">Funky<b>Threads</b></span>
+        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All products</a></li>
+          <li><a href="tshirts.html">T-Shirts</a></li>
+          <li><a href="cases.html">Phone cases</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul>
+          <li><a href="index.html#faq">Shipping</a></li>
+          <li><a href="index.html#faq">Returns</a></li>
+          <li><a href="index.html#faq">Print care</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
+      <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+<script src="js/products.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(async function() {
+  const $ = id => document.getElementById(id);
+  const money = n => window.Store.money(n);
+  const lines = window.Cart.lines;
+
+  if (!lines.length) {
+    window.location.href = 'shop.html';
+    return;
+  }
+
+  // Render order summary
+  const itemsEl = $('orderItems');
+  itemsEl.innerHTML = lines.map(l => {
+    const p = window.PRODUCT_BY_SLUG(l.slug);
+    return `
+      <div class="order-item">
+        <img src="${window.PRODUCT_IMAGE(p, l.colorway)}" alt="">
+        <div class="order-item__details">
+          <div style="font-weight:500">${p.name}</div>
+          <div style="opacity:.7">${l.colorway.charAt(0).toUpperCase() + l.colorway.slice(1)} · ${l.size} × ${l.qty}</div>
+        </div>
+        <div class="order-item__price">${money(p.price * l.qty)}</div>
+      </div>`;
+  }).join('');
+
+  // Update pricing based on gateway
+  function updatePricing() {
+    const gateway = $('cod').checked ? 'COD' : 'Prepaid';
+    window.Store.quote(lines, gateway).then(res => {
+      if (!res.ok) {
+        $('checkoutError').textContent = res.reason;
+        return;
+      }
+      const q = res.quote;
+      $('subtotalPrice').textContent = money(q.subtotal);
+      $('shippingPrice').textContent = q.shipping === 0 ? 'Free' : money(q.shipping);
+      $('totalPrice').textContent = money(q.total);
+
+      const codFeeRow = $('codFeeRow');
+      if (gateway === 'COD' && q.codFee > 0) {
+        codFeeRow.style.display = '';
+        $('codFeePrice').textContent = money(q.codFee);
+      } else {
+        codFeeRow.style.display = 'none';
+      }
+
+      const paymentWarning = $('paymentWarning');
+      if (!q.codAvailable) {
+        paymentWarning.style.display = '';
+        $('cod').disabled = true;
+        $('prepaid').checked = true;
+      } else {
+        paymentWarning.style.display = 'none';
+        $('cod').disabled = false;
+      }
+    });
+  }
+
+  $('cod').addEventListener('change', updatePricing);
+  $('prepaid').addEventListener('change', updatePricing);
+  updatePricing();
+
+  // Form submission
+  $('checkoutForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const clearErrors = () => {
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
+    };
+    clearErrors();
+
+    const gateway = $('cod').checked ? 'COD' : 'Prepaid';
+    const customer = {
+      name: $('name').value,
+      phone: $('phone').value,
+      email: $('email').value,
+      address1: $('address1').value,
+      address2: $('address2').value,
+      city: $('city').value,
+      state: $('state').value,
+      pincode: $('pincode').value
+    };
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Processing…';
+
+    try {
+      if (gateway === 'Prepaid') {
+        const payment = await window.Store.createPayment(lines);
+        if (!payment.ok) {
+          $('checkoutError').textContent = payment.reason;
+          btn.disabled = false;
+          btn.textContent = original;
+          return;
+        }
+
+        // Store the order number and payment details for after Razorpay
+        sessionStorage.setItem('FT_ORDER_NUMBER', payment.orderNumber);
+        sessionStorage.setItem('FT_PAYMENT_ID', payment.razorpay.orderId);
+
+        // Launch Razorpay
+        if (typeof Razorpay === 'undefined') {
+          await new Promise(r => {
+            const s = document.createElement('script');
+            s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            s.onload = r;
+            document.head.appendChild(s);
+          });
+        }
+
+        const options = {
+          key: payment.razorpay.keyId,
+          amount: payment.razorpay.amount,
+          currency: payment.razorpay.currency,
+          order_id: payment.razorpay.orderId,
+          handler: async response => {
+            const verified = await window.Store.finalize(
+              lines,
+              customer,
+              {
+                orderNumber: payment.orderNumber,
+                razorpay_order_id: payment.razorpay.orderId,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              }
+            );
+            if (verified.ok) {
+              window.Cart.clear();
+              window.location.href = `/order-success.html?order=${verified.orderNumber}`;
+            } else {
+              $('checkoutError').textContent = verified.reason;
+              btn.disabled = false;
+              btn.textContent = original;
+            }
+          },
+          prefill: {
+            name: customer.name,
+            email: customer.email,
+            contact: customer.phone
+          }
+        };
+        new Razorpay(options).open();
+      } else {
+        const result = await window.Store.checkout(lines, customer);
+        if (result.ok) {
+          window.Cart.clear();
+          window.location.href = `/order-success.html?order=${result.orderNumber}`;
+        } else {
+          $('checkoutError').textContent = result.reason;
+          btn.disabled = false;
+          btn.textContent = original;
+        }
+      }
+    } catch (err) {
+      $('checkoutError').textContent = err.message;
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  });
+})();
+</script>
+</body>
+</html>
