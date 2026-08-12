@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUNKY THREADS - Colorful T-Shirts & Phone Cases</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">FUNKY</span>
+                <span class="logo-accent">THREADS</span>
+            </div>
+            <div class="nav-links">
+                <a href="#shop" class="nav-link">Shop</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-cart">
+                <button class="cart-toggle" id="cartToggle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="text-gradient">Wear Your Vibe</span>
+            </h1>
+            <p class="hero-subtitle">Funky, colorful, and unapologetically bold fashion for the creative soul</p>
+            <button class="cta-button" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">
+                Shop Now
+                <span class="arrow">→</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="featured" id="featured">
+        <div class="section-header">
+            <h2 class="section-title">Featured Collection</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="featured-grid">
+            <div class="featured-card" style="--delay: 0s">
+                <div class="featured-image" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%)">
+                    <span class="badge">Hot</span>
+                </div>
+                <h3>Cosmic T-Shirt</h3>
+                <p class="price">$34.99</p>
+            </div>
+            <div class="featured-card" style="--delay: 0.1s">
+                <div class="featured-image" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%)">
+                    <span class="badge">New</span>
+                </div>
+                <h3>Wave Phone Case</h3>
+                <p class="price">$24.99</p>
+            </div>
+            <div class="featured-card" style="--delay: 0.2s">
+                <div class="featured-image" style="background: linear-gradient(135deg, #FFD93D 0%, #FFC300 100%)">
+                    <span class="badge">Sale</span>
+                </div>
+                <h3>Rainbow Tee</h3>
+                <p class="price">$29.99</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="shop">
+        <div class="section-header">
+            <h2 class="section-title">All Products</h2>
+            <div class="title-underline"></div>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="tshirts">T-Shirts</button>
+            <button class="filter-btn" data-filter="cases">Phone Cases</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart">
+                <p>Your cart is empty</p>
+                <p class="empty-text">Add some colorful items!</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" onclick="handleCheckout()">
+                Proceed to Checkout
+            </button>
+            <p class="checkout-notice">Ready to connect with Shopify</p>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <h2>About FUNKY THREADS</h2>
+            <p>We believe fashion should be bold, expressive, and fun. Every piece in our collection is designed to help you stand out and celebrate your unique style. From vibrant t-shirts to eye-catching phone cases, we've got everything you need to make a statement.</p>
+            <div class="stats">
+                <div class="stat">
+                    <h4>500+</h4>
+                    <p>Happy Customers</p>
+                </div>
+                <div class="stat">
+                    <h4>100+</h4>
+                    <p>Unique Designs</p>
+                </div>
+                <div class="stat">
+                    <h4>24/7</h4>
+                    <p>Support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-header">
+            <h2 class="section-title">Get in Touch</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="contact-form">
+            <input type="text" placeholder="Your Name" class="form-input">
+            <input type="email" placeholder="Your Email" class="form-input">
+            <textarea placeholder="Your Message" class="form-textarea"></textarea>
+            <button class="cta-button">Send Message</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#shop">T-Shirts</a></li>
+                    <li><a href="#shop">Phone Cases</a></li>
+                    <li><a href="#shop">New Arrivals</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Help</h4>
+                <ul>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 FUNKY THREADS. All rights reserved.</p>
+            <p>Crafted with 🎨 for creative souls</p>
+        </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
