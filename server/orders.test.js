@@ -71,8 +71,8 @@ test('validateCustomer', async t => {
 test('priceOrder', async t => {
   // These are mocked via the catalog module loading js/products.js.
   const lines = [
-    { slug: 'cosmic-checker', colorway: 'pink', size: 'M', qty: 1, product: {} },
-    { slug: 'acid-smiley', colorway: 'lime', size: 'L', qty: 2, product: {} }
+    { slug: 'anime-clear-case', colorway: 'cream', size: 'iPhone 16 Pro', qty: 2, product: {} },
+    { slug: 'anime-clear-case', colorway: 'cream', size: 'iPhone 16 Pro', qty: 2, product: {} }
   ];
 
   await t.test('computes subtotal from catalog prices', () => {
@@ -90,7 +90,7 @@ test('priceOrder', async t => {
   });
 
   await t.test('rejects COD orders over limit', () => {
-    const expensiveLines = [{ slug: 'cosmic-checker', colorway: 'pink', size: 'M', qty: 10, product: {} }];
+    const expensiveLines = [{ slug: 'anime-clear-case', colorway: 'cream', size: 'iPhone 16 Pro', qty: 10, product: {} }];
     assert.throws(
       () => priceOrder(expensiveLines, { gateway: 'COD' }),
       /Cash on Delivery/i

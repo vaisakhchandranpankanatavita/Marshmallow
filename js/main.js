@@ -291,17 +291,62 @@
     renderGrid(el, best);
   }
 
+  /* Fills the parallel-scroll wall from window.PRODUCTS instead of a
+     hand-written image list, so it can never drift out of sync with the
+     catalog again. On a locked category page (tshirts.html/cases.html) it
+     only draws from that category; if that leaves nothing to show (e.g. no
+     real tees exist yet in Qikink), the whole section hides rather than
+     rendering an empty band. */
+  function initParallelWall() {
+    const section = $('parallel');
+    const cols = section?.querySelectorAll('.parallel__col');
+    if (!section || !cols?.length) return;
+
+    const locked = $('mainGrid')?.dataset.lockedCategory || null;
+    const pool = locked ? window.PRODUCTS.filter(p => p.category === locked) : window.PRODUCTS.slice();
+
+    if (!pool.length) {
+      section.hidden = true;
+      return;
+    }
+
+    const TILES_PER_COL = 8;
+    cols.forEach((col, ci) => {
+      const tiles = [];
+      for (let i = 0; i < TILES_PER_COL; i++) {
+        const p = pool[(i + ci * 3) % pool.length];
+        tiles.push(`<img src="${window.PRODUCT_IMAGE(p, p.colorways[0])}" alt="" width="600" height="600" loading="lazy">`);
+      }
+      col.innerHTML = tiles.join('');
+    });
+
+    const kicker = $('parallelKicker');
+    if (kicker) {
+      const themeCount = new Set(pool.map(p => p.theme)).size;
+      kicker.textContent = `${pool.length} design${pool.length === 1 ? '' : 's'} · ${themeCount} theme${themeCount === 1 ? '' : 's'}`;
+    }
+  }
+
+  /* Same idea as the parallel wall — read the true count out of the catalog
+     at boot instead of a number someone has to remember to update by hand. */
+  function syncCatalogStats() {
+    const stat = $('statDesignCount');
+    if (stat) stat.dataset.count = String(window.PRODUCTS.length);
+  }
+
   function initThemeTiles() {
     const el = $('themeTiles');
     if (!el) return;
     const counts = {};
     window.PRODUCTS.forEach(p => { counts[p.theme] = (counts[p.theme] || 0) + 1; });
-    el.innerHTML = window.THEMES.map(t => `
+    // Only advertise a theme that actually has a product behind it — most of
+    // window.THEMES is still unused until more real Qikink products land.
+    el.innerHTML = window.THEMES.filter(t => counts[t.id]).map(t => `
       <a class="themetile" href="shop.html#grid" data-filter-link="theme:${t.id}">
         <span class="themetile__emoji" aria-hidden="true">${t.emoji}</span>
         <h3>${t.label}</h3>
         <p>${t.blurb}</p>
-        <span class="themetile__n">${counts[t.id] || 0} designs</span>
+        <span class="themetile__n">${counts[t.id] || 0} design${counts[t.id] === 1 ? '' : 's'}</span>
       </a>`).join('');
     // These are injected, so they miss the document-load binding pass.
     el.querySelectorAll('[data-filter-link]').forEach(link => {
@@ -314,6 +359,14 @@
   function initReviews() {
     const el = $('reviewGrid');
     if (!el) return;
+    // No real reviews exist yet — hide the whole section rather than show a
+    // "5,400+ reviews" heading over an empty grid.
+    const section = el.closest('section');
+    if (!window.REVIEWS.length) {
+      if (section) section.hidden = true;
+      return;
+    }
+    if (section) section.hidden = false;
     el.innerHTML = window.REVIEWS.map(r => `
       <article class="review">
         <div class="review__stars">${stars(r.rating)}</div>
@@ -397,6 +450,8 @@
 
     initBestSellers();
     initThemeTiles();
+    initParallelWall();
+    syncCatalogStats();
     initFilters();
     initReviews();
     initFaq();

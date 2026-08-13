@@ -78,9 +78,26 @@ box) — or `CASE_PRINT` plus a branch in `case()` for a new case style.
 
 ## Catalog structure
 
-Three independent axes across 51 products.
+`js/products.js` is a hand-maintained mirror of what actually exists in the
+Qikink dashboard (Products -> My Products) — **not** a fictional demo catalog.
+Qikink's public API does not expose a products-listing endpoint (their
+documented API is Orders-only; see the Qikink section below), so there is no
+way to pull the catalog automatically. Every time a product is created in
+Qikink, add a matching row to `js/products.js` and a SKU entry to
+`server/qikink-skus.json` by hand — that pair of files is the entire
+integration surface for "does this product show up on the site."
 
-**Category** — `tees` (28) or `cases` (23).
+The current catalog is one real product: **Anime Clear Case**, a clear
+hardshell case for iPhone 16 Pro only (Qikink Product ID 64640642). Everything
+about the site — best sellers, theme tiles, the parallel-scroll wall, filter
+chip counts — is computed from `window.PRODUCTS` at load time, so it grows
+automatically as real rows are added; nothing needs to be hand-updated a
+second time elsewhere.
+
+Three independent axes, same as before, now just sparser until more real
+products exist:
+
+**Category** — `tees` or `cases`.
 
 **Subcategory** — the fit or style, scoped to a category:
 
@@ -92,7 +109,10 @@ Three independent axes across 51 products.
 | Full Sleeve | MagSafe |
 
 **Theme** — cuts across both categories, so an anime tee and an anime case sit
-together: Anime, Cartoon, Cars, Gaming, Music, Space, Nature, Abstract.
+together: Anime, Cartoon, Cars, Gaming, Music, Space, Nature, Abstract. The
+home page's theme tiles and the shop page's theme chips only ever show a
+theme that has at least one real product — an empty tile advertising zero
+results is worse than not showing it.
 
 Theme is its own axis rather than folded into subcategory because "Oversized"
 and "Anime" answer different questions. The theme row is always visible; its
@@ -113,9 +133,11 @@ data-filter-link="tees::anime"        category + theme
 data-filter-link="theme:anime"        theme only
 ```
 
-Sizes are per category: XS–3XL for tees, and a phone model list weighted to
-what people actually carry in India (OnePlus, Nothing, Redmi, realme, iQOO,
-Samsung) rather than iPhones alone.
+Sizes are per category by default — XS–3XL for tees, a phone model list
+weighted to what people actually carry in India (OnePlus, Nothing, Redmi,
+realme, iQOO, Samsung) for cases — but a product can override this with its
+own `sizes` array (the 14th field in a `js/products.js` row) when Qikink only
+stocks a blank for specific models, which is the normal case early on.
 
 ---
 
@@ -233,22 +255,54 @@ collect money. Razorpay, PayU or Cashfree handles payment — take the payment,
 verify the signature server-side, *then* create the Qikink order. Creating the
 print order first means paying for prints on abandoned payments.
 
+### The Qikink API contract (confirmed)
+
+`server/qikink.js` and `server/orders.js` are checked against Qikink's public
+Postman docs (Introduction + Orders sections — the "Authorization" section
+that documents the actual token endpoint has not been supplied, so
+`/api/token` in `server/qikink.js` is still a guess; everything below this
+line is confirmed):
+
+- `POST /api/order/create` — create an order. Not `/api/order` — that path is
+  GET-only (list/filter).
+- `GET /api/order` — list orders. `GET /api/order?id=&from_date=&to_date=` —
+  filter. There is no filter by *your* order number, only Qikink's own
+  numeric `order_id` (returned as `order_id` from the create call) — save it
+  at order time, which `server/storage.js` already does.
+- Every call takes `ClientId` and `Accesstoken` headers.
+- **There is no products-listing endpoint.** Qikink's nav is Introduction /
+  Authorization / Orders — nothing else. Product and SKU management happens
+  entirely on `dashboard.qikink.com` (Products -> My Products / SKU
+  Descriptions), not via API. `listProducts()` in `server/qikink.js` is
+  speculative and will likely 404 — do not build tooling that depends on it.
+- Rate limit is 30 requests/minute per client.
+
 ### Mapping products to Qikink SKUs
 
-The join between your catalog and Qikink's product list is `server/qikink-skus.json`.
-Two approaches:
+The join between your catalog and Qikink's product list is
+`server/qikink-skus.json`. Two approaches, both set per variant:
 
-1. **Derived codes** (for tees) — a blank code + colour code + size code, joined
-   with hyphens (e.g. `MRnHsOs-Wh-M`). The base codes live in `server/skus.js`,
-   tuned to Qikink's documented SKU format.
+1. **`search_from_my_products: 1`** — for a product saved under Qikink's "My
+   Products" (the normal path once you're designing inside their dashboard).
+   The `sku` is whatever their My Products list shows for it. Qikink pulls
+   the design and placement itself, so the order payload sends no `designs`
+   array — `server/orders.js` branches on this flag automatically.
 
-2. **Explicit overrides** (for phone cases) — SKU per model, since a "MagSafe
-   iPhone 16" is a different blank than "Slim OnePlus 12". Fill in the model
-   mappings in `qikink-skus.json`.
+2. **`search_from_my_products: 0`** (or an override without the flag) — a raw
+   blank SKU from Qikink's "SKU Descriptions" page, built from
+   `<blank>-<colour>-<size>` codes in `server/skus.js`. This path still sends
+   a `designs` array with your artwork URL on every order line, because
+   Qikink has no saved design to fall back to.
 
-Before you can take orders, run `npm run verify:qikink -- --skus` to check every
-variant (product × colourway × size) against your Qikink account. The script
-reports which ones are unmapped or do not exist on Qikink's side.
+Since there is no products API to check a SKU against, **the SKU string
+itself is unverifiable from this codebase.** Confirm it against the product's
+own detail/edit page in the dashboard, not just the list view — the list view
+can show a truncated or composite string rather than the literal value the
+`sku` field expects.
+
+`npm run verify:qikink -- --skus` still checks that every variant (product ×
+colourway × size) has *some* SKU mapped — it just can't confirm the SKU
+exists on Qikink's side, since there's nothing to check it against.
 
 ## Customising
 

@@ -5,23 +5,39 @@
  * or if a field name here turns out to be wrong, this is the only file to edit.
  * Nothing above it knows what a `line_items` looks like.
  *
- * Auth is a two-step: POST the client id and secret to /api/token, get back an
- * Accesstoken, then send that token *and* the client id as headers on every
- * other call. The token is cached in memory until it is close to expiry —
- * fetching a fresh one per order would work but wastes a round trip on the
- * critical path of a checkout.
+ * Confirmed against Qikink's public Postman docs (Introduction + Orders
+ * sections — https://documenter.getpostman.com/view/26157218/2sB3QKqpma):
+ *   - POST /api/order/create — create an order
+ *   - GET  /api/order        — list orders
+ *   - GET  /api/order?id=&from_date=&to_date= — filter orders (query params,
+ *     not a path segment — an earlier version of this file got that wrong)
+ *   - Every call takes `ClientId` and `Accesstoken` headers
+ *
+ * NOT confirmed: their docs describe ClientId + client_secret as generating
+ * an access_token, but the "Authorization" section that documents the actual
+ * token endpoint has not been supplied. The /api/token exchange below is
+ * still a guess — if it 401s once this runs somewhere with real network
+ * access, paste the Authorization section from the docs above and this file
+ * needs updating, not the calling code.
+ *
+ * NOT documented at all: a products-listing endpoint. Their nav is only
+ * Introduction / Authorization / Orders — product/SKU management happens on
+ * dashboard.qikink.com (Products -> My Products / SKU Descriptions), not via
+ * API. listProducts() below is speculative; treat any call to it as likely
+ * to 404, and keep server/qikink-skus.json updated by hand instead.
  *
  * Sandbox is https://sandbox.qikink.com, live is https://api.qikink.com. Live
  * access has to be requested from your dashboard (Integration -> Custom API)
- * before it will answer.
+ * before it will answer. Rate limit is 30 requests/minute per their docs.
  */
 
 import { CONFIG, qikinkConfigured } from './config.js';
 
 const ENDPOINTS = {
   token: '/api/token',
+  orderCreate: '/api/order/create',
   order: '/api/order',
-  products: '/api/products'
+  products: '/api/products'   // unconfirmed — see note above
 };
 
 /* Qikink does not document a token lifetime we can rely on, so the cache is
@@ -151,15 +167,25 @@ async function call(path, { method = 'GET', body = null, query = null, retryOn40
    function deliberately does no mapping, so there is exactly one place where
    our vocabulary becomes theirs. */
 export async function createOrder(payload) {
-  return call(ENDPOINTS.order, { method: 'POST', body: payload });
+  return call(ENDPOINTS.orderCreate, { method: 'POST', body: payload });
 }
 
-/* Qikink echoes an order back by *their* id, or by the order_number we sent.
-   Both are supported so a customer-facing "track my order" only needs ours. */
-export async function getOrder({ qikinkOrderId, orderNumber } = {}) {
-  if (qikinkOrderId) return call(`${ENDPOINTS.order}/${encodeURIComponent(qikinkOrderId)}`);
-  if (orderNumber) return call(ENDPOINTS.order, { query: { order_number: orderNumber } });
-  throw new QikinkError('getOrder needs a qikinkOrderId or an orderNumber', { stage: 'config' });
+/* Their GET /api/order only documents `id` (their own order_id), `from_date`
+   and `to_date` as filters — there is no filter by our order_number. So the
+   numeric order_id createOrder() returns must be saved (storage.js does this
+   as `qikinkOrderId`) at order time; without it, the only option is
+   listOrders() and a client-side search. */
+export async function getOrder({ qikinkOrderId } = {}) {
+  if (!qikinkOrderId) {
+    throw new QikinkError('getOrder needs the qikinkOrderId returned by createOrder — order_number is not a documented filter', { stage: 'config' });
+  }
+  return call(ENDPOINTS.order, { query: { id: qikinkOrderId } });
+}
+
+/* No per-id endpoint is documented — GET /api/order (optionally filtered by
+   from_date/to_date) is the only list operation Qikink's docs describe. */
+export async function listOrders({ fromDate, toDate } = {}) {
+  return call(ENDPOINTS.order, { query: { from_date: fromDate, to_date: toDate } });
 }
 
 /* ---------------------------------------------------------------- products */

@@ -2,61 +2,33 @@
   "_readme": [
     "Explicit Qikink SKUs. Anything here beats the codes derived in server/skus.js.",
     "",
-    "`caseModels` is keyed by '<case style>/<phone model>' — phone cases have one",
-    "SKU per model, so there is nothing to derive. Fill these in from your Qikink",
-    "product list (Dashboard -> Products, or `npm run verify:skus`).",
+    "`variants` is keyed by '<slug>/<colourway>/<size>' from js/products.js. A",
+    "value may be a plain SKU string, or an object:",
+    "  { \"sku\": \"...\", \"search_from_my_products\": 1 }",
     "",
-    "`variants` is keyed by '<slug>/<colourway>/<size>' and overrides a single",
-    "variant. Use it when a specific colourway ships on a different blank.",
-    "A value may be a plain SKU string or an object:",
-    "  { \"sku\": \"...\", \"print_type_id\": 1, \"placement_sku\": \"fr\" }"
+    "Set search_from_my_products to 1 for a product saved under Qikink's",
+    "'My Products' (dashboard.qikink.com -> Products -> My Products) — their API",
+    "then pulls the design/placement itself and no `designs` array is sent.",
+    "Leave it 0 (or omit) for a raw blank SKU from 'SKU Descriptions', which",
+    "needs print_type_id/placement_sku and a `designs` entry per order.",
+    "",
+    "The 'anime-clear-case' entry below is transcribed from the dashboard's My",
+    "Products list (Product ID 64640642, 'Hard Clear Case', iPhone 16 Pro only).",
+    "The sku value is what the list view showed next to the product name —",
+    "confirm it against the product's own detail/edit page before taking real",
+    "orders; the list view may show a truncated or composite string rather than",
+    "the literal API `sku`.",
+    "",
+    "`caseModels` (style/phone-model -> SKU) is here for when more real Qikink",
+    "products get added and a whole model range shares one blank per style."
   ],
 
-  "caseModels": {
-    "tough/iPhone 15": "",
-    "tough/iPhone 15 Pro": "",
-    "tough/iPhone 16": "",
-    "tough/iPhone 16 Pro": "",
-    "tough/OnePlus 12": "",
-    "tough/Samsung S24": "",
-    "tough/Nothing Phone 2a": "",
-    "tough/Redmi Note 13 Pro": "",
-    "tough/realme 12 Pro": "",
-    "tough/iQOO Neo 9": "",
-
-    "slim/iPhone 15": "",
-    "slim/iPhone 15 Pro": "",
-    "slim/iPhone 16": "",
-    "slim/iPhone 16 Pro": "",
-    "slim/OnePlus 12": "",
-    "slim/Samsung S24": "",
-    "slim/Nothing Phone 2a": "",
-    "slim/Redmi Note 13 Pro": "",
-    "slim/realme 12 Pro": "",
-    "slim/iQOO Neo 9": "",
-
-    "clear/iPhone 15": "",
-    "clear/iPhone 15 Pro": "",
-    "clear/iPhone 16": "",
-    "clear/iPhone 16 Pro": "",
-    "clear/OnePlus 12": "",
-    "clear/Samsung S24": "",
-    "clear/Nothing Phone 2a": "",
-    "clear/Redmi Note 13 Pro": "",
-    "clear/realme 12 Pro": "",
-    "clear/iQOO Neo 9": "",
-
-    "magsafe/iPhone 15": "",
-    "magsafe/iPhone 15 Pro": "",
-    "magsafe/iPhone 16": "",
-    "magsafe/iPhone 16 Pro": "",
-    "magsafe/OnePlus 12": "",
-    "magsafe/Samsung S24": "",
-    "magsafe/Nothing Phone 2a": "",
-    "magsafe/Redmi Note 13 Pro": "",
-    "magsafe/realme 12 Pro": "",
-    "magsafe/iQOO Neo 9": ""
+  "variants": {
+    "anime-clear-case/cream/iPhone 16 Pro": {
+      "sku": "qikink_iphone15_anime",
+      "search_from_my_products": 1
+    }
   },
 
-  "variants": {}
+  "caseModels": {}
 }

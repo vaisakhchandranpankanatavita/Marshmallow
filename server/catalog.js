@@ -39,7 +39,7 @@ const bySlug = new Map(PRODUCTS.map(p => [p.slug, p]));
 export const productBySlug = slug => bySlug.get(slug) || null;
 
 export const sizesFor = product =>
-  product.category === 'tees' ? TEE_SIZES : CASE_SIZES;
+  product.sizes || (product.category === 'tees' ? TEE_SIZES : CASE_SIZES);
 
 /* The only place a line's price may come from. Never accept one from a
    request body — a browser-supplied price is a price the customer can edit. */

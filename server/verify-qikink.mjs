@@ -30,26 +30,32 @@ try {
   console.log(`\n  ✓ Auth successful (token length: ${token.length})`);
 
   if (process.argv.includes('--skus')) {
-    console.log('\n  Fetching your Qikink product list...\n');
-    const result = await listProducts({ page: 1 });
-    const isArray = Array.isArray(result);
-    const isList = isArray || (typeof result === 'object' && result.data && Array.isArray(result.data));
-
-    if (!isList) {
-      console.log('  Qikink returned an unexpected shape:');
-      console.log('  ', JSON.stringify(result, null, 2).split('\n').slice(0, 20).join('\n  '));
-      console.log('\n  If this contains your products, you may need to update server/skus.js');
-      console.log('  to flatten or reshape the response. See the imports in that file.\n');
-      process.exit(1);
+    // Qikink's public API does not document a products-listing endpoint —
+    // their nav is only Introduction / Authorization / Orders. This call is
+    // speculative and will most likely 404; when it does, fall back to the
+    // one check that doesn't need it: does every variant have *a* SKU
+    // mapped. Whether that SKU is *correct* has to be eyeballed against
+    // dashboard.qikink.com -> Products, there's nothing to check it against.
+    let qikinkSkus = null;
+    console.log('\n  Checking for a Qikink product-list endpoint (not documented — may 404)...\n');
+    try {
+      const result = await listProducts({ page: 1 });
+      const isArray = Array.isArray(result);
+      const isList = isArray || (typeof result === 'object' && result.data && Array.isArray(result.data));
+      if (isList) {
+        const products = isArray ? result : result.data || [];
+        qikinkSkus = new Set(products.flatMap(p => [
+          p.sku, p.id, p.code,
+          ...((p.variants || []).map(v => v.sku || v.id || v.code))
+        ]).filter(Boolean));
+        console.log(`  Found ${qikinkSkus.size} SKU(s) on Qikink.\n`);
+      } else {
+        console.log('  Qikink returned an unexpected shape — skipping existence check.\n');
+      }
+    } catch (err) {
+      console.log(`  No product-list endpoint available (${err.message}) — skipping existence check.`);
+      console.log('  Confirm each SKU by hand against dashboard.qikink.com -> Products.\n');
     }
-
-    const products = isArray ? result : result.data || [];
-    const qikinkSkus = new Set(products.flatMap(p => [
-      p.sku, p.id, p.code,
-      ...((p.variants || []).map(v => v.sku || v.id || v.code))
-    ]).filter(Boolean));
-
-    console.log(`  Found ${qikinkSkus.size} SKU(s) on Qikink.\n`);
 
     const variants = allVariants();
     const unmapped = unmappedVariants();
@@ -64,23 +70,28 @@ try {
       console.log('  ✓ All variants have SKU mappings.\n');
     }
 
-    const missing = variants.filter(v => v.sku && !qikinkSkus.has(v.sku));
-    if (missing.length) {
-      console.log(`  ✗ ${missing.length} mapped SKU(s) do not exist on Qikink:`);
-      missing.slice(0, 20).forEach(v => {
-        console.log(`    • ${v.sku} ← ${v.slug} (${v.colorway}, ${v.size})`);
-      });
-      if (missing.length > 20) {
-        console.log(`    … and ${missing.length - 20} more`);
+    let missing = [];
+    if (qikinkSkus) {
+      missing = variants.filter(v => v.sku && !qikinkSkus.has(v.sku));
+      if (missing.length) {
+        console.log(`  ✗ ${missing.length} mapped SKU(s) do not exist on Qikink:`);
+        missing.slice(0, 20).forEach(v => {
+          console.log(`    • ${v.sku} ← ${v.slug} (${v.colorway}, ${v.size})`);
+        });
+        if (missing.length > 20) {
+          console.log(`    … and ${missing.length - 20} more`);
+        }
+        console.log();
+      } else {
+        console.log('  ✓ All mapped SKU(s) exist on Qikink.\n');
       }
-      console.log();
-    } else {
-      console.log('  ✓ All mapped SKU(s) exist on Qikink.\n');
     }
 
     const ready = unmapped.length === 0 && missing.length === 0;
     if (ready) {
-      console.log('  ✅ Everything is ready to take orders!\n');
+      console.log(qikinkSkus
+        ? '  ✅ Everything is ready to take orders!\n'
+        : '  ✅ Every variant has a SKU mapped. Double-check each one by hand — see above.\n');
     } else {
       console.log('  Next steps:');
       if (unmapped.length > 0) {

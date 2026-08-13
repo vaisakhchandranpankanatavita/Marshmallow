@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phone Cases — Funky Threads</title>
-<meta name="description" content="23 drop-proof phone cases across four styles — tough, slim, clear and MagSafe. Fits iPhone, OnePlus, Samsung, Nothing, Redmi, realme and iQOO.">
-<link rel="icon" href="assets/acid-smiley--lime.svg">
+<meta name="description" content="Drop-proof phone cases, printed on demand and shipped from Bengaluru. Currently fits iPhone 16 Pro, with more models on the way.">
+<link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/styles.css?v=1786610573">
 </head>
 <body>
 
@@ -44,9 +44,9 @@
 
 <section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
   <div class="shell">
-    <span class="kicker" style="opacity:.8">23 designs · four styles</span>
+    <span class="kicker" style="opacity:.8">New in</span>
     <h1 class="display" style="margin-top:.7rem">Drop-Proof<br>Cases</h1>
-    <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">Tough, slim, clear and MagSafe. Fits iPhone, OnePlus, Samsung, Nothing, Redmi, realme and iQOO.</p>
+    <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">Clear cases to start, with more styles and phone models on the way. Currently fits iPhone 16 Pro.</p>
       <a href="tshirts.html" class="btn btn--light" style="margin-top:1.6rem">Looking for t-shirts? <span class="arrow">→</span></a>
   </div>
 </section>
@@ -80,51 +80,15 @@
 
 <!-- ── parallel scrolling columns ────────────────────────────────────────── -->
 <section class="parallel" id="parallel" aria-label="The full range">
-  <div class="parallel__cols" aria-hidden="true">
-      <div class="parallel__col" data-track="0.9">
-        <img src="assets/cosmic-checker--pink.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/acid-smiley--lime.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/high-voltage--black.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/daisy-crop--pink.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/flame-tough--orange.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/cosmic-checker--pink.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/acid-smiley--lime.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/high-voltage--black.svg" alt="" width="600" height="600" loading="lazy">
-      </div>
-      <div class="parallel__col" data-track="-0.75">
-        <img src="assets/smiley-slim--yellow.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/spiral-mag--purple.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/tidal--cyan.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/supernova--purple.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/double-rainbow--blue.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/smiley-slim--yellow.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/spiral-mag--purple.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/tidal--cyan.svg" alt="" width="600" height="600" loading="lazy">
-      </div>
-      <div class="parallel__col" data-track="0.6">
-        <img src="assets/zigzag-slim--pink.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/third-eye--purple.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/bolt-sleeve--black.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/daisy-clear--lime.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/shroom-boom--lime.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/zigzag-slim--pink.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/third-eye--purple.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/bolt-sleeve--black.svg" alt="" width="600" height="600" loading="lazy">
-      </div>
-      <div class="parallel__col" data-track="-0.85">
-        <img src="assets/checker-crop--cyan.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/hot-flames--orange.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/wave-slim--cyan.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/star-tough--purple.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/hypnotica--black.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/checker-crop--cyan.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/hot-flames--orange.svg" alt="" width="600" height="600" loading="lazy">
-        <img src="assets/wave-slim--cyan.svg" alt="" width="600" height="600" loading="lazy">
-      </div>
+  <div class="parallel__cols" aria-hidden="true" id="parallelCols">
+      <div class="parallel__col" data-track="0.9"></div>
+      <div class="parallel__col" data-track="-0.75"></div>
+      <div class="parallel__col" data-track="0.6"></div>
+      <div class="parallel__col" data-track="-0.85"></div>
   </div>
   <div class="parallel__plate">
     <div data-reveal>
-      <span class="kicker">51 designs · 8 themes</span>
+      <span class="kicker" id="parallelKicker"></span>
       <h2 class="display">Something<br>For Every Mood</h2>
       <p>Four tee fits, four case styles, three colourways each. Nothing here is
          a plain grey anything.</p>
@@ -241,11 +205,11 @@
 
 <div class="toast-stack" id="toasts" aria-live="polite"></div>
 
-<script src="js/products.js"></script>
-<script src="js/store.js"></script>
-<script src="js/cart.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/main.js"></script>
-<script src="js/scroll.js"></script>
+<script src="js/products.js?v=1786610573"></script>
+<script src="js/store.js?v=1786610573"></script>
+<script src="js/cart.js?v=1786610573"></script>
+<script src="js/auth.js?v=1786610573"></script>
+<script src="js/main.js?v=1786610573"></script>
+<script src="js/scroll.js?v=1786610573"></script>
 </body>
 </html>

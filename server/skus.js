@@ -96,6 +96,9 @@ export function skuFor(slug, colorway, size) {
       sku: exact.sku ?? exact,
       printTypeId: exact.print_type_id ?? PRINT_TYPE[product.category],
       placementSku: exact.placement_sku ?? PLACEMENT[product.category],
+      // 1 when this SKU is a saved product in Qikink's "My Products" — their
+      // API then pulls design/placement itself and `designs` must be omitted.
+      searchFromMyProducts: exact.search_from_my_products ?? 0,
       source: 'override'
     };
   }

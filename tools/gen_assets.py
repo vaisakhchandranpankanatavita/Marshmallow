@@ -587,67 +587,12 @@ def avatar(initials, bg, fg=CREAM, s=120):
 
 # (slug, kind, art, variant, theme, colourways[(name, hex, ink)])
 P = PAL
+# Mirrors js/products.js — one row per real product that exists in the
+# Qikink dashboard (Products -> My Products). Add a row here alongside the
+# one in js/products.js each time a new product is created in Qikink; there
+# is no API to pull this automatically (see server/qikink.js).
 CATALOG = [
-    # ---- oversized tees ----
-    ("cosmic-checker",  "tee", "checker",  "oversized", "abstract", [("pink", P["pink"], INK), ("blue", P["blue"], P["lime"]), ("black", P["black"], P["cyan"])]),
-    ("acid-smiley",     "tee", "smiley",   "oversized", "cartoon",  [("lime", P["lime"], INK), ("purple", P["purple"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
-    ("hot-flames",      "tee", "flames",   "oversized", "cars",     [("orange", P["orange"], INK), ("black", P["black"], P["orange"]), ("red", P["red"], P["yellow"])]),
-    ("supernova",       "tee", "star",     "oversized", "space",    [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("blue", P["blue"], P["yellow"])]),
-    ("hypnotica",       "tee", "spiral",   "oversized", "abstract", [("black", P["black"], P["cream"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
-    ("third-eye",       "tee", "eye",      "oversized", "abstract", [("purple", P["purple"], P["cream"]), ("cream", P["cream"], P["purple"]), ("black", P["black"], P["lime"])]),
-    ("senpai-stare",    "tee", "animeeye", "oversized", "anime",    [("pink", P["pink"], INK), ("black", P["black"], P["pink"]), ("cream", P["cream"], P["purple"])]),
-    ("toon-town",       "tee", "toonface", "oversized", "cartoon",  [("yellow", P["yellow"], INK), ("cyan", P["cyan"], INK), ("orange", P["orange"], INK)]),
-    ("redline",         "tee", "car",      "oversized", "cars",     [("red", P["red"], P["cream"]), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
-    # ---- classic fit tees ----
-    ("sunset-stripe",   "tee", "stripes",  "classic",   "abstract", [("yellow", P["yellow"], P["red"]), ("cyan", P["cyan"], P["purple"]), ("cream", P["cream"], P["blue"])]),
-    ("tidal",           "tee", "waves",    "classic",   "nature",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("lime", P["lime"], P["purple"])]),
-    ("high-voltage",    "tee", "bolt",     "classic",   "abstract", [("black", P["black"], P["yellow"]), ("yellow", P["yellow"], INK), ("pink", P["pink"], P["cyan"])]),
-    ("shroom-boom",     "tee", "mushroom", "classic",   "nature",   [("lime", P["lime"], P["red"]), ("cream", P["cream"], P["purple"]), ("blue", P["blue"], P["orange"])]),
-    ("double-rainbow",  "tee", "rainbow",  "classic",   "nature",   [("blue", P["blue"], P["cream"]), ("cream", P["cream"], P["pink"]), ("black", P["black"], P["yellow"])]),
-    ("continue-y-n",    "tee", "controller","classic",  "gaming",   [("black", P["black"], P["lime"]), ("purple", P["purple"], P["cyan"]), ("cream", P["cream"], P["red"])]),
-    ("tape-deck",       "tee", "cassette", "classic",   "music",    [("orange", P["orange"], INK), ("black", P["black"], P["cyan"]), ("yellow", P["yellow"], P["purple"])]),
-    ("orbit",           "tee", "planet",   "classic",   "space",    [("black", P["black"], P["cyan"]), ("blue", P["blue"], P["yellow"]), ("purple", P["purple"], P["lime"])]),
-    # ---- crop tees ----
-    ("daisy-crop",      "tee", "daisy",    "crop",      "nature",   [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["yellow"]), ("lime", P["lime"], P["red"])]),
-    ("checker-crop",    "tee", "checker",  "crop",      "abstract", [("cyan", P["cyan"], INK), ("black", P["black"], P["pink"]), ("yellow", P["yellow"], P["purple"])]),
-    ("smiley-crop",     "tee", "smiley",   "crop",      "cartoon",  [("purple", P["purple"], P["lime"]), ("orange", P["orange"], INK), ("cream", P["cream"], P["red"])]),
-    ("zigzag-crop",     "tee", "zigzag",   "crop",      "abstract", [("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["blue"]), ("blue", P["blue"], P["yellow"])]),
-    ("one-up-crop",     "tee", "pixelheart","crop",     "gaming",   [("lime", P["lime"], INK), ("pink", P["pink"], P["cream"]), ("black", P["black"], P["lime"])]),
-    ("speedlines-crop", "tee", "speed",    "crop",      "anime",    [("cream", P["cream"], P["red"]), ("cyan", P["cyan"], INK), ("yellow", P["yellow"], P["purple"])]),
-    # ---- full sleeve tees ----
-    ("bolt-sleeve",     "tee", "bolt",     "longsleeve","abstract", [("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"]), ("red", P["red"], P["cream"])]),
-    ("spiral-sleeve",   "tee", "spiral",   "longsleeve","abstract", [("cream", P["cream"], P["purple"]), ("purple", P["purple"], P["cream"]), ("black", P["black"], P["cyan"])]),
-    ("wave-sleeve",     "tee", "waves",    "longsleeve","nature",   [("blue", P["blue"], P["cream"]), ("cyan", P["cyan"], INK), ("lime", P["lime"], P["purple"])]),
-    ("mecha-sleeve",    "tee", "animeeye", "longsleeve","anime",    [("black", P["black"], P["red"]), ("purple", P["purple"], P["cream"]), ("cream", P["cream"], P["blue"])]),
-    ("launch-sleeve",   "tee", "rocket",   "longsleeve","space",    [("blue", P["blue"], P["yellow"]), ("black", P["black"], P["orange"]), ("cream", P["cream"], P["red"])]),
-
-    # ---- tough cases ----
-    ("checker-tough",   "case", "checker", "tough",     "abstract", [("pink", P["pink"], INK), ("lime", P["lime"], INK), ("black", P["black"], P["cyan"])]),
-    ("flame-tough",     "case", "flames",  "tough",     "cars",     [("black", P["black"], P["orange"]), ("orange", P["orange"], INK), ("red", P["red"], P["yellow"])]),
-    ("bolt-tough",      "case", "bolt",    "tough",     "abstract", [("yellow", P["yellow"], INK), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
-    ("star-tough",      "case", "star",    "tough",     "space",    [("purple", P["purple"], P["lime"]), ("red", P["red"], P["cream"]), ("cyan", P["cyan"], INK)]),
-    ("redline-tough",   "case", "car",     "tough",     "cars",     [("red", P["red"], P["cream"]), ("black", P["black"], P["yellow"]), ("cream", P["cream"], P["blue"])]),
-    ("respawn-tough",   "case", "controller","tough",   "gaming",   [("black", P["black"], P["lime"]), ("lime", P["lime"], INK), ("purple", P["purple"], P["cyan"])]),
-    # ---- slim cases ----
-    ("smiley-slim",     "case", "smiley",  "slim",      "cartoon",  [("yellow", P["yellow"], INK), ("purple", P["purple"], P["yellow"]), ("cyan", P["cyan"], INK)]),
-    ("zigzag-slim",     "case", "zigzag",  "slim",      "abstract", [("cream", P["cream"], P["blue"]), ("pink", P["pink"], P["cream"]), ("lime", P["lime"], P["purple"])]),
-    ("wave-slim",       "case", "waves",   "slim",      "nature",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("purple", P["purple"], P["lime"])]),
-    ("daisy-slim",      "case", "daisy",   "slim",      "nature",   [("cream", P["cream"], P["orange"]), ("pink", P["pink"], P["lime"]), ("lime", P["lime"], P["red"])]),
-    ("toon-slim",       "case", "toonface","slim",      "cartoon",  [("cyan", P["cyan"], INK), ("yellow", P["yellow"], INK), ("pink", P["pink"], P["cream"])]),
-    ("mixtape-slim",    "case", "cassette","slim",      "music",    [("orange", P["orange"], INK), ("black", P["black"], P["cyan"]), ("cream", P["cream"], P["red"])]),
-    # ---- clear cases ----
-    ("mushroom-clear",  "case", "mushroom","clear",     "nature",   [("cream", P["cream"], P["lime"]), ("cyan", P["cyan"], P["purple"]), ("pink", P["pink"], P["red"])]),
-    ("daisy-clear",     "case", "daisy",   "clear",     "nature",   [("cream", P["cream"], P["pink"]), ("lime", P["lime"], P["orange"]), ("blue", P["blue"], P["yellow"])]),
-    ("eye-clear",       "case", "eye",     "clear",     "abstract", [("cream", P["cream"], P["purple"]), ("cyan", P["cyan"], INK), ("yellow", P["yellow"], P["red"])]),
-    ("senpai-clear",    "case", "animeeye","clear",     "anime",    [("cream", P["cream"], P["pink"]), ("pink", P["pink"], INK), ("cyan", P["cyan"], P["purple"])]),
-    ("heart-clear",     "case", "pixelheart","clear",   "gaming",   [("cream", P["cream"], P["red"]), ("lime", P["lime"], INK), ("cyan", P["cyan"], P["purple"])]),
-    # ---- magsafe cases ----
-    ("spiral-mag",      "case", "spiral",  "magsafe",   "abstract", [("purple", P["purple"], P["cream"]), ("red", P["red"], P["cream"]), ("black", P["black"], P["pink"])]),
-    ("rainbow-mag",     "case", "rainbow", "magsafe",   "nature",   [("blue", P["blue"], P["cream"]), ("black", P["black"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
-    ("stripe-mag",      "case", "stripes", "magsafe",   "abstract", [("yellow", P["yellow"], P["red"]), ("pink", P["pink"], P["cream"]), ("black", P["black"], P["lime"])]),
-    ("orbit-mag",       "case", "planet",  "magsafe",   "space",    [("black", P["black"], P["cyan"]), ("blue", P["blue"], P["yellow"]), ("purple", P["purple"], P["lime"])]),
-    ("bassline-mag",    "case", "note",    "magsafe",   "music",    [("purple", P["purple"], P["yellow"]), ("black", P["black"], P["pink"]), ("orange", P["orange"], INK)]),
-    ("boom-mag",        "case", "bomb",    "magsafe",   "cartoon",  [("red", P["red"], P["cream"]), ("yellow", P["yellow"], INK), ("cyan", P["cyan"], INK)]),
+    ("anime-clear-case", "case", "animeeye", "clear", "anime", [("cream", P["cream"], P["pink"])]),
 ]
 
 POSTERS = [
@@ -655,8 +600,8 @@ POSTERS = [
     ("story-2.svg",  ["Screen", "Printed"],       P["yellow"], INK,        P["red"],    "by hand"),
     ("story-3.svg",  ["Small", "Batch"],          P["blue"],   CREAM,      P["lime"],   "no reprints"),
     ("story-4.svg",  ["Packed", "In Bengaluru"],  P["pink"],   CREAM,      P["yellow"], "shipped fast"),
-    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "28 designs"),
-    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "23 designs"),
+    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "coming soon"),
+    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "1 design"),
     ("look-1.svg",   ["Loud"],                    P["purple"], P["lime"],  P["yellow"], None),
     ("look-2.svg",   ["Proud"],                   P["orange"], INK,        P["cream"],  None),
     ("look-3.svg",   ["Never", "Basic"],          P["cyan"],   INK,        P["red"],    None),
@@ -675,8 +620,21 @@ REVIEWERS = [
 
 
 def main():
+    # Wipe first so a shrunk CATALOG (e.g. a product removed from Qikink)
+    # does not leave orphaned SVGs behind — everything here is regenerated,
+    # nothing in assets/ is hand-edited.
+    if os.path.isdir(OUT):
+        for f in os.listdir(OUT):
+            if f.endswith(".svg"):
+                os.remove(os.path.join(OUT, f))
     os.makedirs(OUT, exist_ok=True)
     n = 0
+
+    # Every page's <link rel="icon"> points here directly (not at a CATALOG
+    # product), so it has to survive the catalog shrinking to whatever is
+    # actually in Qikink.
+    write("favicon.svg", wrap(art_smiley(40, 40, 520, 520, PAL["lime"], INK), 600, 600))
+    n += 1
 
     for slug, kind, art, variant, theme, ways in CATALOG:
         for cname, chex, cink in ways:

@@ -178,9 +178,10 @@ const absoluteUrl = path => `${CONFIG.publicBaseUrl}/${path.replace(/^\/+/, '')}
 /* Our vocabulary -> Qikink's. The field names below are their contract, not
    ours; see server/qikink.js for why they all live on this side of the fence.
  *
- * `search_from_my_products` is 0 because we send the artwork with every line
- * rather than relying on a product saved in the Qikink dashboard. Set it to 1
- * (and drop `designs`) for lines you have already created on their side. */
+ * `search_from_my_products` comes from the SKU mapping (server/skus.js), not
+ * a constant here: it is 1 for a product saved in Qikink's dashboard (their
+ * API then pulls the design itself, so `designs` must be omitted), and 0 for
+ * a raw blank SKU where we supply the artwork on every line. */
 export function toQikinkPayload({ orderNumber, quote, customer, gateway }) {
   const lineItems = quote.lines.map(line => {
     const mapped = skuFor(line.slug, line.colorway, line.size);
@@ -191,14 +192,20 @@ export function toQikinkPayload({ orderNumber, quote, customer, gateway }) {
       );
     }
 
+    const base = {
+      search_from_my_products: mapped.searchFromMyProducts ? 1 : 0,
+      quantity: String(line.qty),
+      price: String(line.unitPrice),
+      sku: mapped.sku
+    };
+
+    if (mapped.searchFromMyProducts) return base;
+
     const print = PRINT_SIZE[line.product.category] || PRINT_SIZE.tees;
     const art = absoluteUrl(artworkPath(line.product, line.colorway));
 
     return {
-      search_from_my_products: 0,
-      quantity: String(line.qty),
-      price: String(line.unitPrice),
-      sku: mapped.sku,
+      ...base,
       print_type_id: mapped.printTypeId,
       designs: [{
         design_code: `${line.slug}-${line.colorway}`,
