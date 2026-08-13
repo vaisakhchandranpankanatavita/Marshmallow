@@ -859,7 +859,8 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 
 /* ================================================== browse welcome modal */
 
-.browse-modal { position: fixed; inset: 0; z-index: 970; display: grid; place-items: center; padding: 1rem; }
+.browse-modal { position: fixed; inset: 0; z-index: 970; display: none; padding: 1rem; }
+.browse-modal.is-open { display: grid; place-items: center; }
 .browse-modal__scrim { position: absolute; inset: 0; background: rgba(20,20,20,.7); }
 
 .browse-modal__panel {
