@@ -165,7 +165,11 @@ export async function getOrder({ qikinkOrderId, orderNumber } = {}) {
 /* ---------------------------------------------------------------- products */
 
 /* Your product list on their side — the source of truth for SKUs. Used by
-   verify-qikink.mjs to check our mapping against reality. */
+   verify-qikink.mjs to check our mapping against reality.
+
+   NOTE: If Qikink's API does not provide a products listing endpoint,
+   you will need to manually define SKU mappings in server/qikink-skus.json
+   and run `npm run verify:qikink` without the --skus flag. */
 export async function listProducts({ page = 1 } = {}) {
   return call(ENDPOINTS.products, { query: { page } });
 }
