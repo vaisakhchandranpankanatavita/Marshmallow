@@ -1,0 +1,62 @@
+{
+  "_readme": [
+    "Explicit Qikink SKUs. Anything here beats the codes derived in server/skus.js.",
+    "",
+    "`caseModels` is keyed by '<case style>/<phone model>' — phone cases have one",
+    "SKU per model, so there is nothing to derive. Fill these in from your Qikink",
+    "product list (Dashboard -> Products, or `npm run verify:skus`).",
+    "",
+    "`variants` is keyed by '<slug>/<colourway>/<size>' and overrides a single",
+    "variant. Use it when a specific colourway ships on a different blank.",
+    "A value may be a plain SKU string or an object:",
+    "  { \"sku\": \"...\", \"print_type_id\": 1, \"placement_sku\": \"fr\" }"
+  ],
+
+  "caseModels": {
+    "tough/iPhone 15": "",
+    "tough/iPhone 15 Pro": "",
+    "tough/iPhone 16": "",
+    "tough/iPhone 16 Pro": "",
+    "tough/OnePlus 12": "",
+    "tough/Samsung S24": "",
+    "tough/Nothing Phone 2a": "",
+    "tough/Redmi Note 13 Pro": "",
+    "tough/realme 12 Pro": "",
+    "tough/iQOO Neo 9": "",
+
+    "slim/iPhone 15": "",
+    "slim/iPhone 15 Pro": "",
+    "slim/iPhone 16": "",
+    "slim/iPhone 16 Pro": "",
+    "slim/OnePlus 12": "",
+    "slim/Samsung S24": "",
+    "slim/Nothing Phone 2a": "",
+    "slim/Redmi Note 13 Pro": "",
+    "slim/realme 12 Pro": "",
+    "slim/iQOO Neo 9": "",
+
+    "clear/iPhone 15": "",
+    "clear/iPhone 15 Pro": "",
+    "clear/iPhone 16": "",
+    "clear/iPhone 16 Pro": "",
+    "clear/OnePlus 12": "",
+    "clear/Samsung S24": "",
+    "clear/Nothing Phone 2a": "",
+    "clear/Redmi Note 13 Pro": "",
+    "clear/realme 12 Pro": "",
+    "clear/iQOO Neo 9": "",
+
+    "magsafe/iPhone 15": "",
+    "magsafe/iPhone 15 Pro": "",
+    "magsafe/iPhone 16": "",
+    "magsafe/iPhone 16 Pro": "",
+    "magsafe/OnePlus 12": "",
+    "magsafe/Samsung S24": "",
+    "magsafe/Nothing Phone 2a": "",
+    "magsafe/Redmi Note 13 Pro": "",
+    "magsafe/realme 12 Pro": "",
+    "magsafe/iQOO Neo 9": ""
+  },
+
+  "variants": {}
+}

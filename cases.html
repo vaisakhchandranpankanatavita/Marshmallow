@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phone Cases — Funky Threads</title>
+<meta name="description" content="23 drop-proof phone cases across four styles — tough, slim, clear and MagSafe. Fits iPhone, OnePlus, Samsung, Nothing, Redmi, realme and iQOO.">
+<link rel="icon" href="assets/acid-smiley--lime.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns · Drop 007 is live</div>
+
+<header class="nav" id="nav">
+  <div class="shell nav__inner">
+    <a href="index.html" class="nav__logo">Funky<b>Threads</b></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="shop.html">Shop all</a>
+      <a href="tshirts.html">T-Shirts</a>
+      <a href="cases.html" aria-current="page">Cases</a>
+      <a href="about.html">Our story</a>
+      <a href="#faq">Help</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="account">
+        <button class="account-btn" id="accountBtn" aria-label="Sign in"
+                aria-expanded="false" aria-haspopup="true"></button>
+        <div class="account__menu" id="accountMenu" hidden></div>
+      </div>
+      <button class="cart-btn" id="cartOpen" aria-label="Open cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
+  <div class="shell">
+    <span class="kicker" style="opacity:.8">23 designs · four styles</span>
+    <h1 class="display" style="margin-top:.7rem">Drop-Proof<br>Cases</h1>
+    <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">Tough, slim, clear and MagSafe. Fits iPhone, OnePlus, Samsung, Nothing, Redmi, realme and iQOO.</p>
+      <a href="tshirts.html" class="btn btn--light" style="margin-top:1.6rem">Looking for t-shirts? <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ COD available</span>
+    <span>★ 240gsm cotton</span><span>★ Water-based inks</span><span>★ Runs of 200</span><span>★ COD available</span>
+  </div>
+</div>
+
+<section class="band band--cream" id="grid">
+  <div class="shell">
+    <div class="toolbar">
+            <div style="display:flex;gap:1rem;align-items:center">
+        <span class="result-count" id="resultCount"></span>
+        <select class="select" id="sort" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+          <option value="rating">Top rated</option>
+        </select>
+      </div>
+    </div>
+    <div class="subfilters" id="subfilters" role="group" aria-label="Filter by style" hidden></div>
+    <div class="themefilters" id="themefilters" role="group" aria-label="Filter by theme"></div>
+    <p class="sub-note" id="subNote" hidden></p>
+    <div class="grid-products" id="mainGrid" data-stagger data-locked-category="cases"></div>
+  </div>
+</section>
+
+<!-- ── parallel scrolling columns ────────────────────────────────────────── -->
+<section class="parallel" id="parallel" aria-label="The full range">
+  <div class="parallel__cols" aria-hidden="true">
+      <div class="parallel__col" data-track="0.9">
+        <img src="assets/cosmic-checker--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/acid-smiley--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/high-voltage--black.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/daisy-crop--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/flame-tough--orange.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/cosmic-checker--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/acid-smiley--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/high-voltage--black.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+      <div class="parallel__col" data-track="-0.75">
+        <img src="assets/smiley-slim--yellow.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/spiral-mag--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/tidal--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/supernova--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/double-rainbow--blue.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/smiley-slim--yellow.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/spiral-mag--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/tidal--cyan.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+      <div class="parallel__col" data-track="0.6">
+        <img src="assets/zigzag-slim--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/third-eye--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/bolt-sleeve--black.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/daisy-clear--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/shroom-boom--lime.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/zigzag-slim--pink.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/third-eye--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/bolt-sleeve--black.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+      <div class="parallel__col" data-track="-0.85">
+        <img src="assets/checker-crop--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/hot-flames--orange.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/wave-slim--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/star-tough--purple.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/hypnotica--black.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/checker-crop--cyan.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/hot-flames--orange.svg" alt="" width="600" height="600" loading="lazy">
+        <img src="assets/wave-slim--cyan.svg" alt="" width="600" height="600" loading="lazy">
+      </div>
+  </div>
+  <div class="parallel__plate">
+    <div data-reveal>
+      <span class="kicker">51 designs · 8 themes</span>
+      <h2 class="display">Something<br>For Every Mood</h2>
+      <p>Four tee fits, four case styles, three colourways each. Nothing here is
+         a plain grey anything.</p>
+      <a href="#grid" class="btn btn--yellow">Browse the lot <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="band band--paper" id="faq">
+  <div class="shell">
+    <div class="band-head band-head--center" data-reveal data-zoom>
+      <span class="kicker">Before you ask</span>
+      <h2 class="display">The Answers</h2>
+    </div>
+    <div class="accordion" id="faqList" data-reveal></div>
+  </div>
+</section>
+
+<section class="band band--yellow">
+  <div class="shell" style="display:grid;gap:2rem;justify-items:center;text-align:center">
+    <div class="band-head band-head--center" style="margin-bottom:0" data-reveal>
+      <span class="kicker">First dibs</span>
+      <h2 class="display">Get The Drop<br>Before It Drops</h2>
+      <p>One email per drop. Early access, restock alerts, and 10% off your first order.</p>
+    </div>
+    <form class="signup" data-reveal novalidate>
+      <input type="email" placeholder="you@email.com" aria-label="Email address" required>
+      <button type="submit" class="btn">Sign me up</button>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="nav__logo">Funky<b>Threads</b></span>
+        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All products</a></li>
+          <li><a href="tshirts.html">T-Shirts</a></li>
+          <li><a href="cases.html">Phone cases</a></li>
+          <li><a href="index.html#bestsellers">Best sellers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#faq">Device fit</a></li>
+          <li><a href="#faq">Shipping</a></li>
+          <li><a href="#faq">Returns</a></li>
+          <li><a href="#faq">Print care</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">Our story</a></li>
+          <li><a href="about.html#sustainability">Sustainability</a></li>
+          <li><a href="index.html#reviews">Reviews</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
+      <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="drawer__head">
+    <h2>Your bag <span id="drawerCount"></span></h2>
+    <button class="drawer__close" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+  <div class="ship-meter" id="shipMeter">
+    <p id="shipText">Spend ₹1,499 for free shipping</p>
+    <div class="ship-meter__bar"><div class="ship-meter__fill" id="shipFill"></div></div>
+  </div>
+  <div class="drawer__items" id="drawerItems"></div>
+  <div class="drawer__foot" id="drawerFoot" hidden>
+    <div class="drawer__row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+    <div class="drawer__row"><span>Shipping</span><span id="shipping">Calculated at checkout</span></div>
+    <div class="drawer__row" style="font-size:.78rem;opacity:.7"><span id="codNote"></span></div>
+    <div class="drawer__row drawer__row--total"><span>Total</span><span id="total">₹0</span></div>
+    <button class="btn btn--block" id="checkout">Checkout</button>
+    <p class="drawer__note">GST included · COD available up to ₹3,000</p>
+  </div>
+</aside>
+
+<div class="auth" id="authModal" role="dialog" aria-modal="true"
+     aria-labelledby="authTitle" aria-hidden="true">
+  <div class="auth__scrim" id="authScrim"></div>
+  <div class="auth__panel">
+    <div class="auth__head">
+      <div>
+        <h2 id="authTitle">Your account</h2>
+        <p>Track orders, save addresses, get drops early.</p>
+      </div>
+      <button class="drawer__close" id="authClose" aria-label="Close">&#10005;</button>
+    </div>
+    <p class="auth__demo">
+      <strong>Demo only.</strong> This form is not connected to anything — no account is
+      created and nothing is verified. Please don't enter a real password.
+    </p>
+    <div class="auth__body" id="authBody"></div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+<script src="js/products.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/scroll.js"></script>
+</body>
+</html>
