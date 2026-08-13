@@ -779,8 +779,11 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   min-width: 220px; z-index: 300;
   background: var(--cream); color: var(--ink);
   border: var(--edge); border-radius: var(--r);
-  padding: .5rem; display: grid; gap: .15rem;
+  padding: .5rem; display: none; gap: .15rem;
   box-shadow: 6px 8px 0 var(--ink);
+}
+.account__menu:not([hidden]) {
+  display: grid;
 }
 .account__who {
   padding: .6rem .7rem .7rem; font-weight: 700; font-size: .9rem;
