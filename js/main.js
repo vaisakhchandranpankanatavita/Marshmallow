@@ -385,8 +385,6 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('is-open')) hide();
     });
-
-    show();
   }
 
   /* ---------------------------------------------------------------- boot */
