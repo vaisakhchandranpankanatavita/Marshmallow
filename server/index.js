@@ -7,6 +7,7 @@
  *
  * Routes:
  *   GET  /api/health              config summary, no secrets
+ *   GET  /api/catalog             products with valid Qikink SKU mappings only
  *   POST /api/quote               price a bag (no side effects)
  *   POST /api/payments/razorpay   open a payment for a priced bag
  *   POST /api/orders              place the order with Qikink
@@ -24,9 +25,38 @@ import {
   PaymentError, assertPaymentCaptured, createPaymentOrder, razorpayConfigured, verifyPaymentSignature
 } from './payments.js';
 import { findOrder, saveOrder, updateOrder } from './storage.js';
-import { unmappedVariants } from './skus.js';
+import { unmappedVariants, allVariants } from './skus.js';
+import { PRODUCTS, productBySlug, sizesFor } from './catalog.js';
 
 /* ------------------------------------------------------------------ routes */
+
+function getCatalog() {
+  const variants = allVariants();
+  const mappedSlugs = new Set(
+    variants
+      .filter(v => v.sku)
+      .map(v => v.slug)
+  );
+
+  return PRODUCTS
+    .filter(p => mappedSlugs.has(p.slug))
+    .map(p => ({
+      slug: p.slug,
+      name: p.name,
+      category: p.category,
+      subcategory: p.subcategory,
+      theme: p.theme,
+      price: p.price,
+      compareAt: p.compareAt,
+      colorways: p.colorways,
+      badge: p.badge,
+      rating: p.rating,
+      reviews: p.reviews,
+      tagline: p.tagline,
+      description: p.description,
+      details: p.details
+    }));
+}
 
 async function handleQuote(req, res) {
   const body = await readJsonBody(req);
@@ -240,6 +270,10 @@ const server = createServer(async (req, res) => {
         unmappedVariants: unmappedVariants().length,
         commerce: CONFIG.commerce
       });
+    }
+
+    if (req.method === 'GET' && path === '/api/catalog') {
+      return sendJson(res, 200, getCatalog());
     }
 
     if (req.method === 'POST' && path === '/api/quote') return await handleQuote(req, res);
