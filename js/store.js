@@ -61,7 +61,7 @@ window.Store = (function () {
 
     /* Your own backend. Not Qikink directly — see the note above. */
     orderEndpoint: '/api/orders',
-    catalogEndpoint: '/api/catalog'        // Load only Qikink-mapped products from the server
+    catalogEndpoint: '/api/catalog',        // Load only Qikink-mapped products from the server
 
     /* Flip on once orderEndpoint is live. */
     enabled: false
