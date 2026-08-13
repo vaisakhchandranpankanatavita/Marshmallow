@@ -368,6 +368,27 @@
     });
   }
 
+  /* ------------------------------------------------------- browse modal */
+
+  function initBrowseModal() {
+    const modal = $('browseModal');
+    const scrim = $('browseScrim');
+    const close = $('browseClose');
+    if (!modal) return;
+
+    const show = () => { modal.style.display = 'grid'; };
+    const hide = () => { modal.style.display = 'none'; };
+
+    scrim?.addEventListener('click', hide);
+    close?.addEventListener('click', hide);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.style.display === 'grid') hide();
+    });
+
+    show();
+  }
+
   /* ---------------------------------------------------------------- boot */
 
   async function boot() {
@@ -381,6 +402,7 @@
     initFaq();
     initNav();
     initSignup();
+    initBrowseModal();
     window.Cart.init();
     window.Auth.init();
 
