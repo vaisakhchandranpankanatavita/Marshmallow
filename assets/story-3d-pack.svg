@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+<rect width="800" height="600" rx="28" fill="#FBF3E4"/>
+<rect x="48" y="48" width="704" height="504" rx="28" fill="#141414" transform="translate(6,6)" opacity=".96"/>
+<rect x="48" y="48" width="704" height="504" rx="28" fill="#FFFFFF" stroke="#141414" stroke-width="6"/>
+<!-- header -->
+<rect x="72" y="72" width="656" height="44" rx="12" fill="#FFC72C" stroke="#141414" stroke-width="4"/>
+<text x="400" y="101" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="800" fill="#141414" letter-spacing="3">PACKED IN THE SAME ROOM • PLASTIC-FREE</text>
+<!-- mailer stack — centered with perfect padding -->
+<g transform="translate(96,136)">
+  <path d="M16 272 L28 260 L556 260 L568 272 L568 304 L28 324 L16 312 Z" fill="#141414"/>
+  <!-- back mailer -->
+  <rect x="28" y="40" width="524" height="252" rx="18" fill="#E03127" stroke="#141414" stroke-width="5" transform="rotate(-2 290 166)"/>
+  <text x="290" y="142" text-anchor="middle" font-family="Archivo Black" font-size="16" fill="#FBF3E4" transform="rotate(-2 290 142)">FRAGILE — NO BEIGE INSIDE</text>
+  <!-- sticker sheet -->
+  <rect x="388" y="8" width="132" height="102" rx="14" fill="#FFFFFF" stroke="#141414" stroke-width="4" transform="rotate(6 454 59)"/>
+  <circle cx="418" cy="38" r="14" fill="#FFC72C" stroke="#141414" stroke-width="3" transform="rotate(6 454 59)"/>
+  <circle cx="454" cy="38" r="14" fill="#E03127" stroke="#141414" stroke-width="3" transform="rotate(6 454 59)"/>
+  <circle cx="418" cy="72" r="14" fill="#2D7DFF" stroke="#141414" stroke-width="3" transform="rotate(6 454 59)"/>
+  <circle cx="454" cy="72" r="14" fill="#FBF3E4" stroke="#141414" stroke-width="3" transform="rotate(6 454 59)"/>
+  <!-- front mailer -->
+  <g transform="rotate(1.5)">
+    <path d="M16 32 L28 20 L532 20 L544 32 L544 252 L28 272 L16 260 Z" fill="#141414" opacity=".96"/>
+    <rect x="16" y="12" width="528" height="260" rx="18" fill="#FFC72C" stroke="#141414" stroke-width="5"/>
+    <rect x="36" y="68" width="220" height="92" rx="10" fill="#FFFFFF" stroke="#141414" stroke-width="3"/>
+    <line x1="52" y1="92" x2="200" y2="92" stroke="#141414" stroke-width="3" stroke-linecap="round"/>
+    <line x1="52" y1="110" x2="180" y2="110" stroke="#141414" stroke-width="3" stroke-linecap="round"/>
+    <line x1="52" y1="128" x2="196" y2="128" stroke="#141414" stroke-width="3" stroke-linecap="round"/>
+    <line x1="52" y1="146" x2="160" y2="146" stroke="#141414" stroke-width="3" stroke-linecap="round" opacity=".4"/>
+    <rect x="200" y="12" width="80" height="260" rx="0" fill="#FFFFFF" opacity=".45"/>
+    <rect x="216" y="36" width="48" height="18" rx="9" fill="#141414"/>
+    <text x="240" y="50" text-anchor="middle" font-family="DM Sans" font-size="7" font-weight="700" fill="#FBF3E4" letter-spacing="1">SEALED</text>
+    <rect x="388" y="96" width="84" height="84" rx="12" fill="#E03127" stroke="#141414" stroke-width="4" transform="rotate(5 430 138)"/>
+    <text x="430" y="130" text-anchor="middle" font-family="Archivo Black" font-size="13" fill="#FBF3E4" transform="rotate(5 430 130)">BENGAL</text>
+    <text x="430" y="146" text-anchor="middle" font-family="Archivo Black" font-size="13" fill="#FBF3E4" transform="rotate(5 430 146)">URU</text>
+    <text x="430" y="164" text-anchor="middle" font-family="DM Sans" font-size="7" font-weight="700" fill="#FBF3E4" letter-spacing="2" transform="rotate(5 430 164)">SAME DAY</text>
+  </g>
+  <!-- marshmallow packing — premium -->
+  <g transform="translate(92,52)">
+    <path d="M-12 140 L-18 164" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+    <path d="M12 140 L18 164" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="-18" cy="172" rx="18" ry="9" fill="#141414"/><ellipse cx="-18" cy="168" rx="18" ry="9" fill="#FFC72C" stroke="#141414" stroke-width="3"/>
+    <ellipse cx="18" cy="172" rx="18" ry="9" fill="#141414"/><ellipse cx="18" cy="168" rx="18" ry="9" fill="#FFFFFF" stroke="#141414" stroke-width="3"/>
+    <path d="M-38 46 L-38 134 L38 134 L38 46 Z" fill="#141414" transform="translate(4,4)" opacity=".96"/>
+    <rect x="-38" y="46" width="76" height="88" rx="14" fill="#FFFFFF" stroke="#141414" stroke-width="4"/>
+    <text x="0" y="80" text-anchor="middle" font-family="Caveat,cursive" font-size="13" font-weight="700" fill="#141414">packed</text>
+    <text x="0" y="96" text-anchor="middle" font-family="Caveat,cursive" font-size="13" font-weight="700" fill="#E03127">with love</text>
+    <text x="0" y="116" text-anchor="middle" font-family="Archivo Black" font-size="8" fill="#141414">♥</text>
+    <g transform="translate(0,18)">
+      <rect x="-42" y="-32" width="84" height="60" rx="16" fill="#141414" transform="translate(4,4)"/>
+      <rect x="-42" y="-32" width="84" height="60" rx="16" fill="#FBF3E4" stroke="#141414" stroke-width="4"/>
+      <path d="M-26 -6 Q0 -12 26 -6" stroke="#8B5A2B" stroke-width="2.4" opacity=".42" fill="none"/>
+      <circle cx="-12" cy="-1" r="5.5" fill="#141414"/><circle cx="-12" cy="-3" r="1.8" fill="white"/>
+      <circle cx="12" cy="-1" r="5.5" fill="#141414"/><circle cx="12" cy="-3" r="1.8" fill="white"/>
+      <path d="M-7 10 Q0 16 7 10" stroke="#141414" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="-30" cy="-16" rx="8" ry="4.5" fill="white" opacity=".94"/>
+      <path d="M-21 26 C-21 35 -15 38 -9 33.5 C-3 29 2 37 7 32.5 C12 28 17 33 21 26" fill="#FFC72C" stroke="#141414" stroke-width="2.4" stroke-linejoin="round"/>
+    </g>
+    <path d="M-38 72 L-60 92" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+    <path d="M38 72 L60 92" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</g>
+<!-- footer label -->
+<g transform="translate(400,524)">
+  <rect x="-132" y="0" width="264" height="24" rx="12" fill="#141414"/>
+  <rect x="-136" y="-4" width="264" height="24" rx="12" fill="#FFFFFF" stroke="#141414" stroke-width="3"/>
+  <text x="0" y="16" text-anchor="middle" font-family="DM Sans" font-size="9" font-weight="800" fill="#141414" letter-spacing="2">PLASTIC-FREE • STICKER SHEET INCLUDED</text>
+</g>
+</svg>

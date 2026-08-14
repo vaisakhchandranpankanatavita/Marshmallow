@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+<!-- ultra-premium poster card — marshmallow hero -->
+<rect width="800" height="600" rx="28" fill="#FBF3E4"/>
+<!-- textured dots -->
+<g opacity=".08" fill="#141414">
+  <circle cx="72" cy="72" r="3"/><circle cx="728" cy="88" r="2.5"/><circle cx="88" cy="528" r="2.5"/><circle cx="720" cy="522" r="3"/>
+  <circle cx="400" cy="56" r="2"/><circle cx="120" cy="320" r="1.8"/><circle cx="680" cy="360" r="1.8"/>
+</g>
+<!-- card shadow extrusion -->
+<rect x="48" y="48" width="704" height="504" rx="28" fill="#141414" opacity=".96"/>
+<rect x="40" y="40" width="704" height="504" rx="28" fill="#FFFFFF" stroke="#141414" stroke-width="6"/>
+<!-- top bar -->
+<rect x="72" y="72" width="656" height="48" rx="14" fill="#FFC72C" stroke="#141414" stroke-width="4"/>
+<circle cx="104" cy="96" r="9" fill="#141414"/><circle cx="128" cy="96" r="9" fill="#141414"/><circle cx="152" cy="96" r="9" fill="#141414"/>
+<text x="400" y="102" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="800" letter-spacing="5" fill="#141414">BOHEMIAN • SINCE 2019 • BENGALURU</text>
+<!-- tee stack platform -->
+<g transform="translate(80,360)">
+  <!-- platform shadow -->
+  <ellipse cx="320" cy="146" rx="260" ry="18" fill="#141414" opacity=".1"/>
+  <g transform="rotate(-4)">
+    <path d="M8 18 L20 6 L248 6 L260 18 L260 86 L20 104 L8 92 Z" fill="#141414"/>
+    <rect x="8" y="6" width="252" height="86" rx="14" fill="#FFC72C" stroke="#141414" stroke-width="4"/>
+    <text x="134" y="58" text-anchor="middle" font-family="Archivo Black" font-size="28" fill="#141414">LOUD</text>
+  </g>
+  <g transform="rotate(3) translate(152,10)">
+    <path d="M8 18 L20 6 L248 6 L260 18 L260 86 L20 104 L8 92 Z" fill="#141414"/>
+    <rect x="8" y="6" width="252" height="86" rx="14" fill="#E03127" stroke="#141414" stroke-width="4"/>
+    <text x="134" y="58" text-anchor="middle" font-family="Archivo Black" font-size="24" fill="#FBF3E4">WEAR IT</text>
+  </g>
+  <g transform="rotate(-1) translate(304,18)">
+    <path d="M8 18 L20 6 L248 6 L260 18 L260 86 L20 104 L8 92 Z" fill="#141414"/>
+    <rect x="8" y="6" width="252" height="86" rx="14" fill="#FFFFFF" stroke="#141414" stroke-width="4"/>
+    <circle cx="134" cy="46" r="22" fill="#E03127" stroke="#141414" stroke-width="3"/><circle cx="126" cy="42" r="3.5" fill="white"/><circle cx="142" cy="42" r="3.5" fill="white"/>
+  </g>
+</g>
+<!-- ===== MARSHMALLOW HERO CHARACTER — centered, ultra premium ===== -->
+<g transform="translate(400,224)">
+  <ellipse cx="0" cy="142" rx="82" ry="14" fill="#141414" opacity=".12"/>
+  <!-- legs -->
+  <path d="M-22 108 L-30 136" stroke="#141414" stroke-width="7" stroke-linecap="round"/>
+  <path d="M22 108 L30 136" stroke="#141414" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="-32" cy="144" rx="24" ry="12" fill="#141414"/><ellipse cx="-32" cy="140" rx="24" ry="12" fill="#FFC72C" stroke="#141414" stroke-width="3.2"/>
+  <ellipse cx="32" cy="144" rx="24" ry="12" fill="#141414"/><ellipse cx="32" cy="140" rx="24" ry="12" fill="#FFFFFF" stroke="#141414" stroke-width="3.2"/>
+  <!-- body tee — oversized, premium -->
+  <path d="M-74  -18 L-74 108 L74 108 L74 -18 Z" fill="#141414" transform="translate(6,6)" opacity=".96"/>
+  <rect x="-74" y="-18" width="148" height="126" rx="26" fill="#FFC72C" stroke="#141414" stroke-width="6"/>
+  <path d="M-28 -18 Q0 16 28 -18" fill="#FBF3E4" stroke="#141414" stroke-width="4.5"/>
+  <text x="0" y="66" text-anchor="middle" font-family="Archivo Black" font-size="14" fill="#141414" letter-spacing="1">MARSHMELLO</text>
+  <text x="0" y="84" text-anchor="middle" font-family="Caveat,cursive" font-size="18" font-weight="700" fill="#141414">wear it proud</text>
+  <!-- head — exact logo puff -->
+  <g transform="translate(0,-52)">
+    <rect x="-64" y="-38" width="128" height="84" rx="24" fill="#141414" transform="translate(6,6)"/>
+    <rect x="-64" y="-38" width="128" height="84" rx="24" fill="#FBF3E4" stroke="#141414" stroke-width="5.5"/>
+    <path d="M-40 -6 Q0 -14 40 -6" stroke="#8B5A2B" stroke-width="3.2" stroke-linecap="round" opacity=".42" fill="none"/>
+    <path d="M-40 8 Q0 0 40 8" stroke="#8B5A2B" stroke-width="3.2" stroke-linecap="round" opacity=".36" fill="none"/>
+    <circle cx="-18" cy="-2" r="8" fill="#141414"/><circle cx="-18" cy="-4.8" r="2.4" fill="white"/>
+    <circle cx="18" cy="-2" r="8" fill="#141414"/><circle cx="18" cy="-4.8" r="2.4" fill="white"/>
+    <ellipse cx="-34" cy="12" rx="8" ry="4.5" fill="#E03127" opacity=".22"/>
+    <ellipse cx="34" cy="12" rx="8" ry="4.5" fill="#E03127" opacity=".22"/>
+    <path d="M-11 13 Q0 22 11 13" stroke="#141414" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-46" cy="-18" rx="12" ry="6.5" fill="white" opacity=".96"/>
+    <path d="M-30 38 C-30 47 -24 50 -18 45.5 C-12 41 -7 49 -1 44.5 C5 40 10 45 16 38" fill="#FFC72C" stroke="#141414" stroke-width="3.2" stroke-linejoin="round"/>
+    <g transform="translate(58,-32)">
+      <path d="M0 -9 L2.4 -2.4 L9 0 L2.4 2.4 L0 9 L-2.4 2.4 L-9 0 L-2.4 -2.4Z" fill="#FFC72C" stroke="#141414" stroke-width="1.6"/>
+    </g>
+  </g>
+  <!-- arms -->
+  <path d="M-74 22 L-102 62" stroke="#141414" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="-106" cy="66" r="11" fill="#141414"/><circle cx="-106" cy="63" r="8.5" fill="#FBF3E4" stroke="#141414" stroke-width="2.2"/>
+  <path d="M74 16 L100 -20 L116 -10" stroke="#141414" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="120" cy="-10" r="11" fill="#141414"/><circle cx="120" cy="-13" r="8.5" fill="#FBF3E4" stroke="#141414" stroke-width="2.2"/>
+  <g transform="translate(136,-24)">
+    <path d="M0 -7 L1.8 -1.8 L7 0 L1.8 1.8 L0 7 L-1.8 1.8 L-7 0 L-1.8 -1.8Z" fill="#FFC72C" stroke="#141414" stroke-width="1.4"/>
+  </g>
+</g>
+<!-- badges — perfectly padded -->
+<g transform="translate(72,520)">
+  <rect x="0" y="0" width="132" height="32" rx="16" fill="#141414"/>
+  <rect x="-4" y="-4" width="132" height="32" rx="16" fill="#FFC72C" stroke="#141414" stroke-width="3.5"/>
+  <text x="66" y="21" text-anchor="middle" font-family="Archivo Black" font-size="10" fill="#141414">200 PCS ONLY</text>
+</g>
+<g transform="translate(656,104)">
+  <circle r="46" cx="0" cy="0" fill="#141414"/>
+  <circle r="46" cx="-4" cy="-4" fill="#E03127" stroke="#141414" stroke-width="4"/>
+  <text x="-4" y="-6" text-anchor="middle" font-family="Archivo Black" font-size="12" fill="#FBF3E4">NO</text>
+  <text x="-4" y="11" text-anchor="middle" font-family="Archivo Black" font-size="12" fill="#FBF3E4">REPRINT</text>
+</g>
+</svg>

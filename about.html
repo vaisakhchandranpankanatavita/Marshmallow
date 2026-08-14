@@ -4,14 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Our story — Funky Threads</title>
-<meta name="description" content="Four people and one press in a Bengaluru studio. How Funky Threads got started and how every order actually gets made.">
+<meta name="description" content="Four people, one press, and a city that stopped wearing beige. Scroll sideways through our bohemian studio story in 3D.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=1786610573">
+<link rel="stylesheet" href="css/styles.css?v=1786737400">
+<link rel="stylesheet" href="css/cartoon.css?v=1786737400">
 </head>
-<body>
+<body class="story-page">
 
 <header class="nav" id="nav">
   <div class="shell nav__inner">
@@ -28,8 +29,7 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
       <div class="account">
-        <button class="account-btn" id="accountBtn" aria-label="Sign in"
-                aria-expanded="false" aria-haspopup="true"></button>
+        <button class="account-btn" id="accountBtn" aria-label="Sign in" aria-expanded="false" aria-haspopup="true"></button>
         <div class="account__menu" id="accountMenu" hidden></div>
       </div>
       <button class="cart-btn" id="cartOpen" aria-label="Open cart">
@@ -38,170 +38,202 @@
       </button>
     </div>
   </div>
+  <div class="story-progress" aria-hidden="true"><div class="story-progress__fill" id="storyProgress"></div></div>
 </header>
 
-<section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
-  <div class="shell feature">
-    <div>
-      <span class="kicker" style="opacity:.8">Since 2019</span>
-      <h1 class="display" style="margin-top:.7rem">Four People,<br>One Press</h1>
+<main class="story-stage" id="storyStage">
+  <!-- 3D backdrop — continuous world, never cuts -->
+  <div class="story-backdrop" aria-hidden="true">
+    <div class="story-backdrop__gradient"></div>
+    <div class="story-backdrop__grid"></div>
+    <div class="story-backdrop__orbs">
+      <span class="story-orb story-orb--1"></span>
+      <span class="story-orb story-orb--2"></span>
+      <span class="story-orb story-orb--3"></span>
+      <span class="story-orb story-orb--4"></span>
+      <span class="story-orb story-orb--5"></span>
     </div>
-    <div class="feature__art" data-reveal>
-      <img src="assets/generated/3.png" alt="Two friends in Marshmello hoodies" width="1024" height="1536" loading="eager">
-    </div>
+    <div class="story-backdrop__skyline"></div>
+    <div class="story-backdrop__doodles"></div>
+    <div class="story-backdrop__grain"></div>
   </div>
-</section>
 
-<section class="band band--yellow">
-  <div class="shell">
-    <p class="editorial" data-words>
-      We started because every mall we walked into sold the <span class="hl">same grey tee</span>
-      at four different prices. <em>So we bought a press.</em>
-    </p>
+  <!-- floating depth debris — each at different Z so scroll feels volumetric -->
+  <div class="story-floaters" aria-hidden="true">
+    <span class="floater floater--star" style="--sz:22px;--x:12%;--y:18%;--z:60;--d:0s">★</span>
+    <span class="floater floater--dot" style="--sz:14px;--x:84%;--y:14%;--z:40;--d:.4s"></span>
+    <span class="floater floater--ring" style="--sz:32px;--x:72%;--y:78%;--z:80;--d:.8s"></span>
+    <span class="floater floater--star" style="--sz:18px;--x:28%;--y:82%;--z:30;--d:1.1s">✦</span>
+    <span class="floater floater--dot" style="--sz:10px;--x:56%;--y:22%;--z:70;--d:.2s"></span>
+    <span class="floater floater--squig" style="--x:92%;--y:52%;--z:50;--d:1.4s">〰</span>
   </div>
-</section>
 
-<section class="band band--cream">
-  <div class="shell feature feature--pin">
-    <div data-reveal>
-      <span class="kicker">The short version</span>
-      <h2 class="display" style="margin:.6rem 0 1.2rem">A Railway Arch<br>And A Bad Idea</h2>
-      <p class="lead" style="margin-bottom:1rem">In 2019 we took a shed off Sarjapur Road in Bengaluru, bought a second-hand four-colour carousel from a retiring printer in Tiruppur, and spent eleven months ruining cotton.</p>
-      <p style="margin-bottom:1rem;opacity:.85">The first drop was forty shirts. We sold eleven, gave nine to friends, and wore the rest ourselves. The second drop sold out in a weekend, which we assumed was a fluke. It was not, and we have been printing ever since.</p>
-      <p style="opacity:.85">Everything still comes off that same carousel. When you order, someone here pulls a blank off the rack, lines up the screen, and pulls the squeegee — once for every colour in the design.</p>
-    </div>
-    <div class="feature__art" data-reveal>
-      <img data-parallax="-0.07" src="assets/story-2.svg" alt="The press" width="800" height="600">
-    </div>
-  </div>
-</section>
+  <div class="story-track" id="storyTrack">
 
-<section class="band band--ink" style="padding-block:clamp(2.5rem,5vw,4rem)">
-  <div class="shell stats" data-stagger>
-    <div class="stat"><div class="stat__n" data-count="2019">0</div><div class="stat__l">Year we started</div></div>
-    <div class="stat"><div class="stat__n" data-count="4">0</div><div class="stat__l">People on the team</div></div>
-    <div class="stat"><div class="stat__n" id="statDesignCount" data-count="1">0</div><div class="stat__l">Designs printed so far</div></div>
-    <div class="stat"><div class="stat__n" data-count="28">0</div><div class="stat__l">States delivered</div></div>
-  </div>
-</section>
+    <!-- 01 HERO -->
+    <section class="story-scene story-scene--hero is-active">
+      <div class="story-scene__inner">
+        <div class="story-scene__frame story-frame--hero" data-depth="1.2">
+          <div class="story-frame__shadow" aria-hidden="true"></div>
+          <img src="assets/story-3d-hero.svg" alt="Stack of Funky Threads tees fanned in 3D with NO REPRINT badge" width="800" height="600" loading="eager" decoding="async">
+          <span class="story-frame__badge story-frame__badge--tr">NO REPRINT</span>
+          <span class="story-frame__badge story-frame__badge--bl">DROP 007</span>
+        </div>
+        <div class="story-scene__card" data-tilt>
+          <span class="story-scene__kicker"><i></i> Bohemian, since 2019 · Bengaluru</span>
+          <h1 class="display">Wear<br>Something<br><em>Loud</em></h1>
+          <p class="lead">Four friends, one second-hand press, and a city tired of beige. We print small batches — when a colourway is gone, it’s a story.</p>
+          <div class="story-scene__cta">
+            <span class="story-scene__hint-inline"><span class="story-hint__arrow">→</span> Scroll or drag sideways — or press →</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="band band--paper">
-  <div class="shell">
-    <div class="band-head" data-reveal>
-      <span class="kicker">Start to finish</span>
-      <h2 class="display">How An Order<br>Gets Made</h2>
-    </div>
-    <div class="collage" data-stagger>
-      <figure class="snap">
-        <img data-parallax="0.09" src="assets/story-1.svg" alt="Choosing blanks" width="800" height="600">
-        <figcaption>Cotton from Tiruppur, picked before the colour</figcaption>
-      </figure>
-      <figure class="snap">
-        <img src="assets/story-2.svg" alt="Printing" width="800" height="600">
-        <figcaption>One pass on the press per ink</figcaption>
-      </figure>
-      <figure class="snap">
-        <img data-parallax="0.11" src="assets/story-3.svg" alt="Curing" width="800" height="600">
-        <figcaption>Cured at 160°C so it never cracks</figcaption>
-      </figure>
-      <figure class="snap">
-        <img data-parallax="-0.05" src="assets/story-4.svg" alt="Packing" width="800" height="600">
-        <figcaption>Folded, bagged and stickered by hand in Bengaluru</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
+    <!-- 02 MANIFESTO — pure typography with 3D word lift -->
+    <section class="story-scene story-scene--quote">
+      <div class="story-scene__inner">
+        <div class="story-scene__card story-scene__card--center story-scene__card--wide story-card--manifesto" data-tilt>
+          <span class="story-scene__kicker"><i></i> Manifesto</span>
+          <p class="editorial editorial--3d">Beige has <span class="hl">enough shops.</span> We make clothes for people who want to be <em>looked at</em>, not looked past.</p>
+          <p class="lead" style="margin-top:1.4rem;opacity:.92">Oversized, heavyweight, water-based — no plastic patch, no crack, no apology. If it doesn’t make you smile in the mirror, we didn’t do our job.</p>
+          <div class="manifesto__stamps" aria-hidden="true">
+            <span class="stamp stamp--yellow">OVERSIZED</span><span class="stamp stamp--red">WATER-BASED</span><span class="stamp stamp--ink">240 GSM</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="band band--red" id="sustainability">
-  <div class="shell">
-    <div class="band-head" data-reveal>
-      <span class="kicker">The honest version</span>
-      <h2 class="display">What We Do<br>And Don't Do</h2>
-      <p>We would rather tell you exactly where we are than call ourselves sustainable and hope nobody checks.</p>
-    </div>
-    <div class="pillars" data-stagger>
-      <div class="pillar">
-        <div class="pillar__icon">✅</div>
-        <h3>What we do</h3>
-        <p>Water-based inks, organic cotton from Tiruppur, plastic-free mailers, and runs of 200 so we are not burning stock nobody bought.</p>
+    <!-- 03 THE SHED -->
+    <section class="story-scene story-scene--origin">
+      <div class="story-scene__inner">
+        <div class="story-scene__frame" data-depth="1">
+          <div class="story-frame__shadow" aria-hidden="true"></div>
+          <img src="assets/story-3d-shed.svg" alt="Isometric illustration of the Sarjapur Road shed studio with press inside" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="story-scene__card" data-tilt>
+          <span class="story-scene__kicker"><i></i> 01 — The shed off Sarjapur Road</span>
+          <h2 class="display">A Railway<br>Arch &<br>A Bad Idea</h2>
+          <p class="lead">Eleven months ruining cotton before we sold our first tee.</p>
+          <p style="opacity:.9">Forty shirts in Drop 001 — eleven sold, nine gifted, rest worn ourselves. Drop 002 sold out in a weekend. Same carousel, same shed, still printing under that buzzing tube light.</p>
+        </div>
       </div>
-      <div class="pillar">
-        <div class="pillar__icon">🚧</div>
-        <h3>What we're fixing</h3>
-        <p>Our blanks travel 300km from Tiruppur by road, which we are fine with — but our mailers still come from a supplier in China. We are testing an Indian alternative and the seal is not good enough yet.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar__icon">❌</div>
-        <h3>What we won't claim</h3>
-        <p>We are not carbon neutral. We don't buy offsets to say we are. Printing and shipping clothes has a footprint and pretending otherwise helps nobody.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar__icon">♻️</div>
-        <h3>Send it back</h3>
-        <p>Worn out a Funky Threads tee? Post it back and we'll take ₹500 off your next order and turn the old one into press rags.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section class="band band--cream">
-  <div class="shell" style="text-align:center">
-    <div class="band-head band-head--center" data-reveal>
-      <span class="kicker">Enough about us</span>
-      <h2 class="display">Go Buy<br>Something Loud</h2>
-    </div>
-    <a href="shop.html" class="btn" data-reveal>Shop all 51 designs <span class="arrow">→</span></a>
-  </div>
-</section>
+    <!-- 04 FABRIC -->
+    <section class="story-scene story-scene--process">
+      <div class="story-scene__inner">
+        <div class="story-scene__frame" data-depth="1.15">
+          <div class="story-frame__shadow" aria-hidden="true"></div>
+          <img src="assets/story-3d-fabric.svg" alt="Layered 3D fabric swatches showing 240gsm heavyweight cotton from Tiruppur" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="story-scene__card" data-tilt>
+          <span class="story-scene__kicker"><i></i> 02 — Fabric first, colour later</span>
+          <h2 class="display">240gsm<br>That Hangs</h2>
+          <p class="lead">Bio-washed Tiruppur cotton, dense knit, pre-shrunk. It survives the wash, hangs off the body, and outlasts the trend.</p>
+          <p style="font-size:.9rem;opacity:.78">Not 140gsm fast-fashion that clings. Proper weight you feel between your fingers — put it on and you’ll know.</p>
+        </div>
+      </div>
+    </section>
 
-<div class="marquee marquee--red" aria-hidden="true">
-  <div class="marquee__track">
-    <span>★ Wear it loud</span><span>★ Wear it proud</span><span>★ Never basic</span><span>★ Colour riot</span>
-    <span>★ Wear it loud</span><span>★ Wear it proud</span><span>★ Never basic</span><span>★ Colour riot</span>
-  </div>
-</div>
+    <!-- 05 INK -->
+    <section class="story-scene story-scene--process">
+      <div class="story-scene__inner">
+        <div class="story-scene__frame" data-depth="1.15">
+          <div class="story-frame__shadow" aria-hidden="true"></div>
+          <img src="assets/story-3d-ink.svg" alt="Squeegee pulling water-based ink across a screen with 3D smiley graphic" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="story-scene__card" data-tilt>
+          <span class="story-scene__kicker"><i></i> 03 — Ink that lives in the fibre</span>
+          <h2 class="display">Water-Based<br>No Crack</h2>
+          <p class="lead">The print soaks into the cotton — no plastisol, no plastic hand, nothing to peel at the corners.</p>
+          <p style="font-size:.9rem;opacity:.78">One pull of the squeegee per colour, by hand. Heat-cured at 160 °C so it never cracks. You can feel the cotton, not the print.</p>
+        </div>
+      </div>
+    </section>
 
-<footer class="footer">
-  <div class="shell">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <span class="nav__logo"><img src="assets/logo.png" alt="marshmello.in" height="127" width="330"></span>
-        <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
+    <!-- 06 SMALL BATCHES -->
+    <section class="story-scene story-scene--stats">
+      <div class="story-scene__inner">
+        <div class="story-scene__card story-scene__card--center story-scene__card--wide story-card--stats" data-tilt>
+          <span class="story-scene__kicker"><i></i> Bohemian rule — small batches only</span>
+          <h2 class="display">200 Made.<br>No Reprint.</h2>
+          <div class="story-scene__visual" aria-hidden="true"><img src="assets/story-3d-batch.svg" alt="" width="800" height="600" loading="lazy" style="width:min(420px,70vw);border-radius:18px;filter:drop-shadow(10px 12px 0 rgba(0,0,0,.18));display:block;margin:0 auto"></div>
+          <div class="story-scene__stats" style="margin-top:1.2rem">
+            <div class="stat"><div class="story-scene__stat-n" data-count="51">0</div><div class="story-scene__stat-l">Designs so far</div></div>
+            <div class="stat"><div class="story-scene__stat-n" data-count="200">0</div><div class="story-scene__stat-l">Per colourway</div></div>
+            <div class="stat"><div class="story-scene__stat-n" data-count="28">0</div><div class="story-scene__stat-l">States shipped</div></div>
+            <div class="stat"><div class="story-scene__stat-n" data-count="15">0</div><div class="story-scene__stat-l">Days returns</div></div>
+          </div>
+          <p class="lead" style="margin-top:1rem">When it’s gone, it’s a story — not a restock notification. Your colourway stays yours.</p>
+        </div>
       </div>
-      <div>
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="shop.html">All products</a></li>
-          <li><a href="tshirts.html">T-Shirts</a></li>
-          <li><a href="cases.html">Phone cases</a></li>
-          <li><a href="index.html#bestsellers">Best sellers</a></li>
-        </ul>
+    </section>
+
+    <!-- 07 PACKED -->
+    <section class="story-scene story-scene--process">
+      <div class="story-scene__inner">
+        <div class="story-scene__frame" data-depth="1.05">
+          <div class="story-frame__shadow" aria-hidden="true"></div>
+          <img src="assets/story-3d-pack.svg" alt="Plastic-free mailer with sticker sheet and folded tee peeking out in 3D" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="story-scene__card" data-tilt>
+          <span class="story-scene__kicker"><i></i> 04 — Folded in the same room</span>
+          <h2 class="display">Bagged,<br>Stickered,<br>Shipped</h2>
+          <p class="lead">Same Bengaluru studio, same day it comes off the press. Plastic-free mailer, free reverse pickup if you change your mind.</p>
+          <ul class="story-bullets">
+            <li><span>✓</span> Sticker sheet in every parcel</li>
+            <li><span>✓</span> 48-hour dispatch</li>
+            <li><span>✓</span> Ships to 28 states</li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4>Help</h4>
-        <ul>
-          <li><a href="shop.html#sizing">Sizing guide</a></li>
-          <li><a href="index.html#faq">Shipping</a></li>
-          <li><a href="index.html#faq">Returns</a></li>
-          <li><a href="index.html#faq">Print care</a></li>
-        </ul>
+    </section>
+
+    <!-- 08 VALUES -->
+    <section class="story-scene story-scene--values">
+      <div class="story-scene__inner">
+        <div class="story-scene__card story-scene__card--center story-scene__card--wide" data-tilt>
+          <span class="story-scene__kicker"><i></i> What we do — and don’t</span>
+          <h2 class="display">Honest<br>Bohemian</h2>
+          <div class="story-scene__values">
+            <div class="story-scene__value"><div class="value__icon value__icon--leaf" aria-hidden="true"></div><h3>Water-based</h3><p>Inks that breathe, not plastic patches.</p></div>
+            <div class="story-scene__value"><div class="value__icon value__icon--cotton" aria-hidden="true"></div><h3>Tiruppur cotton</h3><p>Organic, bio-washed, 240gsm.</p></div>
+            <div class="story-scene__value"><div class="value__icon value__icon--box" aria-hidden="true"></div><h3>Runs of 200</h3><p>No deadstock, no landfill.</p></div>
+            <div class="story-scene__value"><div class="value__icon value__icon--loop" aria-hidden="true"></div><h3>Send it back</h3><p>Worn out? Post it back for ₹500 off.</p></div>
+          </div>
+        </div>
       </div>
-      <div>
-        <h4>Company</h4>
-        <ul>
-          <li><a href="about.html">Our story</a></li>
-          <li><a href="#sustainability">Sustainability</a></li>
-          <li><a href="index.html#reviews">Reviews</a></li>
-          <li><a href="#">Instagram</a></li>
-        </ul>
+    </section>
+
+    <!-- 09 END -->
+    <section class="story-scene story-scene--end">
+      <div class="story-scene__inner">
+        <div class="story-scene__card story-scene__card--center story-card--end" data-tilt>
+          <span class="story-scene__kicker"><i></i> Your turn — wear it loud</span>
+          <h2 class="display">Go Find<br>Your Colour</h2>
+          <p class="lead">Fifty-one designs, two fits, case or tee — same ink, same hands.</p>
+          <a href="shop.html" class="btn btn--yellow btn--lg" style="margin-top:.6rem">Shop all 51 designs <span class="arrow">→</span></a>
+          <div class="story-scene__footer-links" style="margin-top:1.3rem">
+            <a href="shop.html">All products</a>
+            <a href="tshirts.html">T-Shirts</a>
+            <a href="cases.html">Phone cases</a>
+            <a href="index.html#faq">Shipping & returns</a>
+          </div>
+          <p style="font-size:.78rem;opacity:.65;margin-top:1rem">© 2026 Funky Threads Pvt. Ltd. · Bengaluru · GSTIN 29AABCF1234M1Z5</p>
+        </div>
       </div>
-    </div>
-    <div class="footer__bottom">
-      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
-      <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
-    </div>
+    </section>
+
   </div>
-</footer>
+
+  <!-- chrome -->
+  <div class="story-counter" id="storyCounter" aria-hidden="true"><span id="storyCounterCurrent">01</span><i>/</i><span id="storyCounterTotal">09</span></div>
+  <div class="story-dots" id="storyDots" aria-hidden="true"></div>
+  <div class="story-hint" id="storyHint" aria-hidden="true"><span class="story-hint__label">Drag or scroll</span> <span class="story-hint__arrow">→</span></div>
+  <button class="story-nav story-nav--prev" id="storyPrev" aria-label="Previous scene">‹</button>
+  <button class="story-nav story-nav--next" id="storyNext" aria-label="Next scene">›</button>
+</main>
 
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
@@ -224,8 +256,7 @@
   </div>
 </aside>
 
-<div class="auth" id="authModal" role="dialog" aria-modal="true"
-     aria-labelledby="authTitle" aria-hidden="true">
+<div class="auth" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
   <div class="auth__scrim" id="authScrim"></div>
   <div class="auth__panel">
     <div class="auth__head">
@@ -235,10 +266,7 @@
       </div>
       <button class="drawer__close" id="authClose" aria-label="Close">&#10005;</button>
     </div>
-    <p class="auth__demo">
-      <strong>Demo only.</strong> This form is not connected to anything — no account is
-      created and nothing is verified. Please don't enter a real password.
-    </p>
+    <p class="auth__demo"><strong>Demo only.</strong> This form is not connected to anything — no account is created and nothing is verified. Please don't enter a real password.</p>
     <div class="auth__body" id="authBody"></div>
   </div>
 </div>
@@ -250,6 +278,6 @@
 <script src="js/cart.js?v=1786610573"></script>
 <script src="js/auth.js?v=1786610573"></script>
 <script src="js/main.js?v=1786610573"></script>
-<script src="js/scroll.js?v=1786610573"></script>
+<script src="js/story-scroll.js?v=1786737400"></script>
 </body>
 </html>
