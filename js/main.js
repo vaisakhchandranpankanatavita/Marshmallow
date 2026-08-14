@@ -35,6 +35,7 @@
           <img src="${window.PRODUCT_IMAGE(p, first)}" alt="${p.name} in ${first}"
                data-role="img" width="600" height="600" loading="lazy">
           ${p.badge ? `<span class="card__badge" data-badge="${p.badge}">${p.badge}</span>` : ''}
+          ${p.demo ? `<span class="card__demo" title="Placeholder — not a real Qikink product">Demo</span>` : ''}
           <div class="card__quick">
             <button class="btn btn--sm btn--block" data-role="quick">Quick add</button>
           </div>

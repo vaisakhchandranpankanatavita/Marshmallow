@@ -587,21 +587,52 @@ def avatar(initials, bg, fg=CREAM, s=120):
 
 # (slug, kind, art, variant, theme, colourways[(name, hex, ink)])
 P = PAL
-# Mirrors js/products.js — one row per real product that exists in the
-# Qikink dashboard (Products -> My Products). Add a row here alongside the
-# one in js/products.js each time a new product is created in Qikink; there
-# is no API to pull this automatically (see server/qikink.js).
+# Mirrors js/products.js REAL_RAW — one row per real product that exists in
+# the Qikink dashboard (Products -> My Products). Add a row here alongside
+# the one in js/products.js each time a new product is created in Qikink;
+# there is no API to pull this automatically (see server/qikink.js).
 CATALOG = [
     ("anime-clear-case", "case", "animeeye", "clear", "anime", [("cream", P["cream"], P["pink"])]),
 ]
+
+# Mirrors js/products.js DEMO_RAW / SHOW_DEMO_PRODUCTS — placeholder artwork
+# for the placeholder catalog. Flip SHOW_DEMO_PRODUCTS to False (or delete
+# DEMO_CATALOG and this line's reference to it) in lockstep with the same
+# toggle in js/products.js, then rerun this script — main() wipes assets/
+# first, so the demo SVGs disappear on the next generate.
+SHOW_DEMO_PRODUCTS = True
+
+DEMO_CATALOG = [
+    ("cosmic-checker",  "tee", "checker",  "oversized", "abstract", [("pink", P["pink"], INK), ("blue", P["blue"], P["lime"]), ("black", P["black"], P["cyan"])]),
+    ("acid-smiley",     "tee", "smiley",   "oversized", "cartoon",  [("lime", P["lime"], INK), ("purple", P["purple"], P["yellow"]), ("cream", P["cream"], P["pink"])]),
+    ("senpai-stare",    "tee", "animeeye", "oversized", "anime",    [("pink", P["pink"], INK), ("black", P["black"], P["pink"]), ("cream", P["cream"], P["purple"])]),
+    ("redline",         "tee", "car",      "oversized", "cars",     [("red", P["red"], P["cream"]), ("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"])]),
+    ("tidal",           "tee", "waves",    "classic",   "nature",   [("cyan", P["cyan"], INK), ("blue", P["blue"], P["cream"]), ("lime", P["lime"], P["purple"])]),
+    ("continue-y-n",    "tee", "controller","classic",  "gaming",   [("black", P["black"], P["lime"]), ("purple", P["purple"], P["cyan"]), ("cream", P["cream"], P["red"])]),
+    ("tape-deck",       "tee", "cassette", "classic",   "music",    [("orange", P["orange"], INK), ("black", P["black"], P["cyan"]), ("yellow", P["yellow"], P["purple"])]),
+    ("orbit",           "tee", "planet",   "classic",   "space",    [("black", P["black"], P["cyan"]), ("blue", P["blue"], P["yellow"]), ("purple", P["purple"], P["lime"])]),
+    ("bolt-sleeve",     "tee", "bolt",     "longsleeve","abstract", [("black", P["black"], P["yellow"]), ("blue", P["blue"], P["cream"]), ("red", P["red"], P["cream"])]),
+    ("checker-tough",   "case", "checker", "tough",     "abstract", [("pink", P["pink"], INK), ("lime", P["lime"], INK), ("black", P["black"], P["cyan"])]),
+    ("flame-tough",     "case", "flames",  "tough",     "cars",     [("black", P["black"], P["orange"]), ("orange", P["orange"], INK), ("red", P["red"], P["yellow"])]),
+    ("respawn-tough",   "case", "controller","tough",   "gaming",   [("black", P["black"], P["lime"]), ("lime", P["lime"], INK), ("purple", P["purple"], P["cyan"])]),
+    ("smiley-slim",     "case", "smiley",  "slim",      "cartoon",  [("yellow", P["yellow"], INK), ("purple", P["purple"], P["yellow"]), ("cyan", P["cyan"], INK)]),
+    ("mixtape-slim",    "case", "cassette","slim",      "music",    [("orange", P["orange"], INK), ("black", P["black"], P["cyan"]), ("cream", P["cream"], P["red"])]),
+    ("mushroom-clear",  "case", "mushroom","clear",     "nature",   [("cream", P["cream"], P["lime"]), ("cyan", P["cyan"], P["purple"]), ("pink", P["pink"], P["red"])]),
+    ("senpai-clear",    "case", "animeeye","clear",     "anime",    [("cream", P["cream"], P["pink"]), ("pink", P["pink"], INK), ("cyan", P["cyan"], P["purple"])]),
+    ("spiral-mag",      "case", "spiral",  "magsafe",   "abstract", [("purple", P["purple"], P["cream"]), ("red", P["red"], P["cream"]), ("black", P["black"], P["pink"])]),
+    ("orbit-mag",       "case", "planet",  "magsafe",   "space",    [("black", P["black"], P["cyan"]), ("blue", P["blue"], P["yellow"]), ("purple", P["purple"], P["lime"])]),
+]
+
+if SHOW_DEMO_PRODUCTS:
+    CATALOG = CATALOG + DEMO_CATALOG
 
 POSTERS = [
     ("story-1.svg",  ["Cotton", "From Tiruppur"], P["red"],    CREAM,      P["yellow"], "the blanks"),
     ("story-2.svg",  ["Screen", "Printed"],       P["yellow"], INK,        P["red"],    "by hand"),
     ("story-3.svg",  ["Small", "Batch"],          P["blue"],   CREAM,      P["lime"],   "no reprints"),
     ("story-4.svg",  ["Packed", "In Bengaluru"],  P["pink"],   CREAM,      P["yellow"], "shipped fast"),
-    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "coming soon"),
-    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "1 design"),
+    ("cat-tees.svg", ["Tees"],                    P["red"],    CREAM,      P["yellow"], "shop now"),
+    ("cat-cases.svg",["Cases"],                   P["blue"],   CREAM,      P["lime"],   "shop now"),
     ("look-1.svg",   ["Loud"],                    P["purple"], P["lime"],  P["yellow"], None),
     ("look-2.svg",   ["Proud"],                   P["orange"], INK,        P["cream"],  None),
     ("look-3.svg",   ["Never", "Basic"],          P["cyan"],   INK,        P["red"],    None),

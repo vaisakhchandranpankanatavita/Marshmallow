@@ -38,8 +38,15 @@ function getCatalog() {
       .map(v => v.slug)
   );
 
+  // A product reaches the storefront if it can actually be ordered (has a
+  // mapped Qikink SKU) OR is explicitly marked `demo` in js/products.js.
+  // Demo products stay visible for a populated-looking site while skuFor()
+  // still unconditionally refuses them a SKU, so checkout can't place a real
+  // order for one even though it renders here. Anything else — a real
+  // product someone forgot to map — stays hidden rather than being orderable
+  // and silently failing at checkout.
   return PRODUCTS
-    .filter(p => mappedSlugs.has(p.slug))
+    .filter(p => p.demo || mappedSlugs.has(p.slug))
     .map(p => ({
       slug: p.slug,
       name: p.name,
@@ -54,7 +61,9 @@ function getCatalog() {
       reviews: p.reviews,
       tagline: p.tagline,
       description: p.description,
-      details: p.details
+      details: p.details,
+      sizes: p.sizes,
+      demo: p.demo
     }));
 }
 

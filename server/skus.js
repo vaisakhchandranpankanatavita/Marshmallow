@@ -90,6 +90,14 @@ export function skuFor(slug, colorway, size) {
   const product = productBySlug(slug);
   if (!product) return null;
 
+  // Demo/placeholder products (js/products.js DEMO_RAW) must never resolve
+  // to a real SKU. Cases fall through to null on their own — cases has no
+  // BLANK_CODES entries to derive from — but tees do, and a demo tee could
+  // otherwise silently pick up a real derived SKU and place a real order for
+  // a product that doesn't exist in Qikink. This check comes before the
+  // override lookup for the same reason: nothing overrides it.
+  if (product.demo) return null;
+
   const exact = overrides.variants?.[overrideKey(slug, colorway, size)];
   if (exact) {
     return {

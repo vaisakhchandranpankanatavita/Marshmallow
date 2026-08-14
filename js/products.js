@@ -71,31 +71,111 @@ const CASE_DETAILS = [
 
 /* Compact catalog definition — copy lives here, the rest is derived below.
  *
- * This mirrors what actually exists in the Qikink dashboard (Products -> My
- * Products), not a fictional catalog. Qikink's public API does not expose a
- * products-listing endpoint (their documented API only covers Orders), so
- * there is no automatic pull — add a row here each time a new product is
- * created in Qikink. Keep slug/colorway/size in sync with
- * server/qikink-skus.json so the order-time SKU lookup does not fail.
+ * REAL_RAW mirrors what actually exists in the Qikink dashboard (Products ->
+ * My Products). Qikink's public API does not expose a products-listing
+ * endpoint (their documented API only covers Orders), so there is no
+ * automatic pull — add a row here each time a new product is created in
+ * Qikink. Keep slug/colorway/size in sync with server/qikink-skus.json so
+ * the order-time SKU lookup does not fail.
  *
  * Row shape: [slug, name, category, subcategory, theme, price, compareAt,
  *             colorways, badge, rating, reviews, tagline, description, sizes]
  * `sizes` is optional — omit (or pass null) to fall back to the full
  * TEE_SIZES/CASE_SIZES list; pass an array to restrict to the phone models
  * (or tee sizes) Qikink actually stocks a blank for. */
-const RAW = [
+const REAL_RAW = [
   ['anime-clear-case', 'Anime Clear Case', 'cases', 'clear', 'anime', 399, null, ['cream'], null, 0, 0,
    'See-through, not basic.',
    'A hard, anti-yellowing clear case with an anime print on the back. Currently made for iPhone 16 Pro only.',
    ['iPhone 16 Pro']]
 ];
 
+/* ==========================================================================
+ * DEMO / PLACEHOLDER PRODUCTS — NOT REAL. NOT IN QIKINK.
+ *
+ * Fills out the site (theme tiles, filters, best sellers, the parallel-scroll
+ * wall — everything downstream reads window.PRODUCTS, so this needs no other
+ * wiring) while there's only one real product. None of these slugs exist in
+ * server/qikink-skus.json, so checkout correctly refuses to place a real
+ * order for any of them ("no Qikink SKU mapped") — safe to forget to remove.
+ *
+ * TO REMOVE: delete this whole block down to the `const RAW = [...]` line,
+ * change that line to `const RAW = REAL_RAW;`, and run
+ * `python3 tools/gen_assets.py` to drop the matching demo artwork (its own
+ * DEMO_CATALOG toggle lives next to CATALOG in tools/gen_assets.py — flip
+ * both together). Or just set SHOW_DEMO_PRODUCTS to false below to hide them
+ * without deleting anything.
+ * ========================================================================== */
+const SHOW_DEMO_PRODUCTS = true;
+
+const DEMO_RAW = [
+  ['cosmic-checker', 'Cosmic Checker Tee', 'tees', 'oversized', 'abstract', 1499, 1899, ['pink','blue','black'], 'Best seller', 4.9, 412,
+   'The one everybody asks about.',
+   'A warped checkerboard that bends like it is falling into a black hole. Our most-reordered print three drops running.'],
+  ['acid-smiley', 'Acid Smiley Tee', 'tees', 'oversized', 'cartoon', 1499, null, ['lime','purple','cream'], 'Best seller', 4.8, 356,
+   'Aggressively cheerful.',
+   'A grin so wide it is almost a threat. Oversized chest print in a lime that shows up under club lighting.'],
+  ['senpai-stare', 'Senpai Stare Tee', 'tees', 'oversized', 'anime', 1599, null, ['pink','black','cream'], 'New', 4.9, 143,
+   'It noticed you.',
+   'One enormous manga eye with four highlights and a proper lash line. Prints at nearly full chest width.'],
+  ['redline', 'Redline Tee', 'tees', 'oversized', 'cars', 1599, 1899, ['red','black','blue'], 'Best seller', 4.8, 198,
+   'Foot down.',
+   'A stripped-back side profile with speed bars trailing behind it. No badges, no brand, just the shape.'],
+  ['tidal', 'Tidal Tee', 'tees', 'classic', 'nature', 1149, null, ['cyan','blue','lime'], null, 4.7, 162,
+   'Five rolling lines.',
+   'Stacked waves with just enough wobble to feel hand-drawn. Worn most by people who claim they hate prints.'],
+  ['continue-y-n', 'Continue? Y/N Tee', 'tees', 'classic', 'gaming', 1249, null, ['black','purple','cream'], 'Best seller', 4.9, 264,
+   'Ten, nine, eight...',
+   'A fat controller silhouette with a d-pad and four face buttons. Reads instantly from across an arcade.'],
+  ['tape-deck', 'Tape Deck Tee', 'tees', 'classic', 'music', 1199, null, ['orange','black','yellow'], null, 4.7, 152,
+   'Side A.',
+   'A cassette rendered in flat blocks, spools and all. Older than most of the people who buy it.'],
+  ['orbit', 'Orbit Tee', 'tees', 'classic', 'space', 1249, null, ['black','blue','purple'], 'New', 4.8, 97,
+   'Ringed and rising.',
+   'A ringed planet with a scattering of stars. The calmest thing we print, which is not saying much.'],
+  ['bolt-sleeve', 'High Voltage Full Sleeve', 'tees', 'longsleeve', 'abstract', 1799, 2099, ['black','blue','red'], 'Best seller', 4.9, 196,
+   'Fully charged, fully covered.',
+   'The bolt on a long-sleeve body with ribbed cuffs. Our best seller from October onwards.'],
+  ['checker-tough', 'Cosmic Checker Tough Case', 'cases', 'tough', 'abstract', 1099, 1299, ['pink','lime','black'], 'Best seller', 4.8, 341,
+   'Matches the tee, survives the fall.',
+   'Dual-layer shell with reinforced corners. Drop tested to two metres onto concrete, repeatedly.'],
+  ['flame-tough', 'Hot Flames Tough Case', 'cases', 'tough', 'cars', 1149, null, ['black','orange','red'], null, 4.7, 187,
+   'Handle with care, or do not.',
+   'Flames climbing a chunky armoured back. Matte finish so it does not slide off the sofa arm.'],
+  ['respawn-tough', 'Respawn Tough Case', 'cases', 'tough', 'gaming', 1149, 1349, ['black','lime','purple'], 'Low stock', 4.8, 156,
+   'Take the fall.',
+   'Controller print on the drop-tested shell. For people who game where they walk.'],
+  ['smiley-slim', 'Acid Smiley Slim Case', 'cases', 'slim', 'cartoon', 699, null, ['yellow','purple','cyan'], 'Best seller', 4.9, 456,
+   'Grins back at you.',
+   'Highlighter yellow with the grin dead centre. Easiest phone in the world to spot on a dark table.'],
+  ['mixtape-slim', 'Mixtape Slim Case', 'cases', 'slim', 'music', 649, null, ['orange','black','cream'], null, 4.6, 118,
+   'Rewind with a pencil.',
+   'The cassette print on our thinnest case. Adds under 2mm and a lot of conversation.'],
+  ['mushroom-clear', 'Shroom Boom Clear Case', 'cases', 'clear', 'nature', 699, null, ['cream','cyan','pink'], 'New', 4.6, 82,
+   'See-through, still weird.',
+   'Anti-yellowing clear back with the mushroom floating in the middle. Your phone colour still shows.'],
+  ['senpai-clear', 'Senpai Stare Clear Case', 'cases', 'clear', 'anime', 749, null, ['cream','pink','cyan'], null, 4.7, 112,
+   'Watching from your pocket.',
+   'The eye on a transparent back, so your phone colour becomes part of the artwork.'],
+  ['spiral-mag', 'Hypnotica MagSafe Case', 'cases', 'magsafe', 'abstract', 1149, null, ['purple','red','black'], null, 4.8, 164,
+   'Snaps on, spirals out.',
+   'Full magnet array, so car mounts and power banks click straight on. Spiral print sits above the ring.'],
+  ['orbit-mag', 'Orbit MagSafe Case', 'cases', 'magsafe', 'space', 1199, null, ['black','blue','purple'], 'Best seller', 4.9, 143,
+   'Full magnetic orbit.',
+   'The ringed planet above the magnet array, so the ring and the rings line up. We could not resist.']
+];
+
+// DEMO_RAW rows have no `sizes` field (index 13) — pad it with null before
+// appending the demo flag, or `demo: true` would land in the `sizes` slot.
+const RAW = [...REAL_RAW, ...(SHOW_DEMO_PRODUCTS ? DEMO_RAW.map(r => [...r, null, true]) : [])];
+
 window.PRODUCTS = RAW.map(r => ({
   slug: r[0], name: r[1], category: r[2], subcategory: r[3], theme: r[4],
   price: r[5], compareAt: r[6], colorways: r[7],
   badge: r[8], rating: r[9], reviews: r[10],
   tagline: r[11], description: r[12], sizes: r[13] || null,
-  details: r[2] === 'tees' ? TEE_DETAILS : CASE_DETAILS
+  details: r[2] === 'tees' ? TEE_DETAILS : CASE_DETAILS,
+  demo: !!r[14]
 }));
 
 /* Helpers shared by every page. */
