@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ headless: true, args: ['--no-proxy-server'] });
+const page = await (await browser.newContext({ viewport: { width: 1280, height: 800 } })).newPage();
+await page.goto('http://localhost:4000/about.html', { waitUntil: 'networkidle' });
+await page.waitForTimeout(800);
+const bg = await page.$eval('.story-stage', el => getComputedStyle(el).backgroundColor);
+const gradDisplay = await page.$eval('.story-backdrop__gradient', el => getComputedStyle(el).display);
+const skylineOpacity = await page.$eval('.story-backdrop__skyline', el => getComputedStyle(el).opacity);
+const doodleOpacity = await page.$eval('.story-backdrop__doodles', el => getComputedStyle(el).opacity);
+console.log(`STAGE_BG ${bg} GRAD_DISPLAY ${gradDisplay} SKYLINE_OP ${skylineOpacity} DOODLE_OP ${doodleOpacity}`);
+await page.screenshot({ path: `M:\\money\\dropshipping\\verify-out\\about-boho-1280.png`, fullPage: false });
+await page.setViewportSize({ width: 375, height: 800 });
+await page.waitForTimeout(400);
+await page.screenshot({ path: `M:\\money\\dropshipping\\verify-out\\about-boho-375.png`, fullPage: false });
+console.log('ABOUT_SCREENSHOTS done');
+await browser.close();
