@@ -74,9 +74,16 @@
     targets.forEach(el => el.setAttribute('data-ft-bound', ''));
 
     if (reduced || !('IntersectionObserver' in window)) {
-      targets.forEach(el => {
-        el.classList.add('is-in');
-        if (el.dataset.count) el.textContent = formatCount(Number(el.dataset.count));
+      targets.forEach(el => el.classList.add('is-in'));
+      // Not gated on data-ft-bound, unlike the loop above: main.js's boot()
+      // is async (it awaits a catalog fetch before syncCatalogStats() sets
+      // the real product count), so this first pass — which runs on
+      // DOMContentLoaded, before that fetch resolves — would otherwise print
+      // a stale data-count from the raw HTML and, without an
+      // IntersectionObserver pass to correct it later, never fix itself.
+      // Cheap and idempotent, so re-running it on every call is fine.
+      document.querySelectorAll('[data-count]').forEach(el => {
+        el.textContent = formatCount(Number(el.dataset.count));
       });
       return;
     }

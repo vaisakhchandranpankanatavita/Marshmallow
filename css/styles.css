@@ -38,6 +38,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* The UA stylesheet's [hidden]{display:none} loses to *any* author display
+   rule, cascade origin trumps specificity — so `.band{display:flex}` below
+   would otherwise un-hide a hidden .band (the empty-reviews section relies on
+   exactly this: JS sets `hidden` when window.REVIEWS is empty). Restated here
+   explicitly so `hidden` always wins regardless of what else targets the
+   element. */
+[hidden] { display: none !important; }
+
 /* Horizontal overflow is contained on <html>, and with `clip` rather than
    `hidden`. On <body> an overflow value propagates up to the viewport, and
    `hidden` anywhere in the ancestor chain makes that element a scroll
@@ -47,7 +55,24 @@
    It is only a backstop: everything that can bleed sideways (rotated hero
    art, stickers, max-content marquee tracks) already sits inside its own
    overflow:hidden section. */
-html { scroll-behavior: smooth; overflow-x: clip; }
+/* `proximity` rather than `mandatory`: mandatory snap would pull a user back
+   to the top of a section every time they lift their finger, and some
+   sections (the product grid) are many screens tall — mandatory would trap
+   scrolling inside them at the first screen. Proximity still snaps a normal
+   scroll near a section boundary, without fighting a scroll in progress. */
+html { scroll-behavior: smooth; overflow-x: clip; scroll-snap-type: y proximity; }
+
+/* Every page follows the same top: <div class="topbar">, <header class="nav">,
+   then the first content <section> (.hero on the home page, a .band header
+   band everywhere else) — which sits ~120px below the true top of the
+   document. Chromium settles the scroll position toward the nearest snap
+   point even on initial page load with no user scroll at all, which pulled
+   every page down by that ~120px on load and hid the free-shipping topbar
+   behind the sticky nav before a visitor ever saw it. Landing at the true
+   top (0) already shows the page correctly, so the very first section is
+   excluded from snapping — specificity (a type selector + a pseudo-class)
+   beats .band's plain class selector, no !important needed. */
+body > section:first-of-type { scroll-snap-align: none; }
 
 body {
   font-family: var(--body);
@@ -107,8 +132,20 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 
 /* ------------------------------------------------------------------- layout */
 
-.shell { max-width: var(--shell); margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2.5rem); }
-.band { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
+.shell { max-width: var(--shell); margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2.5rem); width: 100%; }
+/* Every section fills at least one viewport, content centred inside it — a
+   short section (a couple of lines of editorial copy) gets breathing room on
+   both sides instead of leaving blank space below it, which is what "blank
+   box" bugs upstream of this were. `min-height`, not `height`: a section with
+   more real content than fits one screen (the product grid) just keeps
+   growing rather than clipping. `100dvh` over `100vh` so mobile browsers
+   don't count their own collapsing address bar as page content. */
+.band {
+  min-height: 100dvh;
+  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+  display: flex; flex-direction: column; justify-content: center;
+  scroll-snap-align: start;
+}
 
 .band--red    { background: var(--red);    color: var(--cream); }
 .band--yellow { background: var(--yellow); color: var(--ink); }
@@ -265,7 +302,11 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   color: var(--cream);
   overflow: hidden;
   border-bottom: 3px solid var(--ink);
+  min-height: 100dvh;
+  display: flex; align-items: center;
+  scroll-snap-align: start;
 }
+.hero__inner { width: 100%; }
 /* The yellow floor is deliberately short: the art breaks across it, the copy
    never should — cream text on yellow does not pass contrast. */
 .hero::after {
@@ -658,8 +699,10 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 .snap:nth-child(odd) img { transform: rotate(-2.5deg) translate3d(0, var(--py, 0px), 0); }
 .snap:nth-child(even) img { transform: rotate(2deg) translate3d(0, var(--py, 0px), 0); }
 
-/* Sticky-stacking panels: each sticks at the top and the next slides over it. */
-.stack { position: relative; }
+/* Sticky-stacking panels: each sticks at the top and the next slides over it.
+   Already viewport-height + centred per panel (100svh, place-items:center) —
+   the pattern the rest of the page's sections now follow too. */
+.stack { position: relative; scroll-snap-align: start; }
 .stack__panel {
   position: sticky; top: 0;
   min-height: 100svh;
@@ -916,9 +959,10 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 .parallel {
   position: relative;
   overflow: hidden;
-  height: clamp(520px, 84vh, 780px);
+  min-height: 100dvh;
   border-block: 3px solid var(--ink);
   background: var(--ink);
+  scroll-snap-align: start;
 }
 
 .parallel__cols {
@@ -975,7 +1019,9 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   .parallel__cols { grid-template-columns: repeat(2, 1fr); gap: .6rem; padding: .6rem; }
   .parallel__col:nth-child(3), .parallel__col:nth-child(4) { display: none; }
   .parallel__col { gap: .6rem; }
-  .parallel { height: clamp(460px, 72vh, 620px); }
+  /* min-height:100dvh on the base rule already covers mobile — the old fixed
+     `height` here (720px max) would have been dead weight now that min-height
+     always wins, so it's gone rather than left as a misleading no-op. */
 }
 
 @media (prefers-reduced-motion: reduce) {

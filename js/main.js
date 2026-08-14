@@ -460,7 +460,9 @@
     initSignup();
     initBrowseModal();
     window.Cart.init();
-    window.Auth.init();
+    // checkout.html and order-success.html don't load js/auth.js — no
+    // account UI makes sense mid-checkout or on a confirmation page.
+    window.Auth?.init();
 
     // Grids are populated above, so scroll.js has to (re)bind after this.
     // It listens for this rather than racing DOMContentLoaded.
