@@ -1,28 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-cursor="case">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Phone Cases — Funky Threads</title>
-<meta name="description" content="Drop-proof phone cases, printed on demand and shipped from Bengaluru. Currently fits iPhone 16 Pro, with more models on the way.">
+<title>Phone Cases — Marshmello.in</title>
+<meta name="description" content="Puffy-protected cases, toasted to order via Qikink. For iPhone, OnePlus, Samsung, Nothing, Redmi, realme and iQOO.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=1786610573">
+<link rel="stylesheet" href="css/styles.css?v=13">
+<link rel="stylesheet" href="css/cartoon.css?v=13">
 </head>
-<body>
+<body data-cursor="case">
 
-<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns · Drop 007 is live</div>
+<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns</div>
 
 <header class="nav" id="nav">
   <div class="shell nav__inner">
-    <a href="index.html" class="nav__logo">Funky<b>Threads</b></a>
+    <a href="index.html" class="nav__logo" aria-label="Marshmello.in home"><img src="assets/logo.png" alt="marshmello.in" height="42" width="340"></a>
     <nav class="nav__links" id="navLinks">
       <a href="shop.html">Shop all</a>
       <a href="tshirts.html">T-Shirts</a>
       <a href="cases.html" aria-current="page">Cases</a>
       <a href="about.html">Our story</a>
+      <a href="contact.html">Contact</a>
       <a href="#faq">Help</a>
     </nav>
     <div class="nav__actions">
@@ -42,12 +44,23 @@
   </div>
 </header>
 
-<section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
-  <div class="shell">
-    <span class="kicker" style="opacity:.8">Tough, slim, clear, MagSafe</span>
-    <h1 class="display" style="margin-top:.7rem">Drop-Proof<br>Cases</h1>
-    <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">Tap a swatch to see the colour, then quick-add without leaving the grid. Model availability varies by design — check sizes before you order.</p>
-      <a href="tshirts.html" class="btn btn--light" style="margin-top:1.6rem">Looking for t-shirts? <span class="arrow">→</span></a>
+<section class="hero cases-hero" style="background:var(--red);color:var(--cream);border-bottom:3px solid var(--ink)">
+  <div class="shell hero__inner" style="align-items:center;grid-template-columns:1.05fr .95fr;gap:clamp(1.8rem,4vw,3.5rem)">
+    <div class="hero__copy" style="padding-bottom:0">
+      <span class="kicker" style="opacity:.8">Fresh from the print run</span>
+      <h1 class="display" style="margin-top:.7rem">Drop-Proof<br>Cases</h1>
+      <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">Tough, slim, clear and MagSafe. Fits iPhone 16/15, OnePlus 12, S24, Nothing 2a, Redmi, realme and iQOO — cut to the camera island, not a generic slab.</p>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.6rem">
+        <a href="#grid" class="btn btn--light">Shop cases <span class="arrow">→</span></a>
+        <a href="tshirts.html" class="btn btn--outline" style="color:var(--cream);border-color:var(--cream)">Tees →</a>
+      </div>
+    </div>
+    <div class="hero__art cases-hero__art" style="max-width:480px; display:grid; place-items:center; position:relative">
+      <img src="assets/logowoman.png" alt="Marshmello girl holding pink phone case" style="width:min(420px,42vw);height:auto;filter:drop-shadow(10px 14px 0 var(--ink));transform:rotate(-1.2deg);border-radius:var(--r-lg)" width="1024" height="1536" loading="eager">
+      <span class="sticker sticker--tl">Puffy<br>Case</span>
+      <span class="sticker sticker--br">X-Eyes<br>On</span>
+    </div>
+
   </div>
 </section>
 
@@ -78,21 +91,67 @@
   </div>
 </section>
 
-<!-- ── parallel scrolling columns ────────────────────────────────────────── -->
-<section class="parallel" id="parallel" aria-label="The full range">
-  <div class="parallel__cols" aria-hidden="true" id="parallelCols">
-      <div class="parallel__col" data-track="0.9"></div>
-      <div class="parallel__col" data-track="-0.75"></div>
-      <div class="parallel__col" data-track="0.6"></div>
-      <div class="parallel__col" data-track="-0.85"></div>
-  </div>
-  <div class="parallel__plate">
+<section class="band band--paper" id="fit">
+  <div class="shell feature feature--pin">
     <div data-reveal>
-      <span class="kicker" id="parallelKicker"></span>
-      <h2 class="display">Something<br>For Every Mood</h2>
-      <p>Four tee fits, four case styles, three colourways each. Nothing here is
-         a plain grey anything.</p>
-      <a href="#grid" class="btn btn--yellow">Browse the lot <span class="arrow">→</span></a>
+      <span class="kicker">Cut for your phone</span>
+      <h2 class="display" style="margin:.6rem 0 1rem">Will It<br>Fit?</h2>
+      <p class="lead">10 models, not a generic one-size. Pick your exact device at checkout — the lip and button cutouts line up to the millimetre.</p>
+      <div style="display:flex;gap:.45rem;flex-wrap:wrap;margin:1.4rem 0" aria-label="Supported phone models">
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">iPhone 16 Pro</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">iPhone 16</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">iPhone 15 Pro</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">iPhone 15</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">OnePlus 12</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">Samsung S24</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">Nothing 2a</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">Redmi Note 13 Pro</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">realme 12 Pro</span>
+        <span class="chip" style="font-size:.74rem;padding:.4rem .9rem">iQOO Neo 9</span>
+      </div>
+      <ul class="feature__list">
+        <li>Raised 1.2mm lip — camera and screen face-down safe</li>
+        <li>MagSafe magnet array (on MagSafe style) — 15W snap charge</li>
+        <li>Shock TPU + rigid PC — 2m drop tested on concrete</li>
+        <li>Wireless-charging friendly, no yellowing on Clear</li>
+      </ul>
+      <p style="font-size:.88rem;opacity:.75">Model not listed? Write to us — we can cut a one-off in the same batch.</p>
+    </div>
+    <div class="feature__art" data-reveal>
+      <img src="assets/clearview-case--cream.svg" alt="Clear case showing raised lip and camera cutout" width="800" height="600" style="border:var(--edge);border-radius:var(--r-lg);box-shadow:12px 12px 0 var(--ink);background:var(--cream)">
+      <p style="font-family:var(--script);font-size:1.2rem;text-align:center;margin-top:1rem;color:var(--red-ink)">Print stays crisp at the corners</p>
+    </div>
+  </div>
+</section>
+
+<section class="band band--cream" id="styles">
+  <div class="shell">
+    <div class="band-head band-head--center" data-reveal data-zoom>
+      <span class="kicker">Pick your build</span>
+      <h2 class="display">Four Styles,<br>No Compromise</h2>
+      <p>Same marshmallow prints, four different shells. The fit is not a label — it is a different mould.</p>
+    </div>
+    <div class="pillars" data-stagger>
+      <div class="pillar">
+        <div class="pillar__icon">🛡️</div>
+        <h3>Tough</h3>
+        <p>Dual-layer TPU + PC, 2m drop. For the phone that has met the floor before.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar__icon">🪶</div>
+        <h3>Slim</h3>
+        <p>Under 2mm, no bulk. Prints the cleanest — ink sits flat on the rigid back.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar__icon">🔍</div>
+        <h3>Clear</h3>
+        <p>Anti-yellowing hard shell, grid print only at the edges so your phone colour shows through.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar__icon">🧲</div>
+        <h3>MagSafe</h3>
+        <p>Built-in magnet array, 15W charging and snap wallets without a bulky adapter.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -125,7 +184,7 @@
   <div class="shell">
     <div class="footer__top">
       <div class="footer__brand">
-        <span class="nav__logo">Funky<b>Threads</b></span>
+        <span class="nav__logo"><img src="assets/logo.png" alt="marshmello.in" height="44" width="340"></span>
         <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
       </div>
       <div>
@@ -149,7 +208,8 @@
       <div>
         <h4>Company</h4>
         <ul>
-          <li><a href="about.html">Our story</a></li>
+          <li><a href="about.html">Our story</a>
+      <a href="contact.html">Contact</a></li>
           <li><a href="about.html#sustainability">Sustainability</a></li>
           <li><a href="index.html#reviews">Reviews</a></li>
           <li><a href="#">Instagram</a></li>
@@ -157,7 +217,7 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
+      <span>© 2026 Marshmello.in · Bengaluru, Karnataka · Made with extra fluff</span>
       <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
     </div>
   </div>
@@ -205,11 +265,13 @@
 
 <div class="toast-stack" id="toasts" aria-live="polite"></div>
 
-<script src="js/products.js?v=1786610573"></script>
-<script src="js/store.js?v=1786610573"></script>
-<script src="js/cart.js?v=1786610573"></script>
-<script src="js/auth.js?v=1786610573"></script>
-<script src="js/main.js?v=1786610573"></script>
-<script src="js/scroll.js?v=1786610573"></script>
+<script src="js/products.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/scroll.js"></script>
+<script src="js/cartoon.js"></script>
+<script src="js/lenis-smooth.js?v=2"></script>
 </body>
 </html>

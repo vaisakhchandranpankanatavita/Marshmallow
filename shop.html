@@ -3,26 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shop all — Funky Threads</title>
-<meta name="description" content="Heavyweight screen-printed tees and drop-proof phone cases, printed on demand. Filter by fit and style, sort by price or rating.">
+<title>Shop all — Marshmello.in</title>
+<meta name="description" content="Soft tees and puffy cases. Filter by fit and style, sort by price or vibe.">
 <link rel="icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=1786610573">
+<link rel="stylesheet" href="css/styles.css?v=12">
+<link rel="stylesheet" href="css/cartoon.css?v=12">
 </head>
 <body>
 
-<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns · Drop 007 is live</div>
+<div class="topbar">Free shipping over ₹1,499 · COD available · 15-day easy returns</div>
 
 <header class="nav" id="nav">
   <div class="shell nav__inner">
-    <a href="index.html" class="nav__logo">Funky<b>Threads</b></a>
+    <a href="index.html" class="nav__logo" aria-label="Marshmello.in home"><img src="assets/logo.png" alt="marshmello.in" height="42" width="340"></a>
     <nav class="nav__links" id="navLinks">
       <a href="shop.html" aria-current="page">Shop all</a>
-      <a href="#grid" data-filter-link="tees">Tees</a>
-      <a href="#grid" data-filter-link="cases">Cases</a>
+      <a href="tshirts.html">Tees</a>
+      <a href="cases.html">Cases</a>
       <a href="about.html">Our story</a>
+      <a href="contact.html">Contact</a>
       <a href="#faq">Help</a>
     </nav>
     <div class="nav__actions">
@@ -42,13 +44,66 @@
   </div>
 </header>
 
-<section class="band band--red" style="padding-block:clamp(2.5rem,5vw,4rem)">
-  <div class="shell">
-    <span class="kicker" style="opacity:.8">Restocked never</span>
-    <h1 class="display" style="margin-top:.7rem">Shop<br>Everything</h1>
-    <p class="lead" style="max-width:48ch;margin-top:1.2rem;opacity:.9">
-      New designs land here as we add them in Qikink. Tap a swatch to see the colour, then quick-add without leaving the grid.
-    </p>
+<section class="shop-hero band band--red">
+  <div class="shell shop-hero__inner">
+    <!-- copy -->
+    <div class="shop-hero__copy">
+      <span class="kicker shop-hero__kicker"><span aria-hidden="true">✦</span> Fresh from the print run</span>
+      <h1 class="display shop-hero__title">Shop<br><span class="shop-hero__everything">Everything</span></h1>
+      <p class="lead shop-hero__lead">
+        Tap a swatch to see the colour, then quick-add without leaving the grid.
+      </p>
+      <div class="shop-hero__actions">
+        <a href="#grid" class="btn btn--light">Jump to grid <span class="arrow">→</span></a>
+        <span class="shop-hero__hint" aria-hidden="true"><span class="shop-hero__hint-arrow">↘</span> try the swatches on the right</span>
+      </div>
+      <div class="shop-hero__chips" aria-hidden="true">
+        <span class="chip shop-hero__chip is-on">All</span>
+        <span class="chip shop-hero__chip">Tees</span>
+        <span class="chip shop-hero__chip">Cases</span>
+      </div>
+    </div>
+
+    <!-- art collage -->
+    <div class="shop-hero__art">
+      <div class="shop-hero__stack">
+        <a class="shop-card shop-card--tee" href="tshirts.html" aria-label="Shop T-Shirts">
+          <div class="shop-card__media">
+            <img src="assets/cat-tees.svg" alt="" width="400" height="320" loading="eager">
+          </div>
+          <span class="sticker shop-card__sticker shop-card__sticker--tl">240<br>GSM</span>
+          <div class="shop-card__bar">
+            <span class="shop-card__dots">
+              <i style="--c:var(--red)"></i><i style="--c:var(--yellow)"></i><i style="--c:#2D7DFF"></i><i style="--c:var(--cream)"></i>
+            </span>
+            <span class="shop-card__label">Tees →</span>
+          </div>
+        </a>
+        <a class="shop-card shop-card--case" href="cases.html" aria-label="Shop Phone Cases">
+          <div class="shop-card__media">
+            <img src="assets/cat-cases.svg" alt="" width="400" height="320" loading="eager">
+          </div>
+          <span class="sticker shop-card__sticker shop-card__sticker--br">Puffy<br>Case</span>
+          <div class="shop-card__bar">
+            <span class="shop-card__dots">
+              <i style="--c:var(--paper)"></i><i style="--c:var(--ink)"></i><i style="--c:var(--yellow)"></i>
+            </span>
+            <span class="shop-card__label">Cases →</span>
+          </div>
+        </a>
+        <img src="assets/logowoman.png" alt="Girl in Marshmello hoodie holding pink phone case with X eyes" class="shop-hero__woman" width="1024" height="1536" loading="eager">
+      </div>
+      <!-- floating doodles -->
+      <span class="shop-doodle shop-doodle--star shop-doodle--s1">★</span>
+      <span class="shop-doodle shop-doodle--star shop-doodle--s2">✦</span>
+      <span class="shop-doodle shop-doodle--star shop-doodle--s3">✶</span>
+      <span class="shop-doodle shop-doodle--squiggle" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <!-- soft confetti behind -->
+  <div class="shop-hero__confetti" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
   </div>
 </section>
 
@@ -84,25 +139,6 @@
   </div>
 </section>
 
-<!-- ── parallel scrolling columns ────────────────────────────────────────── -->
-<section class="parallel" id="parallel" aria-label="The full range">
-  <div class="parallel__cols" aria-hidden="true" id="parallelCols">
-      <div class="parallel__col" data-track="0.9"></div>
-      <div class="parallel__col" data-track="-0.75"></div>
-      <div class="parallel__col" data-track="0.6"></div>
-      <div class="parallel__col" data-track="-0.85"></div>
-  </div>
-  <div class="parallel__plate">
-    <div data-reveal>
-      <span class="kicker" id="parallelKicker"></span>
-      <h2 class="display">Something<br>For Every Mood</h2>
-      <p>Four tee fits, four case styles, three colourways each. Nothing here is
-         a plain grey anything.</p>
-      <a href="#grid" class="btn btn--yellow">Browse the lot <span class="arrow">→</span></a>
-    </div>
-  </div>
-</section>
-
 <!-- ── size guide ────────────────────────────────────────────────────────── -->
 <section class="band band--yellow" id="sizing">
   <div class="shell feature feature--pin">
@@ -122,7 +158,7 @@
       <p style="font-size:.88rem;opacity:.75">Still unsure? Email your usual size in a brand you own and we'll tell you what to order.</p>
     </div>
     <div class="feature__art" data-reveal>
-      <img src="assets/drop.svg" alt="Drop 007" width="800" height="600">
+      <img src="assets/standard-issue--navy-2.png" alt="Standard Issue tee in navy" width="800" height="600">
     </div>
   </div>
 </section>
@@ -155,7 +191,7 @@
   <div class="shell">
     <div class="footer__top">
       <div class="footer__brand">
-        <span class="nav__logo">Funky<b>Threads</b></span>
+        <span class="nav__logo"><img src="assets/logo.png" alt="marshmello.in" height="44" width="340"></span>
         <p>Loud tees and drop-proof cases, screen-printed in small batches in a Bengaluru studio since 2019.</p>
       </div>
       <div>
@@ -179,7 +215,8 @@
       <div>
         <h4>Company</h4>
         <ul>
-          <li><a href="about.html">Our story</a></li>
+          <li><a href="about.html">Our story</a>
+      <a href="contact.html">Contact</a></li>
           <li><a href="about.html#sustainability">Sustainability</a></li>
           <li><a href="index.html#reviews">Reviews</a></li>
           <li><a href="#">Instagram</a></li>
@@ -187,7 +224,7 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© 2026 Funky Threads Pvt. Ltd. · Bengaluru, Karnataka · GSTIN 29AABCF1234M1Z5</span>
+      <span>© 2026 Marshmello.in · Bengaluru, Karnataka · Made with extra fluff</span>
       <div class="pay"><span>UPI</span><span>RUPAY</span><span>VISA</span><span>MC</span><span>NET BANKING</span><span>COD</span></div>
     </div>
   </div>
@@ -235,11 +272,14 @@
 
 <div class="toast-stack" id="toasts" aria-live="polite"></div>
 
-<script src="js/products.js?v=1786610573"></script>
-<script src="js/store.js?v=1786610573"></script>
-<script src="js/cart.js?v=1786610573"></script>
-<script src="js/auth.js?v=1786610573"></script>
-<script src="js/main.js?v=1786610573"></script>
-<script src="js/scroll.js?v=1786610573"></script>
+<script src="js/products.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/scroll.js"></script>
+<script src="js/cartoon.js"></script>
+<script>document.addEventListener("mouseover",e=>{var c=e.target.closest(".card");if(!c)return;var slug=c.dataset.slug;var p=window.PRODUCT_BY_SLUG&&window.PRODUCT_BY_SLUG(slug);if(p)document.documentElement.setAttribute("data-cursor",p.category==="cases"?"case":"tee")});document.addEventListener("mouseout",e=>{if(e.target.closest(".card")) document.documentElement.removeAttribute("data-cursor")})</script>
+<script src="js/lenis-smooth.js?v=2"></script>
 </body>
 </html>

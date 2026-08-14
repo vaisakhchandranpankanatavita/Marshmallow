@@ -26,25 +26,37 @@
 
   const stars = r => '★'.repeat(Math.round(r)) + '☆'.repeat(5 - Math.round(r));
 
+  /* Dot strip only appears (via CSS :empty) when a colourway has more than
+     one real photo — same markup is reused on initial render and on swatch
+     change, so there is exactly one place that knows the button shape. */
+  function dotsButtonsHTML(images) {
+    return images.length < 2 ? '' : images.map((_, i) => `
+      <button class="card__dot" data-role="dot" data-idx="${i}"
+              aria-label="Photo ${i + 1}" aria-pressed="${i === 0}"></button>`).join('');
+  }
+
   function cardHTML(p, index) {
     const first = p.colorways[0];
+    const images = window.PRODUCT_IMAGES(p, first);
     const sizes = window.SIZES_FOR(p);
     return `
-      <article class="card" style="--i:${index % 8}" data-slug="${p.slug}" data-colorway="${first}">
+      <article class="card" style="--i:${index % 8}" data-slug="${p.slug}" data-category="${p.category}" data-colorway="${first}" data-img-index="0">
         <div class="card__media">
-          <img src="${window.PRODUCT_IMAGE(p, first)}" alt="${p.name} in ${first}"
+          <img src="${images[0]}" alt="${p.name} in ${first}"
                data-role="img" width="600" height="600" loading="lazy">
           ${p.badge ? `<span class="card__badge" data-badge="${p.badge}">${p.badge}</span>` : ''}
-          ${p.demo ? `<span class="card__demo" title="Placeholder — not a real Qikink product">Demo</span>` : ''}
           <div class="card__quick">
             <button class="btn btn--sm btn--block" data-role="quick">Quick add</button>
           </div>
+          <div class="card__dots" data-role="dots" role="group" aria-label="Product photos">${dotsButtonsHTML(images)}</div>
         </div>
         <div class="card__body">
           <div class="card__meta">
             <span class="card__sub">${window.SUBCATEGORY_LABEL(p.category, p.subcategory)}</span>
             <span class="card__theme">${window.THEME_LABEL(p.theme)}</span>
-            <span class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} (${p.reviews})</span>
+            ${p.rating != null
+              ? `<span class="card__rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} (${p.reviews})</span>`
+              : `<span class="card__rating">No reviews yet</span>`}
           </div>
           <h3 class="card__name">${p.name}</h3>
           <p class="card__tagline">${p.tagline}</p>
@@ -85,11 +97,27 @@
     if (swatch) {
       const c = swatch.dataset.colorway;
       card.dataset.colorway = c;
+      card.dataset.imgIndex = '0';
+      const images = window.PRODUCT_IMAGES(p, c);
       const img = card.querySelector('[data-role="img"]');
-      img.src = window.PRODUCT_IMAGE(p, c);
+      img.src = images[0];
       img.alt = `${p.name} in ${c}`;
+      const dots = card.querySelector('[data-role="dots"]');
+      if (dots) dots.innerHTML = dotsButtonsHTML(images);
       card.querySelectorAll('[data-role="swatch"]')
         .forEach(s => s.setAttribute('aria-pressed', s === swatch));
+      return;
+    }
+
+    const dot = e.target.closest('[data-role="dot"]');
+    if (dot) {
+      const idx = Number(dot.dataset.idx);
+      const images = window.PRODUCT_IMAGES(p, card.dataset.colorway);
+      card.dataset.imgIndex = String(idx);
+      const img = card.querySelector('[data-role="img"]');
+      img.src = images[idx];
+      dot.parentElement.querySelectorAll('[data-role="dot"]')
+        .forEach(d => d.setAttribute('aria-pressed', d === dot));
       return;
     }
 
@@ -195,8 +223,25 @@
   }
 
   function applyFilters() {
-    const list = visible();
+    let list = visible();
+    // HARDEN: locked pages must never show empty due to stale theme/sub handoff
+    const gridLocked = $('mainGrid')?.dataset.lockedCategory || null;
+    if (gridLocked && list.length === 0 && (sub || theme)) {
+      // clear stale filters and retry once
+      sub = null; theme = null;
+      list = visible();
+      try{ sessionStorage.removeItem(FILTER_KEY); }catch(e){}
+    }
     renderGrid($('mainGrid'), list);
+    // fallback: ensure staggered grid becomes visible even if IntersectionObserver fails
+    const gridEl = $('mainGrid');
+    if (gridEl && !gridEl.classList.contains('is-in')) {
+      setTimeout(()=>{ if(gridEl.children.length) gridEl.classList.add('is-in'); }, 600);
+    }
+    const bestEl = $('bestGrid');
+    if (bestEl && bestEl.children.length && !bestEl.classList.contains('is-in')) {
+      setTimeout(()=> bestEl.classList.add('is-in'), 650);
+    }
 
     const count = $('resultCount');
     if (count) count.textContent = `${list.length} product${list.length === 1 ? '' : 's'}`;
@@ -274,10 +319,53 @@
     applyFilters();
   }
 
+  function handleFilterLink(val) {
+    if (!val) return;
+    const [cat, subId, themeId] = val.split(':');
+    const grid = $('mainGrid');
+    const locked = grid?.dataset.lockedCategory || null;
+    if (cat === 'theme') {
+      theme = subId || null;
+    } else if (locked) {
+      if (cat === locked) { sub = subId || null; theme = themeId || null; }
+      else if (themeId) { theme = themeId; }
+      else if (cat !== locked) return;
+    } else {
+      if (cat === 'tees' || cat === 'cases' || cat === 'all') filter = cat;
+      sub = subId || null;
+      theme = themeId || null;
+    }
+    // in-page filtering: if grid exists on this page, apply immediately
+    if (grid) { applyFilters(); if (location.hash !== '#grid') history.replaceState(null,'','#grid'); $('grid')?.scrollIntoView({behavior:'smooth'}); }
+  }
+
   document.querySelectorAll('[data-filter-link]').forEach(link => {
-    link.addEventListener('click', () => {
-      sessionStorage.setItem(FILTER_KEY, link.dataset.filterLink);
+    link.addEventListener('click', e => {
+      const val = link.dataset.filterLink;
+      sessionStorage.setItem(FILTER_KEY, val);
+      const href = link.getAttribute('href') || '';
+      const isInPageGrid = href === '#grid' || href.endsWith('#grid');
+      // if link is an in-page anchor on a page that has a grid, handle without navigation
+      if (isInPageGrid && $('mainGrid')) {
+        e.preventDefault();
+        handleFilterLink(val);
+      }
     });
+  });
+  // also handle dynamically injected tiles (theme/sub tiles) via delegation
+  document.addEventListener('click', e => {
+    const link = e.target.closest('[data-filter-link]');
+    if (!link || link.__bound) return;
+    // fallback for elements added after boot that missed the direct binding
+    if (!link.dataset.__delegated) {
+      link.dataset.__delegated = '1';
+      const val = link.dataset.filterLink;
+      const href = link.getAttribute('href') || '';
+      if ((href === '#grid' || href.endsWith('#grid')) && $('mainGrid')) {
+        // storage already set by direct handler if present, but ensure
+        sessionStorage.setItem(FILTER_KEY, val);
+      }
+    }
   });
 
   /* ------------------------------------------------------ static sections */
@@ -292,64 +380,44 @@
     renderGrid(el, best);
   }
 
-  /* Fills the parallel-scroll wall from window.PRODUCTS instead of a
-     hand-written image list, so it can never drift out of sync with the
-     catalog again. On a locked category page (tshirts.html/cases.html) it
-     only draws from that category; if that leaves nothing to show (e.g. no
-     real tees exist yet in Qikink), the whole section hides rather than
-     rendering an empty band. */
-  function initParallelWall() {
-    const section = $('parallel');
-    const cols = section?.querySelectorAll('.parallel__col');
-    if (!section || !cols?.length) return;
-
-    const locked = $('mainGrid')?.dataset.lockedCategory || null;
-    const pool = locked ? window.PRODUCTS.filter(p => p.category === locked) : window.PRODUCTS.slice();
-
-    if (!pool.length) {
-      section.hidden = true;
-      return;
-    }
-
-    const TILES_PER_COL = 8;
-    cols.forEach((col, ci) => {
-      const tiles = [];
-      for (let i = 0; i < TILES_PER_COL; i++) {
-        const p = pool[(i + ci * 3) % pool.length];
-        tiles.push(`<img src="${window.PRODUCT_IMAGE(p, p.colorways[0])}" alt="" width="600" height="600" loading="lazy">`);
-      }
-      col.innerHTML = tiles.join('');
-    });
-
-    const kicker = $('parallelKicker');
-    if (kicker) {
-      const themeCount = new Set(pool.map(p => p.theme)).size;
-      kicker.textContent = `${pool.length} design${pool.length === 1 ? '' : 's'} · ${themeCount} theme${themeCount === 1 ? '' : 's'}`;
-    }
-  }
-
-  /* Same idea as the parallel wall — read the true count out of the catalog
-     at boot instead of a number someone has to remember to update by hand. */
-  function syncCatalogStats() {
-    const stat = $('statDesignCount');
-    if (stat) stat.dataset.count = String(window.PRODUCTS.length);
-  }
-
   function initThemeTiles() {
     const el = $('themeTiles');
     if (!el) return;
     const counts = {};
     window.PRODUCTS.forEach(p => { counts[p.theme] = (counts[p.theme] || 0) + 1; });
-    // Only advertise a theme that actually has a product behind it — most of
-    // window.THEMES is still unused until more real Qikink products land.
     el.innerHTML = window.THEMES.filter(t => counts[t.id]).map(t => `
       <a class="themetile" href="shop.html#grid" data-filter-link="theme:${t.id}">
         <span class="themetile__emoji" aria-hidden="true">${t.emoji}</span>
         <h3>${t.label}</h3>
         <p>${t.blurb}</p>
-        <span class="themetile__n">${counts[t.id] || 0} design${counts[t.id] === 1 ? '' : 's'}</span>
+        <span class="themetile__n">${counts[t.id]} design${counts[t.id] === 1 ? '' : 's'}</span>
       </a>`).join('');
     // These are injected, so they miss the document-load binding pass.
+    el.querySelectorAll('[data-filter-link]').forEach(link => {
+      link.addEventListener('click', () => {
+        sessionStorage.setItem('FT_FILTER', link.dataset.filterLink);
+      });
+    });
+  }
+
+  /* Fit/style tiles per category, image + count sourced from real products.
+     A subcategory with zero products is never shown — same rule as themes. */
+  function initSubcatTiles(category, elId, hrefBase) {
+    const el = $(elId);
+    if (!el) return;
+    const inCategory = window.PRODUCTS.filter(p => p.category === category);
+    const counts = {};
+    inCategory.forEach(p => { counts[p.subcategory] = (counts[p.subcategory] || 0) + 1; });
+    const subs = (window.SUBCATEGORIES[category] || []).filter(sc => counts[sc.id]);
+    if (!subs.length) { el.closest('[data-subtile-block]')?.setAttribute('hidden', ''); return; }
+    el.innerHTML = subs.map(sc => {
+      const sample = inCategory.find(p => p.subcategory === sc.id);
+      return `
+      <a class="subtile" href="${hrefBase}#grid" data-filter-link="${category}:${sc.id}">
+        <img src="${window.PRODUCT_IMAGE(sample)}" alt="${sc.label}" width="600" height="600" loading="lazy">
+        <div class="subtile__body"><h3>${sc.label}</h3><p>${sc.blurb}</p><span class="subtile__n">${counts[sc.id]} design${counts[sc.id] === 1 ? '' : 's'}</span></div>
+      </a>`;
+    }).join('');
     el.querySelectorAll('[data-filter-link]').forEach(link => {
       link.addEventListener('click', () => {
         sessionStorage.setItem('FT_FILTER', link.dataset.filterLink);
@@ -360,14 +428,7 @@
   function initReviews() {
     const el = $('reviewGrid');
     if (!el) return;
-    // No real reviews exist yet — hide the whole section rather than show a
-    // "5,400+ reviews" heading over an empty grid.
-    const section = el.closest('section');
-    if (!window.REVIEWS.length) {
-      if (section) section.hidden = true;
-      return;
-    }
-    if (section) section.hidden = false;
+    if (!window.REVIEWS.length) { el.closest('section')?.setAttribute('hidden', ''); return; }
     el.innerHTML = window.REVIEWS.map(r => `
       <article class="review">
         <div class="review__stars">${stars(r.rating)}</div>
@@ -430,14 +491,14 @@
     const close = $('browseClose');
     if (!modal) return;
 
-    const show = () => { modal.classList.add('is-open'); };
-    const hide = () => { modal.classList.remove('is-open'); };
+    const show = () => { modal.style.display = 'grid'; };
+    const hide = () => { modal.style.display = 'none'; };
 
     scrim?.addEventListener('click', hide);
     close?.addEventListener('click', hide);
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) hide();
+      if (e.key === 'Escape' && modal.style.display === 'grid') hide();
     });
 
     show();
@@ -446,28 +507,42 @@
   /* ---------------------------------------------------------------- boot */
 
   async function boot() {
-    const status = await window.Store.init();
-    console.info(`[store] catalog source: ${status.source} (${status.count} products)`);
+    try {
+      let status = { source: 'local', count: (window.PRODUCTS||[]).length };
+      try { status = await window.Store.init(); } catch(err){ console.warn('[store] init failed, using local catalog', err); }
+      console.info(`[store] catalog source: ${status.source} (${status.count} products)`);
 
-    initBestSellers();
-    initThemeTiles();
-    initParallelWall();
-    syncCatalogStats();
-    initFilters();
-    initReviews();
-    initFaq();
-    initNav();
-    initSignup();
-    initBrowseModal();
-    window.Cart.init();
-    // checkout.html and order-success.html don't load js/auth.js — no
-    // account UI makes sense mid-checkout or on a confirmation page.
-    window.Auth?.init();
+      initBestSellers();
+      initThemeTiles();
+      initSubcatTiles('tees', 'teeFitTiles', 'tshirts.html');
+      initSubcatTiles('cases', 'caseStyleTiles', 'cases.html');
+      initFilters();
+      initReviews();
+      initFaq();
+      initNav();
+      initSignup();
+      initBrowseModal();
+      window.Cart.init();
+      window.Auth.init();
 
-    // Grids are populated above, so scroll.js has to (re)bind after this.
-    // It listens for this rather than racing DOMContentLoaded.
-    document.dispatchEvent(new CustomEvent('ft:content-ready'));
+      // Grids are populated above, so scroll.js has to (re)bind after this.
+      // It listens for this rather than racing DOMContentLoaded.
+      document.dispatchEvent(new CustomEvent('ft:content-ready'));
+      // safety net: if filters/grid still empty due to late PRODUCTS, retry once
+      setTimeout(()=>{
+        const mg=$('mainGrid');
+        if(mg && mg.children.length===0 && window.PRODUCTS && window.PRODUCTS.length){
+          try{ applyFilters(); document.dispatchEvent(new CustomEvent('ft:content-ready')); }catch(e){ console.warn(e); }
+        }
+      }, 900);
+    } catch(e){
+      console.error('[boot] fatal', e);
+      // last-ditch: try to render at least something
+      try{ const g=$('mainGrid'); if(g && window.PRODUCTS){ renderGrid(g, window.PRODUCTS.slice(0,8)); g.classList.add('is-in'); } }catch(_){}
+    }
   }
 
   document.addEventListener('DOMContentLoaded', boot);
+  // also support pages where DOMContentLoaded already fired (e.g. cached)
+  if(document.readyState !== 'loading'){ setTimeout(()=>{ if(!$('mainGrid') || $('mainGrid').children.length===0) boot(); }, 400); }
 })();

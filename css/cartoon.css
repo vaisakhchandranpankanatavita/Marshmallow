@@ -1,0 +1,255 @@
+/* ==========================================================================
+   MARSHMELLO — cartoon puff system
+   Hand-tuned, no generic fade-up. Only transforms + opacity, respects
+   prefers-reduced-motion. Palette stays ink/red/yellow/cream.
+   ========================================================================== */
+
+/* ——— keyframes ——— */
+
+@keyframes puffIn {
+  0%   { opacity: 0; transform: scale(0.72, 0.88) translateY(18px) rotate(-1.5deg); }
+  55%  { opacity: 1; transform: scale(1.06, 0.92) translateY(-6px) rotate(0.6deg); }
+  75%  { transform: scale(0.97, 1.04) translateY(2px) rotate(-0.3deg); }
+  100% { opacity: 1; transform: scale(1, 1) translateY(0) rotate(0); }
+}
+
+@keyframes jelly {
+  0%   { transform: scale(1,1); }
+  18%  { transform: scale(1.18, 0.84); }
+  32%  { transform: scale(0.92, 1.14); }
+  48%  { transform: scale(1.06, 0.94); }
+  68%  { transform: scale(0.98, 1.03); }
+  84%  { transform: scale(1.02, 0.99); }
+  100% { transform: scale(1,1); }
+}
+
+@keyframes wobble {
+  0%   { transform: rotate(-3deg) translateY(0); }
+  15%  { transform: rotate(3.5deg) translateY(-4px); }
+  30%  { transform: rotate(-2.5deg) translateY(2px); }
+  45%  { transform: rotate(2deg) translateY(-2px); }
+  65%  { transform: rotate(-1deg) translateY(1px); }
+  100% { transform: rotate(-3deg) translateY(0); }
+}
+
+@keyframes floatPuff {
+  0%, 100% { transform: rotate(-3deg) translateY(0) translateX(0); }
+  25% { transform: rotate(-2deg) translateY(-8px) translateX(2px); }
+  50% { transform: rotate(-3.6deg) translateY(-4px) translateX(-1px); }
+  75% { transform: rotate(-2.4deg) translateY(-10px) translateX(1px); }
+}
+
+@keyframes starPop {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.18) rotate(14deg); }
+}
+
+@keyframes drip {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  50%      { transform: scaleY(1.12) translateY(1.5px); }
+}
+
+@keyframes swatchBounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.35); }
+  60%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+/* ——— logo ——— */
+.nav__logo img {
+  transition: transform 180ms cubic-bezier(.34,1.4,.64,1);
+  transform-origin: 22px 22px;
+}
+.nav__logo:hover img { animation: jelly 520ms cubic-bezier(.34,1.4,.64,1); }
+.nav__logo:active img { transform: scale(0.96); }
+
+/* ——— hero ——— */
+.hero__art img {
+  animation: floatPuff 4.2s ease-in-out infinite;
+}
+.hero__art:hover img { animation-play-state: paused; }
+
+/* stickers: replace plain bob with wobble+float, keep offset */
+.sticker { animation: wobble 3.6s ease-in-out infinite; }
+.sticker--tl { animation-delay: 0s; }
+.sticker--br { animation-delay: 0.7s; }
+.sticker:hover { animation: jelly 480ms cubic-bezier(.34,1.4,.64,1); }
+
+/* ——— buttons ——— */
+.btn {
+  transition: transform 180ms cubic-bezier(.34,1.4,.64,1), background 180ms, color 180ms, box-shadow 180ms;
+}
+.btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 4px 5px 0 var(--ink); }
+.btn:active { transform: scale(0.97); }
+.btn.is-jelly { animation: jelly 500ms cubic-bezier(.34,1.4,.64,1); }
+
+/* ——— cards ——— */
+.card {
+  transform-origin: center 85%;
+}
+.card:hover {
+  animation: jelly 520ms cubic-bezier(.34,1.4,.64,1);
+}
+.card__media img { transition: transform 420ms cubic-bezier(.34,1.4,.64,1); }
+.card:hover .card__media img { transform: scale(1.06) rotate(0.7deg); }
+
+/* staggered puff entrance — overrides the plain reveal for cards */
+.grid-products > .card {
+  opacity: 0;
+}
+.grid-products.is-in > .card,
+#bestGrid.is-in > .card {
+  animation: puffIn 680ms cubic-bezier(.34,1.4,.64,1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* ——— swatches / chips ——— */
+.swatch[aria-pressed="true"] { animation: swatchBounce 380ms cubic-bezier(.34,1.4,.64,1); }
+.swatch:hover { transform: scale(1.22) rotate(-6deg); }
+.chip:hover { transform: translateY(-1px) rotate(-0.8deg); }
+.chip:active { transform: scale(0.96); }
+
+/* ——— pillars / tiles ——— */
+.pillar { transition: transform 200ms cubic-bezier(.34,1.4,.64,1); }
+.pillar:hover { transform: translateY(-6px) rotate(0.7deg); }
+.tile:hover { transform: translateY(-6px) rotate(0.4deg); }
+.pillar__icon { display: inline-block; transition: transform 220ms cubic-bezier(.34,1.4,.64,1); }
+.pillar:hover .pillar__icon { transform: scale(1.22) rotate(-8deg); }
+
+/* ——— cart bump upgraded to jelly ——— */
+.cart-btn.is-bumped { animation: jelly 420ms cubic-bezier(.34,1.4,.64,1); }
+
+/* ——— footer logo subtle drift ——— */
+.footer__brand .nav__logo img {
+  animation: floatPuff 6s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+/* ——— marquee slight wave ——— */
+.marquee__track {
+  will-change: transform;
+}
+
+/* ——— utility: trigger class for JS ——— */
+.is-jelly { animation: jelly 520ms cubic-bezier(.34,1.4,.64,1); }
+.is-puff { animation: puffIn 600ms cubic-bezier(.34,1.4,.64,1) both; }
+
+/* ——— premium motion consistency ——— */
+:root{ --ease-premium: cubic-bezier(.16,1,.3,1); --ease-spring: cubic-bezier(.34,1.56,.64,1); }
+*{ scroll-behavior:auto; }
+@media (prefers-reduced-motion: no-preference){
+  .card, .btn, .chip, .tile, .subtile, .themetile{ transition-timing-function: var(--ease-premium) !important; }
+  .grid-products.is-in > .card{ animation-timing-function: var(--ease-premium) !important; animation-duration:.58s !important; }
+}
+
+/* ——— reduced motion ——— */
+@media (prefers-reduced-motion: reduce) {
+  .nav__logo img,
+  .hero__art img,
+  .sticker,
+  .btn,
+  .card,
+  .footer__brand .nav__logo img { animation: none !important; transition: none !important; }
+  .grid-products > .card,
+  #bestGrid > .card { opacity: 1; animation: none !important; }
+}
+
+/* ——— logoman mascot ——— */
+.hero__art{position:relative}
+.hero__mascot{
+  position:absolute; right:-36px; bottom:-38px;
+  width:min(340px,44vw); height:auto;
+  filter:drop-shadow(8px 10px 0 var(--ink));
+  transform:rotate(2.2deg); z-index:2; pointer-events:none;
+  animation: floatPuff 4.2s ease-in-out infinite;
+}
+.hero__mascot--sm{width:min(240px,32vw); right:-18px; bottom:-24px}
+@media (max-width:980px){ .hero__mascot{display:none} }
+.hero__mascot--cases{ width:min(240px,30vw) !important; right:-52px !important; bottom:-28px !important; transform:rotate(1.5deg) !important; }
+@media (max-width:1120px){ .hero__mascot--cases{ right:-28px; width:min(200px,28vw) } }
+
+
+/* ——— custom cursors ——— */
+html[data-cursor="tee"], body[data-cursor="tee"], .cursor-tee { cursor: url('../assets/cursor-tee.svg') 14 10, auto; }
+html[data-cursor="case"], body[data-cursor="case"], .cursor-case { cursor: url('../assets/cursor-case.svg') 16 14, auto; }
+.card[data-category="tees"], [data-cursor-tee] { cursor: url('../assets/cursor-tee.svg') 14 10, pointer; }
+.card[data-category="cases"], [data-cursor-case] { cursor: url('../assets/cursor-case.svg') 16 14, pointer; }
+
+/* ——— shop hero — cute collage ——— */
+@keyframes shopFloatA {
+  0%,100% { transform: rotate(-3.4deg) translateY(0) translateX(0); }
+  25% { transform: rotate(-2.6deg) translateY(-9px) translateX(2px); }
+  50% { transform: rotate(-3.8deg) translateY(-4px) translateX(-1px); }
+  75% { transform: rotate(-3deg) translateY(-11px) translateX(1px); }
+}
+@keyframes shopFloatB {
+  0%,100% { transform: rotate(3.2deg) translateY(0) translateX(0); }
+  25% { transform: rotate(3.8deg) translateY(-7px) translateX(-2px); }
+  50% { transform: rotate(2.6deg) translateY(-3px) translateX(1px); }
+  75% { transform: rotate(3.5deg) translateY(-10px) translateX(-1px); }
+}
+@keyframes dotPop {
+  0%, 85%, 100% { transform: scale(1); }
+  8% { transform: scale(1.32); }
+  16% { transform: scale(.92); }
+}
+@keyframes hintWiggle {
+  0%,100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(-1deg) translateY(-3px); }
+}
+@keyframes confettiDrift {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(6deg); }
+}
+@keyframes scribbleWiggle {
+  0%,100% { transform: rotate(-1.5deg) scaleX(1); }
+  50% { transform: rotate(-1deg) scaleX(1.03); }
+}
+.shop-card--tee{ animation: shopFloatA 4.4s ease-in-out infinite; }
+.shop-card--case{ animation: shopFloatB 4.8s ease-in-out infinite; animation-delay:.4s; }
+.shop-card:hover{ animation-play-state:paused; }
+.shop-card__dots i{ animation: dotPop 2.8s ease-in-out infinite; }
+.shop-card__dots i:nth-child(2){ animation-delay:.18s; }
+.shop-card__dots i:nth-child(3){ animation-delay:.36s; }
+.shop-card__dots i:nth-child(4){ animation-delay:.54s; }
+.shop-card__dots i:nth-child(5){ animation-delay:.72s; }
+.shop-hero__hint{ animation: hintWiggle 2.2s ease-in-out infinite; }
+.shop-hero__hint-arrow{ animation: starPop 1.4s ease-in-out infinite; display:inline-block; }
+.shop-doodle--s1{ animation: starPop 2.2s ease-in-out infinite; }
+.shop-doodle--s2{ animation: starPop 2.6s ease-in-out infinite; animation-delay:.5s; }
+.shop-doodle--s3{ animation: starPop 2.4s ease-in-out infinite; animation-delay:.9s; }
+.shop-doodle--squiggle{ animation: scribbleWiggle 3s ease-in-out infinite; }
+.shop-hero__confetti i{ animation: confettiDrift 3.8s ease-in-out infinite; }
+.shop-hero__confetti i:nth-child(2){ animation-delay:.3s; animation-duration:4.2s; }
+.shop-hero__confetti i:nth-child(3){ animation-delay:.7s; }
+.shop-hero__confetti i:nth-child(4){ animation-delay:.2s; animation-duration:4.6s; }
+.shop-hero__confetti i:nth-child(5){ animation-delay:.9s; }
+.shop-hero__confetti i:nth-child(6){ animation-delay:1.1s; }
+.shop-hero__confetti i:nth-child(7){ animation-delay:.4s; animation-duration:5s; }
+.shop-card__sticker{ animation: wobble 3.6s ease-in-out infinite; }
+.shop-card--case .shop-card__sticker{ animation-delay:.7s; }
+
+/* entrance - copy puffs, cards pop */
+.shop-hero__copy > *{ animation: puffIn 680ms cubic-bezier(.34,1.4,.64,1) both; }
+.shop-hero__copy > *:nth-child(1){ animation-delay:60ms; }
+.shop-hero__copy > *:nth-child(2){ animation-delay:140ms; }
+.shop-hero__copy > *:nth-child(3){ animation-delay:220ms; }
+.shop-hero__copy > *:nth-child(4){ animation-delay:300ms; }
+.shop-hero__copy > *:nth-child(5){ animation-delay:380ms; }
+.shop-hero__stack .shop-card{ animation-name: shopFloatA, puffIn; animation-duration: 4.4s, 680ms; animation-timing-function: ease-in-out, cubic-bezier(.34,1.4,.64,1); animation-iteration-count: infinite, 1; animation-fill-mode: none, both; }
+.shop-hero__stack .shop-card--tee{ animation-delay: 0s, 420ms; }
+.shop-hero__stack .shop-card--case{ animation-name: shopFloatB, puffIn; animation-duration: 4.8s, 680ms; animation-delay: .4s, 560ms; }
+
+.shop-hero__woman{ animation: floatPuff 4.6s ease-in-out infinite; }
+.cases-hero__art img{ animation: floatPuff 4.4s ease-in-out infinite; }
+.cases-hero__art:hover img, .shop-hero__woman:hover{ animation-play-state:paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-card, .shop-card__dots i, .shop-hero__hint, .shop-hero__hint-arrow,
+  .shop-doodle, .shop-doodle--squiggle, .shop-hero__confetti i,
+  .shop-hero__copy > *, .shop-hero__stack .shop-card,
+  .shop-hero__woman, .cases-hero__art img { animation: none !important; }
+  .shop-card--tee, .shop-card--case { transform: rotate(-3.4deg); }
+  .shop-card--case { transform: rotate(3.2deg); }
+}
