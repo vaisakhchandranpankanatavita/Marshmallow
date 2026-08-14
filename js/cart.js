@@ -73,6 +73,7 @@ window.Cart = (function () {
     $('drawer').setAttribute('aria-hidden', 'false');
     $('overlay').classList.add('is-open');
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     $('cartClose').focus();
   }
 
@@ -81,6 +82,7 @@ window.Cart = (function () {
     $('drawer').setAttribute('aria-hidden', 'true');
     $('overlay').classList.remove('is-open');
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
   }
 
   function render() {

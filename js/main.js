@@ -85,6 +85,41 @@
            Nothing matches all of those filters. Try clearing the theme or the fit.</p>`;
   }
 
+  // ultra-smooth tab switch: exit → swap → enter, respects reduced-motion
+  let _switchTimer = null;
+  function smoothRenderGrid(el, products) {
+    if (!el) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCold = !el.classList.contains('is-in') || el.children.length === 0;
+    if (reduce || isCold) {
+      renderGrid(el, products);
+      requestAnimationFrame(() => el.classList.add('is-in'));
+      return;
+    }
+    const cards = [...el.children].filter(c => c.classList.contains('card'));
+    if (!cards.length) {
+      renderGrid(el, products);
+      requestAnimationFrame(() => el.classList.add('is-in'));
+      return;
+    }
+    if (_switchTimer) clearTimeout(_switchTimer);
+    el.classList.add('is-switching');
+    cards.forEach((c, i) => {
+      c.style.animation = `tabOut 340ms var(--ease-premium) both`;
+      c.style.animationDelay = `${i * 22}ms`;
+    });
+    const outDur = 340 + cards.length * 22;
+    _switchTimer = setTimeout(() => {
+      renderGrid(el, products);
+      void el.offsetHeight;
+      el.classList.remove('is-switching');
+      el.classList.remove('is-in');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => el.classList.add('is-in'));
+      });
+    }, Math.min(380, outDur * 0.55));
+  }
+
   /* Card interactions are delegated from the document, so grids can re-render
      freely without rebinding anything. */
   document.addEventListener('click', e => {
@@ -232,7 +267,11 @@
       list = visible();
       try{ sessionStorage.removeItem(FILTER_KEY); }catch(e){}
     }
-    renderGrid($('mainGrid'), list);
+    // ultra-smooth grid transition — keeps scroll position, no flash
+    const wasTabbed = applyFilters._lastFilter !== undefined && applyFilters._lastFilter !== filter + '|' + sub + '|' + theme + '|' + sort;
+    applyFilters._lastFilter = filter + '|' + sub + '|' + theme + '|' + sort;
+    if (wasTabbed) smoothRenderGrid($('mainGrid'), list);
+    else renderGrid($('mainGrid'), list);
     // fallback: ensure staggered grid becomes visible even if IntersectionObserver fails
     const gridEl = $('mainGrid');
     if (gridEl && !gridEl.classList.contains('is-in')) {
@@ -244,7 +283,15 @@
     }
 
     const count = $('resultCount');
-    if (count) count.textContent = `${list.length} product${list.length === 1 ? '' : 's'}`;
+    if (count) {
+      count.style.opacity = '0';
+      count.style.translate = '0 4px';
+      setTimeout(() => {
+        count.textContent = `${list.length} product${list.length === 1 ? '' : 's'}`;
+        count.style.opacity = '';
+        count.style.translate = '';
+      }, 140);
+    }
 
     $('filters')?.querySelectorAll('[data-filter]').forEach(b =>
       b.setAttribute('aria-pressed', b.dataset.filter === filter));
@@ -491,8 +538,8 @@
     const close = $('browseClose');
     if (!modal) return;
 
-    const show = () => { modal.classList.add('is-open'); };
-    const hide = () => { modal.classList.remove('is-open'); };
+    const show = () => { modal.classList.add('is-open'); document.body.style.overflow = 'hidden'; document.documentElement.style.overflow = 'hidden'; };
+    const hide = () => { modal.classList.remove('is-open'); document.body.style.overflow = ''; document.documentElement.style.overflow = ''; };
 
     scrim?.addEventListener('click', hide);
     close?.addEventListener('click', hide);

@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css?v=1786610573">
+<link rel="stylesheet" href="css/cartoon.css?v=1786610573">
 <style>
   .success {
     text-align: center;
@@ -38,6 +39,11 @@
       <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
+      <div class="account">
+        <button class="account-btn" id="accountBtn" aria-label="Sign in"
+                aria-expanded="false" aria-haspopup="true"></button>
+        <div class="account__menu" id="accountMenu" hidden></div>
+      </div>
       <button class="cart-btn" id="cartOpen" aria-label="Open cart">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>

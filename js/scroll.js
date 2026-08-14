@@ -14,6 +14,10 @@
  *   data-track="0.5"         column in a .parallel section; negative reverses
  *   data-count="2140"        counts up to the number on entry
  *
+ * One page-level flag, set on <body>:
+ *
+ *   data-smooth              content eases after the scroll, scrollbar hidden
+ *
  * All of it collapses to "just show the content" under prefers-reduced-motion.
  */
 
@@ -136,11 +140,21 @@
       el,
       speed: parseFloat(el.dataset.parallax) || 0.1,
       top: docTop(el),
-      height: el.offsetHeight
+      height: el.offsetHeight,
+      current: 0,
+      target: 0
     }));
   }
 
+  // Lerping current toward target each frame (rather than writing target
+  // straight to the transform) is what makes the drift feel like inertia
+  // instead of being pixel-locked to the scroll position — the difference
+  // between "smooth parallax" and parallax that just tracks the scrollbar.
+  const PARALLAX_EASE = 0.12;
+  const SETTLE_EPSILON = 0.05;
+
   function updateParallax(vh, y) {
+    let unsettled = false;
     for (const item of parallaxItems) {
       const relTop = item.top - y;
       if (relTop + item.height < -200 || relTop > vh + 200) continue;
@@ -148,8 +162,12 @@
       const centre = item.top + item.height / 2;
       const progress = ((y + vh / 2) - centre) / (vh / 2 + item.height / 2);
       const clamped = Math.max(-1.5, Math.min(1.5, progress));
-      item.el.style.setProperty('--py', (clamped * item.speed * -100).toFixed(1) + 'px');
+      item.target = clamped * item.speed * -100;
+      item.current += (item.target - item.current) * PARALLAX_EASE;
+      if (Math.abs(item.target - item.current) > SETTLE_EPSILON) unsettled = true;
+      item.el.style.setProperty('--py', item.current.toFixed(1) + 'px');
     }
+    return unsettled;
   }
 
   /* --------------------------------------------- parallel scrolling columns */
@@ -163,11 +181,14 @@
     tracks = [...document.querySelectorAll('[data-track]')].map(el => {
       const frame = el.closest('.parallel');
       const overflow = Math.max(0, el.scrollHeight - (frame ? frame.clientHeight : 0));
+      const base = -overflow / 2;
       return {
         el, frame,
         speed: parseFloat(el.dataset.track) || 0.5,
         amplitude: overflow / 2,
-        base: -overflow / 2
+        base,
+        current: base,
+        target: base
       };
     });
     tracks.forEach(t => {
@@ -176,15 +197,19 @@
   }
 
   function updateTracks(vh, y) {
+    let unsettled = false;
     for (const t of tracks) {
       if (!t.frame || !t.amplitude) continue;
       const rect = t.frame.getBoundingClientRect();
       if (rect.bottom < -100 || rect.top > vh + 100) continue;
       // -1 as the section enters from below, +1 as it leaves past the top.
       const progress = (vh - rect.top) / (vh + rect.height) * 2 - 1;
-      const offset = t.base + progress * t.amplitude * t.speed;
-      t.el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      t.target = t.base + progress * t.amplitude * t.speed;
+      t.current += (t.target - t.current) * PARALLAX_EASE;
+      if (Math.abs(t.target - t.current) > SETTLE_EPSILON) unsettled = true;
+      t.el.style.transform = `translate3d(0, ${t.current.toFixed(1)}px, 0)`;
     }
+    return unsettled;
   }
 
   /* ------------------------------------------------- scroll-driven marquee */
@@ -220,6 +245,66 @@
     }
   }
 
+  /* ------------------------------------------------------ smooth page scroll */
+
+  /* Native scroll stays in charge — we never intercept the wheel — but the
+     content is drawn at an eased position that trails it, so the page glides
+     to a stop instead of tracking the scrollbar pixel for pixel. Everything
+     downstream (parallax, tracks, progress) is then fed that eased position
+     rather than window.scrollY, or the layers would drift against a page that
+     is still catching up. */
+  let smooth = null;
+
+  const SMOOTH_EASE = 0.085;
+
+  /* Anything position:fixed has to stay a direct child of <body>: inside a
+     transformed wrapper a fixed element is positioned against the wrapper, not
+     the viewport, so the cart drawer, the scrim and the modals would scroll
+     away with the page. */
+  const SMOOTH_KEEP = '#nav, #overlay, #drawer, #authModal, .toast-stack, .progress, script, template';
+
+  function initSmooth() {
+    if (reduced || !document.body.hasAttribute('data-smooth')) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'smooth-wrap';
+    // A spacer carries the document height, since the fixed wrapper no longer
+    // contributes any — without it there is nothing left to scroll.
+    const spacer = document.createElement('div');
+    spacer.className = 'smooth-spacer';
+
+    const moving = [...document.body.children].filter(el => !el.matches(SMOOTH_KEEP));
+    document.body.appendChild(wrap);
+    document.body.appendChild(spacer);
+    moving.forEach(el => wrap.appendChild(el));
+
+    document.documentElement.classList.add('is-smooth');
+
+    smooth = { wrap, spacer, current: window.scrollY };
+    measureSmooth();
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(() => { measureSmooth(); request(); }).observe(wrap);
+    }
+  }
+
+  function measureSmooth() {
+    if (!smooth) return;
+    const nav = document.getElementById('nav');
+    // Replaces the space the now-fixed nav used to take up in flow.
+    smooth.wrap.style.paddingTop = (nav ? nav.offsetHeight : 0) + 'px';
+    smooth.spacer.style.height = smooth.wrap.offsetHeight + 'px';
+  }
+
+  /* Returns the position the content is actually drawn at this frame. */
+  function updateSmooth(y) {
+    if (!smooth) return y;
+    smooth.current += (y - smooth.current) * SMOOTH_EASE;
+    if (Math.abs(y - smooth.current) < 0.05) smooth.current = y;
+    smooth.wrap.style.transform = `translate3d(0, ${(-smooth.current).toFixed(2)}px, 0)`;
+    return smooth.current;
+  }
+
   /* -------------------------------------------------------- progress rail */
 
   let fill = null;
@@ -253,13 +338,20 @@
     velocity = velocity * 0.82 + (y - lastY) * 0.18;
     lastY = y;
 
+    // Drawn position, which trails y on a data-smooth page and equals it
+    // everywhere else.
+    const drawY = updateSmooth(y);
+    const smoothUnsettled = smooth ? Math.abs(y - smooth.current) > 0.05 : false;
+
     updateProgress(y);
-    updateParallax(vh, y);
-    updateTracks(vh, y);
+    const parallaxUnsettled = updateParallax(vh, drawY);
+    const tracksUnsettled = updateTracks(vh, drawY);
     updateMarquees(velocity);
 
-    // Marquees animate continuously, so keep ticking while they exist.
-    if (marquees.length || tracks.length || Math.abs(velocity) > 0.05) request();
+    // Marquees animate continuously, and easing keeps drifting for a few
+    // frames after the scroll itself stops, so keep ticking through both.
+    if (marquees.length || smoothUnsettled || parallaxUnsettled || tracksUnsettled ||
+        Math.abs(velocity) > 0.05) request();
   }
 
   function request() {
@@ -284,12 +376,17 @@
     document.addEventListener('ft:content-ready', () => {
       initReveals();
       if (reduced) return;
+      measureSmooth();
       collectParallax();
       collectTracks();
       request();
     });
 
     if (reduced) return;
+
+    // Before initProgress and the measuring passes: it reparents the page, so
+    // every cached offset below has to be taken afterwards.
+    initSmooth();
 
     initProgress();
     collectParallax();
@@ -299,6 +396,7 @@
     window.addEventListener('scroll', request, { passive: true });
 
     const remeasure = debounce(() => {
+      measureSmooth();
       collectParallax();
       collectTracks();
       marquees.forEach(m => { m.half = m.track.scrollWidth / 2; });

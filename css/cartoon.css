@@ -154,6 +154,11 @@
   .grid-products > .card,
   #bestGrid > .card { opacity: 1; animation: none !important; }
 }
+@media (hover: none) {
+  .card:hover { transform: none !important; box-shadow: none !important; }
+  .card:hover .card__media img { transform: none !important; }
+  .tile:hover, .pill:hover, .subtile:hover, .themetile:hover { transform: none !important; }
+}
 
 /* ——— logoman mascot ——— */
 .hero__art{position:relative}
@@ -242,14 +247,14 @@ html[data-cursor="case"], body[data-cursor="case"], .cursor-case { cursor: url('
 .shop-hero__stack .shop-card--case{ animation-name: shopFloatB, puffIn; animation-duration: 4.8s, 680ms; animation-delay: .4s, 560ms; }
 
 .shop-hero__woman{ animation: floatPuff 4.6s ease-in-out infinite; }
-.cases-hero__art img{ animation: floatPuff 4.4s ease-in-out infinite; }
-.cases-hero__art:hover img, .shop-hero__woman:hover{ animation-play-state:paused; }
+.cases-hero__art img, .tshirts-hero__art img{ animation: floatPuff 4.4s ease-in-out infinite; }
+.cases-hero__art:hover img, .tshirts-hero__art:hover img, .shop-hero__woman:hover{ animation-play-state:paused; }
 
 @media (prefers-reduced-motion: reduce) {
   .shop-card, .shop-card__dots i, .shop-hero__hint, .shop-hero__hint-arrow,
   .shop-doodle, .shop-doodle--squiggle, .shop-hero__confetti i,
   .shop-hero__copy > *, .shop-hero__stack .shop-card,
-  .shop-hero__woman, .cases-hero__art img { animation: none !important; }
+  .shop-hero__woman, .cases-hero__art img, .tshirts-hero__art img { animation: none !important; }
   .shop-card--tee, .shop-card--case { transform: rotate(-3.4deg); }
   .shop-card--case { transform: rotate(3.2deg); }
 }

@@ -66,6 +66,7 @@ window.Auth = (function () {
     $('authModal').classList.add('is-open');
     $('authModal').setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     setTimeout(() => $('authModal').querySelector('input')?.focus(), 60);
   }
 
@@ -73,6 +74,7 @@ window.Auth = (function () {
     $('authModal').classList.remove('is-open');
     $('authModal').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
   }
 
   function render() {
