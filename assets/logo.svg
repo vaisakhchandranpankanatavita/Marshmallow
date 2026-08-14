@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 52" role="img" aria-label="Marshmello.in">
+  <!-- Icon: toasted marshmallow on a stick -->
+  <g transform="translate(2,3)">
+    <!-- stick shadow -->
+    <path d="M30 38 L42 50" stroke="#141414" stroke-width="5.5" stroke-linecap="round" opacity="1"/>
+    <!-- marshmallow body — puffy square with soft round -->
+    <rect x="2" y="4" width="38" height="34" rx="13" fill="#FBF3E4" stroke="#141414" stroke-width="3.2"/>
+    <!-- toasted grill lines -->
+    <path d="M8 16.5 Q20 14 32 16.5" stroke="#8B5A2B" stroke-width="2.6" stroke-linecap="round" opacity="0.42" fill="none"/>
+    <path d="M8 22.5 Q20 20 32 22.5" stroke="#8B5A2B" stroke-width="2.6" stroke-linecap="round" opacity="0.35" fill="none"/>
+    <!-- melt drip on bottom edge -->
+    <path d="M14 38 C14 42.5 16.2 44 18.5 41.5 C20.8 39 22.5 42.8 24.8 40.2 C27 37.6 29 41 31 38" fill="#FFC72C" stroke="#141414" stroke-width="1.9" stroke-linejoin="round">
+      <animateTransform attributeName="transform" type="scale" values="1,1;1,1.08;1,1" dur="2.4s" repeatCount="indefinite" additive="sum"/>
+    </path>
+    <!-- little highlight -->
+    <ellipse cx="12.5" cy="11.5" rx="5.5" ry="3.2" fill="white" opacity="0.9"/>
+    <!-- spark / star top right — angular, not blob -->
+    <g transform="translate(36,5)">
+      <path d="M0 -7 L1.8 -1.8 L7 0 L1.8 1.8 L0 7 L-1.8 1.8 L-7 0 L-1.8 -1.8Z" fill="#FFC72C" stroke="#141414" stroke-width="1.4" stroke-linejoin="round">
+        <animateTransform attributeName="transform" type="rotate" values="0;14;-10;0" dur="1.8s" repeatCount="indefinite" additive="sum"/>
+        <animateTransform attributeName="transform" type="scale" values="1;1.18;0.92;1" dur="1.8s" repeatCount="indefinite" additive="sum"/>
+      </path>
+    </g>
+  </g>
+
+  <!-- Wordmark: marshmello — bold rounded, hand-tweaked baseline -->
+  <g transform="translate(54,0)">
+    <!-- soft offset shadow for punch, not glow -->
+    <text x="1.6" y="32.5" font-family="'Archivo Black', Impact, sans-serif" font-size="29" letter-spacing="-0.045em" fill="#141414" opacity="0.14">marshmello</text>
+    <text x="0" y="31" font-family="'Archivo Black', Impact, sans-serif" font-size="29" letter-spacing="-0.045em" fill="#141414">marshmello</text>
+    <!-- red underline chunk — thick, off-kilter -->
+    <rect x="1" y="35.5" width="178" height="5.5" rx="2.7" fill="#E03127" transform="rotate(-0.9 90 35.5)"/>
+  </g>
+
+  <!-- .in pill -->
+  <g transform="translate(291,13)">
+    <rect x="0" y="0" width="41" height="22" rx="11" fill="#FFC72C" stroke="#141414" stroke-width="2.6"/>
+    <text x="20.5" y="15.8" text-anchor="middle" font-family="'DM Sans', sans-serif" font-weight="800" font-size="13.5" letter-spacing="0.02em" fill="#141414">.in</text>
+  </g>
+</svg>
