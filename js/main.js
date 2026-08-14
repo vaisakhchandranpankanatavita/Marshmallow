@@ -491,14 +491,14 @@
     const close = $('browseClose');
     if (!modal) return;
 
-    const show = () => { modal.style.display = 'grid'; };
-    const hide = () => { modal.style.display = 'none'; };
+    const show = () => { modal.classList.add('is-open'); };
+    const hide = () => { modal.classList.remove('is-open'); };
 
     scrim?.addEventListener('click', hide);
     close?.addEventListener('click', hide);
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.style.display === 'grid') hide();
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) hide();
     });
 
     show();

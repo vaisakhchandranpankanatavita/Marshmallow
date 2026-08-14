@@ -255,6 +255,7 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   gap: 1.5rem;
 }
 .nav__logo { font-family: var(--script); font-size: 2rem; line-height: 1; color: var(--red); }
+.nav__logo img { height: 52px; width: auto; }
 .nav__logo b { font-family: var(--display); font-size: .95rem; line-height: 1; color: var(--ink); text-transform: uppercase; letter-spacing: .1em; display: block; margin-top: -.1rem; }
 
 .nav__links { display: flex; gap: 1.8rem; }
@@ -1106,7 +1107,7 @@ a:focus-visible, button:focus-visible, .chip:focus-visible{ outline:3px solid va
 
 /* logo peek-out mobile */
 @media (max-width: 760px) {
-  .nav__logo img { height: 64px !important; margin-top: 6px !important; margin-bottom: -18px !important; margin-left: -8px !important; transform: rotate(-3.8deg) !important; transform-origin: left center !important; }
+  .nav__logo img { height: 42px !important; width: auto !important; margin: 0 !important; transform: none !important; }
 }
 
 /* ======================================================== SHOP HERO (shop.html) */
