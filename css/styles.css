@@ -60,7 +60,15 @@
    to the top of a section every time they lift their finger, and some
    sections (the product grid) are many screens tall — mandatory would trap
    scrolling inside them at the first screen. Proximity still snaps a normal
-   scroll near a section boundary, without fighting a scroll in progress. */
+   scroll near a section boundary, without fighting a scroll in progress.
+
+   `scroll-snap-stop: always` on the section rule below is what actually makes
+   scrolling read as section-by-section: it forces one fast wheel flick or
+   touch swipe to stop right at the next section instead of sailing straight
+   past it (which proximity alone allows), without proximity's downside —
+   it only holds a fling at a boundary it would otherwise skip *over*, so
+   browsing freely inside a section taller than one screen (the product grid)
+   is untouched. */
 html { scroll-behavior: smooth; overflow-x: clip; scroll-snap-type: y proximity; }
 
 /* Every page follows the same top: <div class="topbar">, <header class="nav">,
@@ -146,6 +154,7 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   padding-block: clamp(3.5rem, 8vw, 6.5rem);
   display: flex; flex-direction: column; justify-content: center;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .band--red    { background: var(--red);    color: var(--cream); }
@@ -307,6 +316,7 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
   min-height: 100dvh;
   display: flex; align-items: center;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 .hero__inner { width: 100%; }
 /* The yellow floor is deliberately short: the art breaks across it, the copy
@@ -531,6 +541,13 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 /* ------------------------------------------------------------------ feature */
 
 .feature { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 4rem); align-items: center; }
+/* Grid items default to min-width:auto, so a replaced element (the size-guide
+   photo below carries width/height attributes) sets the column's minimum to
+   its intrinsic size regardless of the 1fr track — the column, and every
+   other row sharing it once the layout collapses to a single column on
+   mobile, refuses to shrink below that and the whole grid overflows the
+   viewport. min-width: 0 opts back into shrinking with the track. */
+.feature > * { min-width: 0; }
 .feature img { border: var(--edge); border-radius: var(--r-lg); box-shadow: 12px 12px 0 var(--ink); }
 .feature__list { list-style: none; display: grid; gap: .8rem; margin-block: 1.6rem; }
 .feature__list li { display: flex; gap: .7rem; align-items: flex-start; font-weight: 500; }
@@ -792,6 +809,7 @@ html.is-smooth .nav { position: fixed; top: 0; left: 0; right: 0; }
   overflow: hidden;
   border-bottom: 3px solid var(--ink);
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 .story-hero__media { position: absolute; inset: -10% 0; overflow: hidden; }
 .story-hero__media img {
@@ -815,7 +833,7 @@ html.is-smooth .nav { position: fixed; top: 0; left: 0; right: 0; }
 /* Sticky-stacking panels: each sticks at the top and the next slides over it.
    Already viewport-height + centred per panel (100svh, place-items:center) —
    the pattern the rest of the page's sections now follow too. */
-.stack { position: relative; scroll-snap-align: start; }
+.stack { position: relative; scroll-snap-align: start; scroll-snap-stop: always; }
 .stack__panel {
   position: sticky; top: 0;
   min-height: 100svh;
@@ -1495,6 +1513,7 @@ body.story-page { height: 100dvh; overflow: hidden; }
   border-block: 3px solid var(--ink);
   background: var(--ink);
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 @media (max-width: 760px) {
   .parallel { min-height: 74svh; }
@@ -1979,4 +1998,19 @@ a:focus-visible, button:focus-visible, .chip:focus-visible, input:focus-visible,
   transform:rotate(-1.2deg) !important;
   display:block !important;
   margin-inline:auto !important;
+}
+
+/* Below 980px .hero__inner collapses to one column (see the responsive block
+   above), and the stacked copy+art routinely runs taller than one screen.
+   These three heroes force an exact viewport `height` above so the desktop
+   pair sits dead-centre — with a fixed height and justify-content:center,
+   taller content overflows *centred on itself*, spilling equally off the
+   top (hidden behind the sticky nav) and the bottom (overlapping whatever
+   comes next) instead of just growing the section. `height: auto` here
+   (after the rule above in source, so it wins the !important tie) lets the
+   section grow to fit; `min-height` above still guarantees a full screen
+   whenever the content is short enough to allow it. Same story for
+   .shop-hero, defined with its own forced height in the block below. */
+@media (max-width: 980px) {
+  .shop-hero, .cases-hero, .tshirts-hero { height: auto !important; }
 }
