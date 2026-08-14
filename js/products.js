@@ -180,8 +180,12 @@ window.PRODUCTS = RAW.map(r => ({
 
 /* Helpers shared by every page. */
 window.PRODUCT_BY_SLUG = slug => window.PRODUCTS.find(p => p.slug === slug);
-window.PRODUCT_IMAGE = (product, colorway) =>
-  `assets/${product.slug}--${colorway || product.colorways[0]}.svg`;
+window.PRODUCT_IMAGES = (product, colorway) => {
+  const c = colorway || product.colorways[0];
+  // upstream has single image per colorway; wrap for compatibility with stashed main.js
+  return [`assets/${product.slug}--${c}.svg`];
+};
+window.PRODUCT_IMAGE = (product, colorway) => window.PRODUCT_IMAGES(product, colorway)[0];
 window.SIZES_FOR = product =>
   product.sizes || (product.category === 'tees' ? window.TEE_SIZES : window.CASE_SIZES);
 window.SUBCATEGORY_LABEL = (category, id) => {
