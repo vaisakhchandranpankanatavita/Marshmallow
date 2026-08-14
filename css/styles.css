@@ -962,11 +962,18 @@ h3.display { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 .parallel__plate h2 { color: var(--cream); }
 .parallel__plate p { color: var(--cream); opacity: .85; margin: 1rem auto 1.6rem; }
 
+/* The column *count* in the grid has to match the number of .parallel__col
+   elements actually visible, or the leftover ones wrap into a second row
+   instead of shrinking — the frame's overflow:hidden then clips the whole
+   thing to a blank band, since the parallax math assumes one row. Hiding the
+   excess columns keeps DOM count == track count at every breakpoint. */
 @media (max-width: 900px) {
   .parallel__cols { grid-template-columns: repeat(3, 1fr); }
+  .parallel__col:nth-child(4) { display: none; }
 }
 @media (max-width: 620px) {
   .parallel__cols { grid-template-columns: repeat(2, 1fr); gap: .6rem; padding: .6rem; }
+  .parallel__col:nth-child(3), .parallel__col:nth-child(4) { display: none; }
   .parallel__col { gap: .6rem; }
   .parallel { height: clamp(460px, 72vh, 620px); }
 }
